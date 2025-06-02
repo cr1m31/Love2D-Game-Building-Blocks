@@ -17,15 +17,6 @@ local cell = {
     height = 50,
 }
 
-function gridModule.printGridElements()
-  for rowNumber, row in ipairs(grid) do
-    print("rowNumber: " .. rowNumber .. " \nrow length: " .. #row)
-    for columnNumber, tileValue in ipairs(grid[rowNumber]) do
-      print("columnNumber: " .. columnNumber .. " tileValue: " .. tileValue)
-    end
-  end
-end
-
 function gridModule.drawGrid()
   for rowNumber, row in ipairs(grid) do
     for columnNumber, tileValue in ipairs(grid[rowNumber]) do
