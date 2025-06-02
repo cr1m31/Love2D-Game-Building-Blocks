@@ -4,6 +4,7 @@ local gridModule = require("grid")
 
 function love.load()
   collisionModule.createColliders()
+  gridModule.createGridTiles()
 end
 
 function love.update(dt)
