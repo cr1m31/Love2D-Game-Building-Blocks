@@ -5,7 +5,7 @@ local player = {
   y = 350,
   width = 50,
   height = 50,
-  speed = 100,
+  speed = 300,
 }
 
 local coll = nil
