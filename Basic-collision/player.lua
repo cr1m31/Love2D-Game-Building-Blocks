@@ -3,8 +3,8 @@ local collisionModule = require("collision")
 local player = {
   x = 100,
   y = 350,
-  width = 50,
-  height = 50,
+  width = 40,
+  height = 40,
   speed = 300,
 }
 
