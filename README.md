@@ -69,3 +69,15 @@ Si vous préférez la ligne de commande ou si votre éditeur n'est pas configur�
 Assurez-vous que **Love2D est bien installé et accessible via votre PATH** pour que la commande `love` fonctionne directement.
 
 Vous pouvez ensuite explorer le code avec l'éditeur de votre choix et le modifier à votre guise.
+
+## Crédits
+Crédits des Assets pour Driver-Test
+Tous les assets suivants sont sous licence CC0 (domaine public), sauf indication contraire.
+
+Vary Car Pack 1 par Vary (https://opengameart.org/content/vary-car-pack-1)
+2D Top Down Highway Background par Surt (https://opengameart.org/content/2d-top-down-highway-background)
+HD River Rock Pack par Ragewortt (https://opengameart.org/content/hd-river-rock-pack)
+Pixel Wooden Crate par artisticdude (https://opengameart.org/content/pixel-wooden-crate)
+Les assets de yurinikolai proviennent de OpenGameArt.org (https://opengameart.org/users/yurinikolai). 
+Pour les détails de licence spécifiques à ces assets, veuillez vous référer au fichier readme situé dans 
+le dossier des images du jeu.
