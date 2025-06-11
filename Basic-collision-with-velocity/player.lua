@@ -9,14 +9,14 @@ local player = {
   center = {x = 0, y = 0},
   speed = 10,
   velocity = {x = 0, y = 0},
-  maxVelocity = 2,
+  maxVelocity = 4,
 }
 
 local coll = nil
 
 function player.updatePlayer(dt)
   
-  velocityModule.limitPlayerVelocity(player)
+  -- velocityModule.limitPlayerVelocity(player)
   
   movePlayer(dt)
   
