@@ -15,60 +15,53 @@ local player = {
 local coll = nil
 
 function player.updatePlayer(dt)
-  
-  -- velocityModule.limitPlayerVelocity(player)
-  
   movePlayer(dt)
-  
-  
-  player.center = {x = player.x + (player.width / 2), y = player.y + (player.height / 2)}
+  player.center = {
+    x = player.x + (player.width / 2),
+    y = player.y + (player.height / 2)
+  }
 end
 
 function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
-  
-  -- move horizontally
-  if(love.keyboard.isDown("a") )then
+
+  -- Apply acceleration based on input
+  if love.keyboard.isDown("a") then
     player.velocity.x = player.velocity.x - player.speed * dt
-  elseif(love.keyboard.isDown("d") )then
+  elseif love.keyboard.isDown("d") then
     player.velocity.x = player.velocity.x + player.speed * dt
   end
-  
-  -- set velocity before to revert position based on collision
+
+  if love.keyboard.isDown("w") then
+    player.velocity.y = player.velocity.y - player.speed * dt
+  elseif love.keyboard.isDown("s") then
+    player.velocity.y = player.velocity.y + player.speed * dt
+  end
+
+  -- Limit the total velocity vector magnitude
+  velocityModule.limitVectorMagnitude(player.velocity, player.maxVelocity)
+
+  -- Move horizontally
   player.x = player.x + player.velocity.x
-  
-  -- check horitontal collision
   coll = collisionModule.collisionAABB(player)
   if coll then
     player.velocity.x = 0
-    player.x = oldPlayerX -- revert x position only
+    player.x = oldPlayerX
   end
-  
-  -- move vertically
-  if(love.keyboard.isDown("w") )then
-    player.velocity.y = player.velocity.y - player.speed * dt
-  elseif(love.keyboard.isDown("s") )then
-    player.velocity.y = player.velocity.y + player.speed * dt
-  end
-  
-  -- set velocity before to revert position based on collision
+
+  -- Move vertically
   player.y = player.y + player.velocity.y
-  
-  -- check vertical collision
   coll = collisionModule.collisionAABB(player)
   if coll then
     player.velocity.y = 0
-    player.y = oldPlayerY -- revert y position only
+    player.y = oldPlayerY
   end
-
 end
 
 function player.drawPlayer()
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
-  
   love.graphics.print("coll: " .. tostring(coll), 20, 20)
-  
   velocityModule.drawVelocityAndMagnitude(player)
 end
 
