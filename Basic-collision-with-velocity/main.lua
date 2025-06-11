@@ -5,6 +5,7 @@ local collisionModule = require("collision")
 local gridModule = require("grid")
 
 function love.load()
+  playerModule.loadPlayer()
   gridModule.loadBuildedTiles()
 end
 
