@@ -52,10 +52,7 @@ function movePlayer(dt)
     player.velocity.y = 0
     player.y = oldPlayerY -- revert y position only
   end
-  
-  
-  
-  
+
 end
 
 function player.drawPlayer()
@@ -64,6 +61,12 @@ function player.drawPlayer()
   love.graphics.print("coll: " .. tostring(coll), 20, 20)
   
   love.graphics.print("velX: " .. player.velocity.x .. " velY: " .. player.velocity.y, 50, 50)
+
+  -- debug velocity with line
+  local playerCenter = {x = player.x + (player.width / 2), y = player.y + (player.height / 2)}
+  local velocityVectorLengthMultiplier = 6
+  love.graphics.line(playerCenter.x, playerCenter.y, playerCenter.x + player.velocity.x * velocityVectorLengthMultiplier, playerCenter.y +  player.velocity.y * velocityVectorLengthMultiplier)
+
 end
 
 
