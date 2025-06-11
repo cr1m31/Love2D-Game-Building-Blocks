@@ -1,21 +1,35 @@
 local velocityModule = {}
 
-local velocityVectorLengthMultiplier = 4.5
+-- Multiplier to scale the velocity vector when drawing for debug purposes
+local debugVelocityVectorDrawScale = 4.5
 
-function velocityModule.limitVectorMagnitude(vec, max)
-  local length = math.sqrt(vec.x * vec.x + vec.y * vec.y)
-  if length > max then
-    local scale = max / length
-    vec.x = vec.x * scale
-    vec.y = vec.y * scale
+--[[
+  Limits the velocity of an object so that its total speed does not exceed maxSpeed.
+  Preserves the direction but rescales the x and y components to maintain physics consistency.
+]]
+function velocityModule.limit2DVelocityMagnitude(velocityVector, maxSpeed)
+  local currentSpeed = math.sqrt(velocityVector.x * velocityVector.x + velocityVector.y * velocityVector.y)
+
+  if currentSpeed > maxSpeed then
+    local rescaleFactor = maxSpeed / currentSpeed
+    velocityVector.x = velocityVector.x * rescaleFactor
+    velocityVector.y = velocityVector.y * rescaleFactor
   end
 end
 
-function velocityModule.drawVelocityAndMagnitude(player)
-  love.graphics.print("velX: " .. player.velocity.x .. " velY: " .. player.velocity.y, 50, 50)
+--[[
+  Draws the player's current velocity vector as a line from their center,
+  and prints the velocity components on screen for debugging.
+]]
+function velocityModule.drawVelocityDebug(player)
+  love.graphics.print("Velocity X: " .. player.velocity.x .. " | Y: " .. player.velocity.y, 50, 50)
 
-  -- debug velocity with line
-  love.graphics.line(player.center.x, player.center.y, player.center.x + player.velocity.x * velocityVectorLengthMultiplier, player.center.y +  player.velocity.y * velocityVectorLengthMultiplier)
+  love.graphics.line(
+    player.center.x,
+    player.center.y,
+    player.center.x + player.velocity.x * debugVelocityVectorDrawScale,
+    player.center.y + player.velocity.y * debugVelocityVectorDrawScale
+  )
 end
 
 return velocityModule

@@ -40,7 +40,7 @@ function movePlayer(dt)
   end
 
   -- Limit the total velocity vector magnitude
-  velocityModule.limitVectorMagnitude(player.velocity, player.maxVelocity)
+  velocityModule.limit2DVelocityMagnitude(player.velocity, player.maxVelocity)
 
   -- Move horizontally
   player.x = player.x + player.velocity.x
@@ -62,7 +62,7 @@ end
 function player.drawPlayer()
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
   love.graphics.print("coll: " .. tostring(coll), 20, 20)
-  velocityModule.drawVelocityAndMagnitude(player)
+  velocityModule.drawVelocityDebug(player)
 end
 
 return player
