@@ -1,6 +1,7 @@
 local collisionModule = require("collision")
 local velocityModule = require("velocity")
 local velocityDampingModule = require("velocityDamping")
+local surfaceFrictionModule = require("surfaceFriction")
 
 local player = {
   x = 100,
@@ -65,6 +66,8 @@ function movePlayer(dt)
   if coll then
     player.velocity.x = 0
     player.x = oldPlayerX
+
+    surfaceFrictionModule.addFrictionWhenColliding(player, 0.5)
   end
 
   -- Move vertically
@@ -73,6 +76,8 @@ function movePlayer(dt)
   if coll then
     player.velocity.y = 0
     player.y = oldPlayerY
+
+    surfaceFrictionModule.addFrictionWhenColliding(player, 0.5)
   end
 end
 
