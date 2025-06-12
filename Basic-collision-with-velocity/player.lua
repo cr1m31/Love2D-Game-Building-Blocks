@@ -1,5 +1,6 @@
 local collisionModule = require("collision")
 local velocityModule = require("velocity")
+local velocityDampingModule = require("velocityDamping")
 
 local player = {
   x = 100,
@@ -14,13 +15,29 @@ local player = {
 
 local coll = nil
 
+function checkIfPlayerIsMoving()
+  if love.keyboard.isDown("a") or 
+    love.keyboard.isDown("d") or
+    love.keyboard.isDown("w") or 
+    love.keyboard.isDown("s") then
+    return true
+  else
+    return false
+  end
+end
+
 function player.updatePlayer(dt)
   movePlayer(dt)
   player.center = {
     x = player.x + (player.width / 2),
     y = player.y + (player.height / 2)
   }
+
+  if checkIfPlayerIsMoving() == false then
+    velocityDampingModule.reduceVelocity(player, 0.99)
+  end
 end
+
 
 function movePlayer(dt)
   local oldPlayerX = player.x

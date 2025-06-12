@@ -6,6 +6,8 @@ local gridModule = require("grid")
 
 function love.load()
   gridModule.loadBuildedTiles()
+  
+  print("load")
 end
 
 function love.update(dt)

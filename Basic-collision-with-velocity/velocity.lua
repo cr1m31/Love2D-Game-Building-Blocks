@@ -1,7 +1,7 @@
 local velocityModule = {}
 
 -- Multiplier to scale the velocity vector when drawing for debug purposes
-local debugVelocityVectorDrawScale = 4.5
+local debugVelocityVectorDrawScale = 9
 
 --[[
   Limits the velocity of an object so that its total speed does not exceed maxSpeed.
