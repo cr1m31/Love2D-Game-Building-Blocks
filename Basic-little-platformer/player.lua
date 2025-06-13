@@ -16,7 +16,7 @@ local player = {
   gravityForce = 8,
   jumpPowerMultiplier = 20,
   frictionPower = 1, -- 0.99
-  velocityDamping = 0.99,
+  velocityDamping = 0.8,
 }
 
 local coll = nil
