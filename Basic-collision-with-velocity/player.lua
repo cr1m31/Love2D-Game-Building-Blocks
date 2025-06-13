@@ -39,6 +39,7 @@ function player.updatePlayer(dt)
   end
 end
 
+local frictionPower = 0.8
 
 function movePlayer(dt)
   local oldPlayerX = player.x
@@ -60,24 +61,26 @@ function movePlayer(dt)
   -- Limit the total velocity vector magnitude
   velocityModule.limit2DVelocityMagnitude(player.velocity, player.maxVelocity)
 
-  -- Move horizontally
+  -- Move horizontally (vertical collision)
   player.x = player.x + player.velocity.x
   coll = collisionModule.collisionAABB(player)
   if coll then
-    player.velocity.x = 0
+    
     player.x = oldPlayerX
 
-    surfaceFrictionModule.addFrictionWhenColliding(player, 0.5)
+    player.velocity.x = 0
+
+    surfaceFrictionModule.addFrictionWhenColliding(player, frictionPower)
   end
 
-  -- Move vertically
+  -- Move vertically (horizontal collision)
   player.y = player.y + player.velocity.y
   coll = collisionModule.collisionAABB(player)
   if coll then
-    player.velocity.y = 0
     player.y = oldPlayerY
 
-    surfaceFrictionModule.addFrictionWhenColliding(player, 0.5)
+    player.velocity.y = 0
+    surfaceFrictionModule.addFrictionWhenColliding(player, frictionPower)
   end
 end
 
