@@ -1,8 +1,8 @@
 local velocityDampingModule = {}
 
-function velocityDampingModule.reduceVelocity(player, damping)
-    player.velocity.x = player.velocity.x * damping
-    player.velocity.y = player.velocity.y * damping
+function velocityDampingModule.reduceVelocity(player)
+    player.velocity.x = player.velocity.x * player.velocityDamping
+    player.velocity.y = player.velocity.y * player.velocityDamping
 end
 
 return velocityDampingModule

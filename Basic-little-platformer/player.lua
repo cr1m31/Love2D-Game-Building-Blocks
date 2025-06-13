@@ -2,25 +2,30 @@ local collisionModule = require("collision")
 local velocityModule = require("velocity")
 local velocityDampingModule = require("velocityDamping")
 local surfaceFrictionModule = require("surfaceFriction")
+local gravityModule = require("gravity")
 
 local player = {
   x = 100,
-  y = 350,
+  y = 300,
   width = 40,
   height = 40,
   center = {x = 0, y = 0},
   speed = 10,
   velocity = {x = 0, y = 0},
   maxVelocity = 4,
+  gravityForce = 3,
+  jumpPowerMultiplier = 3,
+  frictionPower = 0.99,
+  velocityDamping = 0.99,
 }
 
 local coll = nil
 
 function checkIfPlayerIsMoving()
   if love.keyboard.isDown("a") or 
-    love.keyboard.isDown("d") or
-    love.keyboard.isDown("w") or 
-    love.keyboard.isDown("s") then
+    love.keyboard.isDown("d") then -- or
+    --love.keyboard.isDown("w") or 
+    --love.keyboard.isDown("s") then
     return true
   else
     return false
@@ -35,11 +40,13 @@ function player.updatePlayer(dt)
   }
 
   if checkIfPlayerIsMoving() == false then
-    velocityDampingModule.reduceVelocity(player, 0.99)
+    velocityDampingModule.reduceVelocity(player)
   end
-end
 
-local frictionPower = 0.8
+  gravityModule.addGravity(player, dt)
+
+
+end
 
 function movePlayer(dt)
   local oldPlayerX = player.x
@@ -52,11 +59,11 @@ function movePlayer(dt)
     player.velocity.x = player.velocity.x + player.speed * dt
   end
 
-  if love.keyboard.isDown("w") then
+  --[[ if love.keyboard.isDown("w") then
     player.velocity.y = player.velocity.y - player.speed * dt
   elseif love.keyboard.isDown("s") then
     player.velocity.y = player.velocity.y + player.speed * dt
-  end
+  end ]]
 
   -- Limit the total velocity vector magnitude
   velocityModule.limit2DVelocityMagnitude(player.velocity, player.maxVelocity)
@@ -70,7 +77,7 @@ function movePlayer(dt)
 
     player.velocity.x = 0
 
-    surfaceFrictionModule.addFrictionWhenColliding(player, frictionPower)
+    surfaceFrictionModule.addFrictionWhenColliding(player)
   end
 
   -- Move vertically (horizontal collision)
@@ -80,7 +87,7 @@ function movePlayer(dt)
     player.y = oldPlayerY
 
     player.velocity.y = 0
-    surfaceFrictionModule.addFrictionWhenColliding(player, frictionPower)
+    surfaceFrictionModule.addFrictionWhenColliding(player)
   end
 end
 
@@ -88,6 +95,12 @@ function player.drawPlayer()
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
   love.graphics.print("coll: " .. tostring(coll), 20, 20)
   velocityModule.drawVelocityDebug(player)
+end
+
+function love.keypressed(key)
+  if key =="space" then
+    player.velocity.y = player.velocity.y - 2 * player.jumpPowerMultiplier
+  end
 end
 
 return player
