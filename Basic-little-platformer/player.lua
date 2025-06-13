@@ -2,6 +2,7 @@ local collisionModule = require("collision")
 local velocityModule = require("velocity")
 local velocityDampingModule = require("velocityDamping")
 local surfaceFrictionModule = require("surfaceFriction")
+local gravityModule = require("gravity")
 
 local player = {
   x = 100,
@@ -12,6 +13,7 @@ local player = {
   speed = 10,
   velocity = {x = 0, y = 0},
   maxVelocity = 4,
+  gravityForce = 3,
 }
 
 local coll = nil
@@ -37,6 +39,10 @@ function player.updatePlayer(dt)
   if checkIfPlayerIsMoving() == false then
     velocityDampingModule.reduceVelocity(player, 0.99)
   end
+
+  gravityModule.addGravity(player, dt)
+
+
 end
 
 local frictionPower = 0.8
@@ -52,11 +58,11 @@ function movePlayer(dt)
     player.velocity.x = player.velocity.x + player.speed * dt
   end
 
-  if love.keyboard.isDown("w") then
+  --[[ if love.keyboard.isDown("w") then
     player.velocity.y = player.velocity.y - player.speed * dt
   elseif love.keyboard.isDown("s") then
     player.velocity.y = player.velocity.y + player.speed * dt
-  end
+  end ]]
 
   -- Limit the total velocity vector magnitude
   velocityModule.limit2DVelocityMagnitude(player.velocity, player.maxVelocity)
