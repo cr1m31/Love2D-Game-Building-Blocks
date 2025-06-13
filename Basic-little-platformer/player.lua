@@ -10,12 +10,12 @@ local player = {
   width = 40,
   height = 40,
   center = {x = 0, y = 0},
-  speed = 10,
+  speed = 20,
   velocity = {x = 0, y = 0},
   maxVelocity = 4,
-  gravityForce = 3,
-  jumpPowerMultiplier = 3,
-  frictionPower = 0.99,
+  gravityForce = 8,
+  jumpPowerMultiplier = 20,
+  frictionPower = 1, -- 0.99
   velocityDamping = 0.99,
 }
 
@@ -100,6 +100,7 @@ end
 function love.keypressed(key)
   if key =="space" then
     player.velocity.y = player.velocity.y - 2 * player.jumpPowerMultiplier
+    print(player.velocity.y)
   end
 end
 
