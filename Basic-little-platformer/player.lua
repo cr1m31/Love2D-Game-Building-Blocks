@@ -14,6 +14,23 @@ function player.updatePlayer(dt)
   movePlayer(dt)
 end
 
+--[[
+  Formulas for velocity, speed, etc.
+  dt = delta time = how much time has passed since the last frame, in seconds.
+  
+  If you're using known speed:
+    displacement = speed * time = player.speed * dt
+  
+  If you're calculating speed/velocity from positions:
+    velocity = displacement / time
+             = (player.y - player.previousY) / dt
+
+  Notes:
+  - displacement = change in position (can be in x or y)
+  - velocity is a vector (has direction), speed is scalar (just magnitude)
+]]
+
+
 function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
