@@ -7,13 +7,17 @@ local player = {
   height = 40,
   speed = 20,
   velocity = {x = 0, y = 0},
+  jumpForce = 5,
 }
+
+local gravity = 4
 
 local coll = nil
 local visualVectorLineLengthMultiplier = 3
 
 function player.updatePlayer(dt)
   movePlayer(dt)
+  addGravity(dt)
 end
 
 function movePlayer(dt)
@@ -31,6 +35,8 @@ function movePlayer(dt)
     player.x = player.x + player.speed * dt
   end
   
+  player.velocity.x = (player.x - oldPlayerX)
+
   -- check horitontal collision
   coll = collisionModule.collisionAABB(player)
   if coll then
@@ -39,13 +45,15 @@ function movePlayer(dt)
     player.x = oldPlayerX -- revert x position only
     
   end
-  
+
   -- move vertically
   if(love.keyboard.isDown("w") )then
-    player.y = player.y - player.speed * dt
+    -- player.y = player.y - player.speed * dt
   elseif(love.keyboard.isDown("s") )then
-    player.y = player.y + player.speed * dt
+    -- player.y = player.y + player.speed * dt
   end
+
+  player.velocity.y = (player.y - oldPlayerY)
   
   -- check vertical collision
   coll = collisionModule.collisionAABB(player)
@@ -56,11 +64,14 @@ function movePlayer(dt)
     
   end
 
-  -- let this velocity definition at the end of the function once player has moved and
-  -- added displacement
-  player.velocity.x = (player.x - oldPlayerX)
-  player.velocity.y = (player.y - oldPlayerY)
- 
+end
+
+function playerJump()
+  player.velocity.y = player.velocity.y - player.jumpForce
+end
+
+function addGravity(dt)
+ player.velocity.y = player.velocity.y + gravity * dt
 end
 
 function player.drawPlayer()
@@ -73,5 +84,10 @@ function player.drawPlayer()
   love.graphics.line(player.x + (player.width / 2), player.y + (player.height / 2), player.x + (player.width / 2) + (player.velocity.x * visualVectorLineLengthMultiplier), player.y + (player.height / 2) + (player.velocity.y * visualVectorLineLengthMultiplier))
 end
 
+function love.keypressed(key , scancode , isrepeat )
+ if(key == "space") then
+  playerJump()
+ end
+end
 
 return player
