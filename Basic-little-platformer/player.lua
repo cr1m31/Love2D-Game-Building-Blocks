@@ -17,7 +17,7 @@ local visualVectorLineLengthMultiplier = 3
 
 function player.updatePlayer(dt)
   movePlayer(dt)
-  addGravity(dt)
+  -- addGravity(dt)
 end
 
 function movePlayer(dt)
@@ -48,9 +48,9 @@ function movePlayer(dt)
 
   -- move vertically
   if(love.keyboard.isDown("w") )then
-    -- player.y = player.y - player.speed * dt
+    player.y = player.y - player.speed * dt
   elseif(love.keyboard.isDown("s") )then
-    -- player.y = player.y + player.speed * dt
+    player.y = player.y + player.speed * dt
   end
 
   player.velocity.y = (player.y - oldPlayerY)
