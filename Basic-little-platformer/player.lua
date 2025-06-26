@@ -24,43 +24,43 @@ function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
 
-  -- let this increasing position at the begining of the function
-  player.x = player.x + player.velocity.x
-  player.y = player.y + player.velocity.y
-
   -- move horizontally
   if(love.keyboard.isDown("a") )then
-    player.x = player.x - player.speed * dt
+    player.velocity.x = player.velocity.x - player.speed * dt
   elseif(love.keyboard.isDown("d") )then
-    player.x = player.x + player.speed * dt
+    player.velocity.x = player.velocity.x + player.speed * dt
   end
   
-  player.velocity.x = (player.x - oldPlayerX)
+  player.x = player.x + player.velocity.x
 
   -- check horitontal collision
   coll = collisionModule.collisionAABB(player)
   if coll then
-    player.velocity.x = 0
+    
 
     player.x = oldPlayerX -- revert x position only
+
+    player.velocity.x = 0
     
   end
 
   -- move vertically
   if(love.keyboard.isDown("w") )then
-    player.y = player.y - player.speed * dt
+    player.velocity.y = player.velocity.y - player.speed * dt
   elseif(love.keyboard.isDown("s") )then
-    player.y = player.y + player.speed * dt
+    player.velocity.y = player.velocity.y + player.speed * dt
   end
 
-  player.velocity.y = (player.y - oldPlayerY)
+  player.y = player.y + player.velocity.y
   
   -- check vertical collision
   coll = collisionModule.collisionAABB(player)
   if coll then
-    player.velocity.y = 0
+    
     
     player.y = oldPlayerY -- revert y position only
+
+    player.velocity.y = 0
     
   end
 
