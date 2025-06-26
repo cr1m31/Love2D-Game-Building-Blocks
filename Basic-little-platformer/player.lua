@@ -9,7 +9,7 @@ local player = {
   height = 40,
   speed = 20,
   velocity = {x = 0, y = 0},
-  jumpForce = 5,
+  jumpForce = 3,
   mass = 4,
   isGrounded = false,
 }
