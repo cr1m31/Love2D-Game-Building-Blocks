@@ -43,6 +43,40 @@ function movePlayer(dt)
   if coll then
     player.y = oldPlayerY -- revert y position only
   end
+
+  --[[
+    Collision Reaction (Axis Separation)
+
+    It's important to distinguish between:
+      1. Collision Detection – Checking if an object is colliding with another.
+      2. Collision Reaction – Responding appropriately when a collision is detected.
+
+    The key idea is to process movement and collisions per axis, frame by frame.
+    Each frame:
+      - Move the player a small amount on one axis.
+      - Immediately check for collisions.
+      - If a collision is detected, resolve it on that same axis (e.g., revert movement and reset velocity).
+
+    This is done separately for the X and Y axes:
+
+      a. Move the player along the X-axis.
+      b. Check for any collisions.
+      c. If there's a collision, revert X movement and reset X velocity.
+      d. Move the player along the Y-axis.
+      e. Check for any collisions.
+      f. If there's a collision, revert Y movement and reset Y velocity.
+
+    This approach allows for simple and effective collision resolution
+    without needing to know the direction or side of the collision explicitly.
+
+    Note:
+    There are multiple ways to handle 2D collisions. This axis-separated method works well
+    for many games, but it has limitations. One common issue is **tunneling** — when fast-moving
+    objects pass through thin walls without detecting a collision. To avoid tunneling,
+    you may need to implement additional techniques such as continuous collision detection
+    or limit object speed relative to wall thickness.
+  ]]
+
   
 end
 
