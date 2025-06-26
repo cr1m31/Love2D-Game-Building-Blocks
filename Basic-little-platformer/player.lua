@@ -1,5 +1,7 @@
 local collisionModule = require("collision")
 
+local frictionModule = require("friction")
+
 local player = {
   x = 100,
   y = 350,
@@ -8,16 +10,30 @@ local player = {
   speed = 20,
   velocity = {x = 0, y = 0},
   jumpForce = 5,
+  mass = 4,
+  isGrounded = false,
 }
-
-local gravity = 4
 
 local coll = nil
 local visualVectorLineLengthMultiplier = 3
 
 function player.updatePlayer(dt)
   movePlayer(dt)
-  -- addGravity(dt)
+  addGravity(dt)
+
+
+  player.isGrounded = coll
+
+  -- always add momentum friction except if grounded
+  frictionModule.addHorizontalFriction(player, 0.02, dt)
+  if(player.isGrounded) then 
+    
+    frictionModule.addVerticalFriction(player, 0.02, dt)
+  else
+    addGravity(dt)
+    
+  end
+  
 end
 
 function movePlayer(dt)
@@ -101,7 +117,7 @@ function playerJump()
 end
 
 function addGravity(dt)
- player.velocity.y = player.velocity.y + gravity * dt
+ player.velocity.y = player.velocity.y + player.mass * dt
 end
 
 function player.drawPlayer()
