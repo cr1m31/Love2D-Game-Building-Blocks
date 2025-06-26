@@ -19,7 +19,7 @@ local visualVectorLineLengthMultiplier = 3
 
 function player.updatePlayer(dt)
   movePlayer(dt)
-  addGravity(dt)
+  
 
 
   player.isGrounded = coll
@@ -131,7 +131,7 @@ function player.drawPlayer()
 end
 
 function love.keypressed(key , scancode , isrepeat )
- if(key == "space") then
+ if(key == "space") and player.isGrounded then
   playerJump()
  end
 end
