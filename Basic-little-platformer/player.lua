@@ -12,14 +12,19 @@ local player = {
   jumpForce = 3,
   mass = 4,
   isGrounded = false,
+  groundCollider = {x = 0, y = 0, width = 30, height = 4}
 }
 
 local coll = nil
 local visualVectorLineLengthMultiplier = 3
 
+function updateGroundCollider()
+  groundCollider.x = player.x + player.width / 2 - (groundCollider.widht / 2)
+  groundCollider.y = player.y + player.height
+end
+
 function player.updatePlayer(dt)
   movePlayer(dt)
-  
 
 
   player.isGrounded = coll
@@ -128,6 +133,9 @@ function player.drawPlayer()
   love.graphics.print("velX: " .. player.velocity.x .. " velY: " .. player.velocity.y, 200, 200)
 
   love.graphics.line(player.x + (player.width / 2), player.y + (player.height / 2), player.x + (player.width / 2) + (player.velocity.x * visualVectorLineLengthMultiplier), player.y + (player.height / 2) + (player.velocity.y * visualVectorLineLengthMultiplier))
+
+  -- draw groundCollider
+  love.graphics.rectangle("line", groundCollider.x, groundCollider.y, groundCollider.width, groundCollider.height)
 end
 
 function love.keypressed(key , scancode , isrepeat )
