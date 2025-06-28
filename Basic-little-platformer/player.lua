@@ -11,7 +11,6 @@ local player = {
   velocity = {x = 0, y = 0},
   jumpForce = 3,
   mass = 4,
-  isGrounded = false,
   groundCollider = {x = 0, y = 0, width = 30, height = 4}
 }
 
@@ -19,15 +18,15 @@ local coll = nil
 local visualVectorLineLengthMultiplier = 3
 
 function updateGroundCollider()
-  groundCollider.x = player.x + player.width / 2 - (groundCollider.widht / 2)
-  groundCollider.y = player.y + player.height
+  player.groundCollider.x = player.x + player.width / 2 - (player.groundCollider.width / 2)
+  player.groundCollider.y = player.y + player.height
 end
 
 function player.updatePlayer(dt)
   movePlayer(dt)
+  updateGroundCollider()
 
-
-  player.isGrounded = coll
+  
 
   -- always add momentum friction except if grounded
   frictionModule.addHorizontalFriction(player, 0.02, dt)
@@ -126,20 +125,24 @@ function addGravity(dt)
 end
 
 function player.drawPlayer()
-  love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
+
+  love.graphics.setColor(1, 0.5, 1)
+  love.graphics.rectangle("fill", player.x, player.y, player.width, player.height)
   
+  love.graphics.setColor(1, 1, 1)
+
   love.graphics.print("coll: " .. tostring(coll), 200, 250)
 
   love.graphics.print("velX: " .. player.velocity.x .. " velY: " .. player.velocity.y, 200, 200)
 
   love.graphics.line(player.x + (player.width / 2), player.y + (player.height / 2), player.x + (player.width / 2) + (player.velocity.x * visualVectorLineLengthMultiplier), player.y + (player.height / 2) + (player.velocity.y * visualVectorLineLengthMultiplier))
 
-  -- draw groundCollider
-  love.graphics.rectangle("line", groundCollider.x, groundCollider.y, groundCollider.width, groundCollider.height)
+  -- draw player.groundCollider
+  love.graphics.rectangle("line", player.groundCollider.x, player.groundCollider.y, player.groundCollider.width, player.groundCollider.height)
 end
 
 function love.keypressed(key , scancode , isrepeat )
- if(key == "space") and player.isGrounded then
+ if(key == "space")  and collisionModule.groundCollision(player.groundCollider) then
   playerJump()
  end
 end
