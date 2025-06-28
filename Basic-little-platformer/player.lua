@@ -9,6 +9,9 @@ local player = {
   height = 40,
   speed = 20,
   velocity = {x = 0, y = 0},
+  maxVelocity = 1.2,
+  friction = {x = 0.009, y = 0.009},
+  frictionY = 0.009,
   jumpForce = 3,
   mass = 4,
   groundCollider = {x = 0, y = 0, width = 30, height = 4}
@@ -22,6 +25,25 @@ function updateGroundCollider()
   player.groundCollider.y = player.y + player.height
 end
 
+function limitMaxVelocityX(vel, maxVel)
+  if (vel.x > maxVel) then
+    vel.x = math.max(maxVel)
+  elseif (vel.x < - maxVel) then
+    vel.x = math.max(- maxVel)
+  end
+  return vel.x
+end
+
+function limitMaxVelocityY(vel, maxVel)
+  if (vel.y > maxVel) then
+    vel.y = math.max(maxVel)
+  elseif (vel.y < - maxVel) then
+    vel.y = math.max(- maxVel)
+  end
+  
+  return vel.y
+end
+
 function player.updatePlayer(dt)
   movePlayer(dt)
   updateGroundCollider()
@@ -30,14 +52,13 @@ function player.updatePlayer(dt)
   -- DADBORD RéSOUDRE LA LIMITATION DE VéLOCITé MAX AVENT D'AJOUTER DE LA FRICTION !!
   ---------------------------------------------------------------------------------------------
   -- always add momentum friction except if grounded
-  -- frictionModule.addHorizontalFriction(player, 0.02, dt)
+  frictionModule.addHorizontalFriction(player, player.friction.x, dt)
   if(collisionModule.groundCollision(player.groundCollider)) then 
-    print("vertical friction")
-    -- frictionModule.addVerticalFriction(player, 0.02, dt)
-  else
-    print("else")
-    addGravity(dt)
     
+    
+  else
+    frictionModule.addVerticalFriction(player, player.friction.y, dt)
+    addGravity(dt)
   end
   
 end
@@ -55,7 +76,8 @@ function movePlayer(dt)
   end
   
   -- Adding velocity to player horizontal position
-  player.x = player.x + player.velocity.x
+  
+  player.x = player.x + limitMaxVelocityX(player.velocity, player.maxVelocity)
   -- check horitontal collision
   coll = collisionModule.collisionAABB(player)
   if coll then
@@ -72,7 +94,8 @@ function movePlayer(dt)
   end
 
   -- Adding velocity to player vertical position
-  player.y = player.y + player.velocity.y
+
+  player.y = player.y + limitMaxVelocityY(player.velocity, player.maxVelocity)
   -- check vertical collision
   coll = collisionModule.collisionAABB(player)
   if coll then
