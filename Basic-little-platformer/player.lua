@@ -26,14 +26,16 @@ function player.updatePlayer(dt)
   movePlayer(dt)
   updateGroundCollider()
 
-  
-
+  -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  -- DADBORD RéSOUDRE LA LIMITATION DE VéLOCITé MAX AVENT D'AJOUTER DE LA FRICTION !!
+  ---------------------------------------------------------------------------------------------
   -- always add momentum friction except if grounded
-  frictionModule.addHorizontalFriction(player, 0.02, dt)
-  if(player.isGrounded) then 
-    
-    frictionModule.addVerticalFriction(player, 0.02, dt)
+  -- frictionModule.addHorizontalFriction(player, 0.02, dt)
+  if(collisionModule.groundCollision(player.groundCollider)) then 
+    print("vertical friction")
+    -- frictionModule.addVerticalFriction(player, 0.02, dt)
   else
+    print("else")
     addGravity(dt)
     
   end
