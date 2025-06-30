@@ -1,6 +1,6 @@
 io.stdout:setvbuf("no") -- disable output buffering to see debug text directly in output when running game
 
-love.window.setMode( 1600, 900)
+love.window.setMode( 1024, 768)
 
 local playerModule = require("player")
 local collisionModule = require("collision")
