@@ -136,7 +136,8 @@ function player.drawPlayer()
   love.graphics.setColor(1, 1, 1)
 
   love.graphics.draw(player.image, player.x + player.width / 2 - player.image:getWidth() / 2, player.y - player.height)
-  love.graphics.draw(player.flameImage, player.x + player.width / 2 - player.image:getWidth() / 2, player.y - player.height,0,0.3,0.3)
+  local flameOffset = {x = 10, y = 0}
+  love.graphics.draw(player.flameImage, player.x - flameOffset.x , player.y - player.height,0,0.3,0.3)
 
   love.graphics.print("coll: " .. tostring(coll), 200, 250)
 
