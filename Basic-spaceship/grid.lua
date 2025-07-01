@@ -83,14 +83,12 @@ function buildGridTileLocations(theGrid)
   return tiles
 end
 
-local currentGrid = grid -- default
+
 function gridModule.loadBuildedTiles(gridNumber)
   if(gridNumber == 1) then
     buildedTiles = buildGridTileLocations(grid)
-    currentGrid = grid
   elseif(gridNumber == 2) then
     buildedTiles = buildGridTileLocations(grid2)
-    currentGrid = grid2
   end
 end
 
