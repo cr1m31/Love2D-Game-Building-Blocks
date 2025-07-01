@@ -18,6 +18,7 @@ local player = {
   mass = 4,
   groundCollider = {x = 0, y = 0, width = 30, height = 4},
   image = love.graphics.newImage("/images/front-ship-low-res.png"),
+  flameImage = love.graphics.newImage("/images/vertical-flame.png")
 }
 
 local coll = nil
@@ -135,6 +136,7 @@ function player.drawPlayer()
   love.graphics.setColor(1, 1, 1)
 
   love.graphics.draw(player.image, player.x + player.width / 2 - player.image:getWidth() / 2, player.y - player.height)
+  love.graphics.draw(player.flameImage, player.x + player.width / 2 - player.image:getWidth() / 2, player.y - player.height,0,0.3,0.3)
 
   love.graphics.print("coll: " .. tostring(coll), 200, 250)
 
