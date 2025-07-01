@@ -11,11 +11,11 @@ local player = {
   height = 48,
   speed = 40,
   velocity = {x = 0, y = 0},
-  maxVelocity = 3.8,
+  maxVelocity = 4.8,
   friction = {x = 0.8, y = 0.99},
-  -- can not be greater than max velocity
-  jumpForce = 3.8,
-  mass = 6,
+  -- jumpforce can not be greater than max velocity
+  jumpForce = 4.8,
+  mass = 10,
   groundCollider = {x = 0, y = 0, width = 28, height = 4},
   image = love.graphics.newImage("/images/player-test.png"),
 }

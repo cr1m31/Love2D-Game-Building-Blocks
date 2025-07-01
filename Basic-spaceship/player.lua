@@ -13,7 +13,8 @@ local player = {
   velocity = {x = 0, y = 0},
   maxVelocity = 2.8,
   friction = {x = 0.99, y = 0.99},
-  jumpForce = 3,
+  -- jumpforce can not be greater than max velocity
+  jumpForce = 2.8,
   mass = 4,
   groundCollider = {x = 0, y = 0, width = 30, height = 4},
   image = love.graphics.newImage("/images/front-ship-low-res.png"),
