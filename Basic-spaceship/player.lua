@@ -6,24 +6,22 @@ local velocityModule = require("velocity")
 
 local player = {
   x = 100,
-  y = 450,
-  width = 32,
-  height = 48,
-  speed = 40,
+  y = 350,
+  width = 40,
+  height = 40,
+  speed = 20,
   velocity = {x = 0, y = 0},
-  maxVelocity = 4.8,
-  friction = {x = 0.8, y = 0.99},
+  maxVelocity = 2.8,
+  friction = {x = 0.99, y = 0.99},
   -- jumpforce can not be greater than max velocity
-  jumpForce = 4.8,
-  mass = 10,
-  groundCollider = {x = 0, y = 0, width = 28, height = 4},
-  image = love.graphics.newImage("/images/player-test.png"),
+  jumpForce = 2.8,
+  mass = 4,
+  groundCollider = {x = 0, y = 0, width = 30, height = 4},
+  image = love.graphics.newImage("/images/front-ship-low-res.png"),
 }
 
 local coll = nil
 local visualVectorLineLengthMultiplier = 20
-
-print("pl width :" .. player.width .. " pl height" .. player.height)
 
 function player.updatePlayer(dt)
   movePlayer(dt)
@@ -66,12 +64,12 @@ function movePlayer(dt)
   end
 
   -- move vertically
-  --[[ if(love.keyboard.isDown("w") )then
+  if(love.keyboard.isDown("w") )then
     -- increase velocity when pressing directional keys
     player.velocity.y = player.velocity.y - player.speed * dt
   elseif(love.keyboard.isDown("s") )then
     player.velocity.y = player.velocity.y + player.speed * dt
-  end ]]
+  end
 
   -- Adding velocity to player vertical position
 
@@ -136,7 +134,7 @@ function player.drawPlayer()
   
   love.graphics.setColor(1, 1, 1)
 
-  love.graphics.draw(player.image, player.x, player.y, 0,2,2)
+  love.graphics.draw(player.image, player.x + player.width / 2 - player.image:getWidth() / 2, player.y - player.height)
 
   love.graphics.print("coll: " .. tostring(coll), 200, 250)
 
