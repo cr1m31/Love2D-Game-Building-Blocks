@@ -9,7 +9,7 @@ local player = {
   height = 40,
   speed = 20,
   velocity = {x = 0, y = 0},
-  maxVelocity = 1.2,
+  maxVelocity = 2.8,
   friction = {x = 0.99, y = 0.99},
   jumpForce = 3,
   mass = 4,
@@ -18,7 +18,7 @@ local player = {
 }
 
 local coll = nil
-local visualVectorLineLengthMultiplier = 3
+local visualVectorLineLengthMultiplier = 20
 
 function updateGroundCollider()
   player.groundCollider.x = player.x + player.width / 2 - (player.groundCollider.width / 2)
@@ -77,7 +77,7 @@ function movePlayer(dt)
   
   -- Adding velocity to player horizontal position
   
-  player.x = player.x + player.velocity.x --limitMaxVelocityX(player.velocity, player.maxVelocity)
+  player.x = player.x + limitMaxVelocityX(player.velocity, player.maxVelocity)
   -- check horitontal collision
   coll = collisionModule.collisionAABB(player)
   if coll then
@@ -95,7 +95,7 @@ function movePlayer(dt)
 
   -- Adding velocity to player vertical position
 
-  player.y = player.y + player.velocity.y --limitMaxVelocityY(player.velocity, player.maxVelocity)
+  player.y = player.y + limitMaxVelocityY(player.velocity, player.maxVelocity)
   -- check vertical collision
   coll = collisionModule.collisionAABB(player)
   if coll then
