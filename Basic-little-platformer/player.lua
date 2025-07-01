@@ -2,6 +2,8 @@ local collisionModule = require("collision")
 
 local frictionModule = require("friction")
 
+local velocityModule = require("velocity")
+
 local player = {
   x = 100,
   y = 350,
@@ -20,44 +22,19 @@ local player = {
 local coll = nil
 local visualVectorLineLengthMultiplier = 20
 
-function updateGroundCollider()
-  player.groundCollider.x = player.x + player.width / 2 - (player.groundCollider.width / 2)
-  player.groundCollider.y = player.y + player.height
-end
-
-function limitMaxVelocityX(vel, maxVel)
-  if (vel.x > maxVel) then
-    vel.x = math.max(maxVel)
-  elseif (vel.x < - maxVel) then
-    vel.x = math.max(- maxVel)
-  end
-  return vel.x
-end
-
-function limitMaxVelocityY(vel, maxVel)
-  if (vel.y > maxVel) then
-    vel.y = math.max(maxVel)
-  elseif (vel.y < - maxVel) then
-    vel.y = math.max(- maxVel)
-  end
-  
-  return vel.y
-end
-
 function player.updatePlayer(dt)
   movePlayer(dt)
-  updateGroundCollider()
 
-  -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  -- DADBORD RéSOUDRE LA LIMITATION DE VéLOCITé MAX AVENT D'AJOUTER DE LA FRICTION !!
+  collisionModule.updateGroundCollider(player)
+
+  -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  -- FIRST RESOLVE VELOCITY MAX LIMIT BEFORE TO IMLEMENT FRICTION
   ---------------------------------------------------------------------------------------------
-  -- always add momentum friction except if grounded
-  frictionModule.addHorizontalFriction(player, player.friction.x, dt)
-  if(collisionModule.groundCollision(player.groundCollider)) then 
-    
-    
-  else
-    frictionModule.addVerticalFriction(player, player.friction.y, dt)
+  -- always add momentum friction 
+  frictionModule.addHorizontalFriction(player, player.friction.x)
+
+  if(not collisionModule.groundCollision(player.groundCollider)) then 
+    frictionModule.addVerticalFriction(player, player.friction.y)
     addGravity(dt)
   end
   
@@ -77,7 +54,7 @@ function movePlayer(dt)
   
   -- Adding velocity to player horizontal position
   
-  player.x = player.x + limitMaxVelocityX(player.velocity, player.maxVelocity)
+  player.x = player.x + velocityModule.limitMaxVelocityX(player.velocity, player.maxVelocity)
   -- check horitontal collision
   coll = collisionModule.collisionAABB(player)
   if coll then
@@ -95,7 +72,7 @@ function movePlayer(dt)
 
   -- Adding velocity to player vertical position
 
-  player.y = player.y + limitMaxVelocityY(player.velocity, player.maxVelocity)
+  player.y = player.y + velocityModule.limitMaxVelocityY(player.velocity, player.maxVelocity)
   -- check vertical collision
   coll = collisionModule.collisionAABB(player)
   if coll then

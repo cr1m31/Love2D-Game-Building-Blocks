@@ -28,9 +28,15 @@ function collisionModule.groundCollision(aa)
   return false
 end
 
+function collisionModule.updateGroundCollider(player)
+  player.groundCollider.x = player.x + player.width / 2 - (player.groundCollider.width / 2)
+  player.groundCollider.y = player.y + player.height
+end
+
 function collisionModule.drawColliders()
   for i, v in ipairs(tiles) do
-    -- love.graphics.rectangle("line", v.x, v.y, v.width, v.height)
+    love.graphics.setColor(1,0,0)
+    love.graphics.rectangle("line", v.x, v.y, v.width, v.height)
   end
 end
 
