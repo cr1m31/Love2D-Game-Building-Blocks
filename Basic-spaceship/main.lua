@@ -1,6 +1,4 @@
 io.stdout:setvbuf("no") -- disable output buffering to see debug text directly in output when running game
--- disable anti aliasing
-love.graphics.setDefaultFilter("nearest", "nearest", 1)
 
 love.window.setMode( 1024, 768)
 
