@@ -7,7 +7,7 @@ local collisionModule = require("collision")
 local gridModule = require("grid")
 
 function love.load()
-  gridModule.loadBuildedTiles()
+  gridModule.loadBuildedTiles(1) -- arg = grid number aka level number
 end
 
 function love.update(dt)
@@ -18,4 +18,12 @@ function love.draw()
   playerModule.drawPlayer()
   collisionModule.drawColliders()
   gridModule.drawTilesOnGrid()
+end
+
+
+function love.keypressed(key, scancode, isrepeat)
+	if key == "f" then
+		fullscreen = not fullscreen
+		love.window.setFullscreen(fullscreen, "exclusive")
+	end
 end
