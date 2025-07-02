@@ -20,14 +20,25 @@ function love.draw()
   mapTilesBuilderModule.drawTilesOnMap()
 end
 
-
+local currMapNum = 1
+local numberOfMaps = 2
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f" then
 		fullscreen = not fullscreen
 		love.window.setFullscreen(fullscreen, "exclusive")
 	end
 
-  if key == "m" then
-    mapTilesBuilderModule.loadBuiltTiles(2)
+  if key == "left" then
+    if(currMapNum > 1) then
+      currMapNum = currMapNum -1
+      mapTilesBuilderModule.loadBuiltTiles(currMapNum)
+    end
   end
+  if key == "right" then
+    if(currMapNum < numberOfMaps) then
+      currMapNum = currMapNum + 1
+      mapTilesBuilderModule.loadBuiltTiles(currMapNum)
+    end
+  end
+
 end

@@ -27,16 +27,23 @@ local function buildMapTileLocations(theMap)
 end
 
 function mapTilesBuilder.loadBuiltTiles(mapNumber)
-  -- Unload previous map module reference
-  currentMapModule = nil
+  -- Unload previous map module from package.loaded cache
+  local oldMapName = currentMapModule and currentMapModule._name
+  if oldMapName then
+    package.loaded[oldMapName] = nil
+  end
+
   builtTiles = {}
 
-  -- Dynamically require the new map module by filename ("map-1", "map-2", etc.)
-  currentMapModule = require("maps/map-" .. tostring(mapNumber))
+  local mapName = "maps/map-" .. tostring(mapNumber)
+  package.loaded[mapName] = nil  -- forcibly unload it to reload fresh
 
-  -- Build tile locations based on newly loaded map
+  currentMapModule = require(mapName)
+  currentMapModule._name = mapName  -- store the name so we can unload next time
+
   builtTiles = buildMapTileLocations(currentMapModule)
 end
+
 
 function mapTilesBuilder.getBuiltTilesInCollisions()
   return builtTiles
