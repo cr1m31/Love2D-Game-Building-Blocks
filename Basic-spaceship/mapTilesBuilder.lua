@@ -1,0 +1,57 @@
+local mapTilesBuilder = {}
+
+-- keep 32 pixels for cells to fit to screen
+local cell = {
+    width = 32,
+    height = 32,
+}
+
+local builtTiles = {}
+local currentMapModule = nil
+
+local function buildMapTileLocations(theMap)
+  local tiles = {}
+  for rowNum, row in ipairs(theMap) do
+    for columnNumber, tileValue in ipairs(row) do
+      if tileValue == 1 then -- add only tiles with value 1 of the map
+        table.insert(tiles, {
+          x = (columnNumber - 1) * cell.width + (theMap.x or 0),
+          y = (rowNum - 1) * cell.height + (theMap.y or 0),
+          width = cell.width,
+          height = cell.height,
+        })
+      end
+    end
+  end
+  return tiles
+end
+
+function mapTilesBuilder.loadBuiltTiles(mapNumber)
+  -- Unload previous map module reference
+  currentMapModule = nil
+  builtTiles = {}
+
+  -- Dynamically require the new map module by filename ("map-1", "map-2", etc.)
+  currentMapModule = require("maps/map-" .. tostring(mapNumber))
+
+  -- Build tile locations based on newly loaded map
+  builtTiles = buildMapTileLocations(currentMapModule)
+end
+
+function mapTilesBuilder.getBuiltTilesInCollisions()
+  return builtTiles
+end
+
+function mapTilesBuilder.drawTilesOnMap()
+  for _, tile in ipairs(builtTiles) do
+    love.graphics.setColor(0.7, 0.7, 0.7)
+    love.graphics.rectangle("fill", tile.x, tile.y, cell.width, cell.height)
+  end
+end
+
+-- Optional getter for the current map data (for collision checks, holes, etc)
+function mapTilesBuilder.getCurrentMap()
+  return currentMapModule
+end
+
+return mapTilesBuilder

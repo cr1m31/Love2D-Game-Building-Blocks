@@ -4,10 +4,10 @@ love.window.setMode( 1024, 768)
 
 local playerModule = require("player")
 local collisionModule = require("collision")
-local gridModule = require("grid")
+local mapTilesBuilderModule = require("mapTilesBuilder")
 
 function love.load()
-  gridModule.loadBuildedTiles(1) -- arg = grid number aka level number
+  mapTilesBuilderModule.loadBuiltTiles(1) -- arg = map number aka level number
 end
 
 function love.update(dt)
@@ -17,7 +17,7 @@ end
 function love.draw()
   playerModule.drawPlayer()
   collisionModule.drawColliders()
-  gridModule.drawTilesOnGrid()
+  mapTilesBuilderModule.drawTilesOnMap()
 end
 
 
@@ -26,4 +26,8 @@ function love.keypressed(key, scancode, isrepeat)
 		fullscreen = not fullscreen
 		love.window.setFullscreen(fullscreen, "exclusive")
 	end
+
+  if key == "m" then
+    mapTilesBuilderModule.loadBuiltTiles(2)
+  end
 end
