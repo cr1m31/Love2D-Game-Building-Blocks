@@ -15,10 +15,10 @@ local function buildMapTileLocations(theMap)
     for columnNumber, tileValue in ipairs(row) do
       if tileValue == 1 then -- add only tiles with value 1 of the map
         table.insert(tiles, {
-          x = (columnNumber - 1) * cell.width + (theMap.x or 0),
-          y = (rowNum - 1) * cell.height + (theMap.y or 0),
-          width = cell.width,
-          height = cell.height,
+          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x or 0),
+          y = (rowNum - 1) * theMap.cellHeight + (theMap.y or 0),
+          width = theMap.cellWidth,
+          height = theMap.cellHeight,
         })
       end
     end
@@ -52,7 +52,7 @@ end
 function mapTilesBuilder.drawTilesOnMap()
   for _, tile in ipairs(builtTiles) do
     love.graphics.setColor(0.7, 0.7, 0.7)
-    love.graphics.rectangle("fill", tile.x, tile.y, cell.width, cell.height)
+    love.graphics.rectangle("fill", tile.x, tile.y, currentMapModule.cellWidth, currentMapModule.cellHeight)
   end
 end
 

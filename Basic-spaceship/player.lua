@@ -4,6 +4,8 @@ local frictionModule = require("friction")
 
 local velocityModule = require("velocity")
 
+local mapTilesBuilder = require("mapTilesBuilder")
+
 local player = {
   x = 100,
   y = 350,
@@ -126,6 +128,12 @@ end
 
 function addGravity(dt)
  player.velocity.y = player.velocity.y + player.mass * dt
+end
+
+function spawnPlayer()
+  mapTilesBuilder.getCurrentMap()
+  player.x = location.x
+  player.y = location.y
 end
 
 function player.drawPlayer()
