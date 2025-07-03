@@ -183,18 +183,12 @@ end
 
 function player.checkPlayerTeleportAndSpawn()
   local isOnGate, nextMapNum = checkTeleport()
-
-  print("nextMapNum: " .. tostring(nextMapNum))
-
-
   if isOnGate and nextMapNum then
     mapTilesBuilder.loadBuiltTiles(nextMapNum)
     player.spawnPlayer()
   end
 
 end
-
-
 
 function player.drawPlayer()
 
