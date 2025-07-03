@@ -130,10 +130,30 @@ function addGravity(dt)
  player.velocity.y = player.velocity.y + player.mass * dt
 end
 
-function spawnPlayer()
-  mapTilesBuilder.getCurrentMap()
-  player.x = location.x
-  player.y = location.y
+function findSpawnLocation(map)
+  for rowNum, row in ipairs(map) do
+    for colNum, tileValue in ipairs(row) do
+      if tileValue == 115 then
+        return {
+          x = (colNum -1) * map.cellWidth,
+          y = (rowNum -1) * map.cellHeight,
+        }
+      end
+    end
+  end
+  return nil
+end
+
+function player.spawnPlayer()
+  local map =  mapTilesBuilder.getCurrentMap()
+  local spawnPos = findSpawnLocation(map)
+  if (spawnPos) then
+    player.x = spawnPos.x
+    player.y = spawnPos.y
+  else
+    player.x = 0
+    player.y = 0
+  end
 end
 
 function player.drawPlayer()

@@ -8,6 +8,7 @@ local mapTilesBuilderModule = require("mapTilesBuilder")
 
 function love.load()
   mapTilesBuilderModule.loadBuiltTiles(1) -- arg = map number aka level number
+  playerModule.spawnPlayer() -- will spawn player on current map location
 end
 
 function love.update(dt)
@@ -32,12 +33,14 @@ function love.keypressed(key, scancode, isrepeat)
     if(currMapNum > 1) then
       currMapNum = currMapNum -1
       mapTilesBuilderModule.loadBuiltTiles(currMapNum)
+      playerModule.spawnPlayer()
     end
   end
   if key == "right" then
     if(currMapNum < numberOfMaps) then
       currMapNum = currMapNum + 1
       mapTilesBuilderModule.loadBuiltTiles(currMapNum)
+      playerModule.spawnPlayer()
     end
   end
 
