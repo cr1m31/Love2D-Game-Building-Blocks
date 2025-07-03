@@ -13,6 +13,7 @@ end
 
 function love.update(dt)
   playerModule.updatePlayer(dt)
+  playerModule.checkPlayerTeleportAndSpawn()
 end
 
 function love.draw()

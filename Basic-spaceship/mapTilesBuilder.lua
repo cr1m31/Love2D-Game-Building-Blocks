@@ -1,15 +1,6 @@
 local mapTilesBuilder = {}
 
--- keep 32 pixels for cells to fit to screen
-local cell = {
-    width = 32,
-    height = 32,
-}
-
-local builtTiles = {}
-local currentMapModule = nil
-
-local function buildMapTileLocations(theMap)
+function buildMapTileLocations(theMap)
   local tiles = {}
   for rowNum, row in ipairs(theMap) do
     for columnNumber, tileValue in ipairs(row) do
@@ -25,6 +16,26 @@ local function buildMapTileLocations(theMap)
   end
   return tiles
 end
+
+function buildGateTileLocations(theMap)
+  local gates = {}
+  for rowNum, row in ipairs(theMap) do
+    for colNum, tileValue in ipairs(row) do
+      if tileValue == 103 then
+        table.insert(gates, {
+          x = (colNum -1) * theMap.cellWidth + (theMap.x or 0),
+          y = (rowNum -1) * theMap.cellHeight + (theMap.y or 0),
+          width = theMap.cellWidth,
+          height = theMap.cellHeight,
+        })
+      end
+    end
+  end
+  return gates
+end
+
+local builtTiles = {}
+local currentMapModule = nil
 
 function mapTilesBuilder.loadBuiltTiles(mapNumber)
   -- Unload previous map module from package.loaded cache
