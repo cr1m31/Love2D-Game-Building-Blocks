@@ -27,6 +27,19 @@ function collisionModule.groundCollision(aa)
   return false
 end
 
+function collisionModule.gatesCollisions(aa)
+  local gates = mapTilesBuilderModule.getBuiltTileGates()
+  for i, bb in ipairs(gates) do
+    if not (aa.x + aa.width < bb.x or 
+            aa.x > bb.x + bb.width or
+            aa.y + aa.height < bb.y or
+            aa.y > bb.y + bb.height) then 
+      return true
+    end
+  end
+  return false
+end
+
 function collisionModule.updateGroundCollider(player)
   player.groundCollider.x = player.x + player.width / 2 - (player.groundCollider.width / 2)
   player.groundCollider.y = player.y + player.height
