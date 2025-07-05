@@ -36,6 +36,7 @@ end
 
 local builtTiles = {}
 local currentMapModule = nil
+local builtGates = {}
 
 function mapTilesBuilder.loadBuiltTiles(mapNumber)
   -- Unload previous map module from package.loaded cache
@@ -45,6 +46,7 @@ function mapTilesBuilder.loadBuiltTiles(mapNumber)
   end
 
   builtTiles = {}
+  builtGates = {}
 
   local mapName = "maps/map-" .. tostring(mapNumber)
   package.loaded[mapName] = nil  -- forcibly unload it to reload fresh
@@ -53,11 +55,16 @@ function mapTilesBuilder.loadBuiltTiles(mapNumber)
   currentMapModule._name = mapName  -- store the name so we can unload next time
 
   builtTiles = buildMapTileLocations(currentMapModule)
+  builtGates = buildGateTileLocations(currentMapModule)
 end
 
 
 function mapTilesBuilder.getBuiltTilesInCollisions()
   return builtTiles
+end
+
+function mapTilesBuilder.getBuiltTileGates()
+  return builtGates
 end
 
 function mapTilesBuilder.drawTilesOnMap()

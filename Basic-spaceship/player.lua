@@ -158,7 +158,7 @@ end
 
 function checkTeleport()
   local map = mapTilesBuilder.getCurrentMap()
-  print("Current map nextMapNum:", map.nextMapNum)
+  
 
   local cellWidth = map.cellWidth
   local cellHeight = map.cellHeight
