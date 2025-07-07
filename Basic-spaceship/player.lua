@@ -20,7 +20,8 @@ local player = {
   mass = 4,
   groundCollider = {x = 0, y = 0, width = 30, height = 4},
   image = love.graphics.newImage("/images/front-ship-low-res.png"),
-  flameImage = love.graphics.newImage("/images/vertical-flame.png")
+  flameImage = love.graphics.newImage("/images/vertical-flame.png"),
+  spawnPoint = {x = 0, y = 0}
 }
 
 local coll = nil
@@ -144,15 +145,21 @@ function findSpawnLocation(map)
   return nil
 end
 
-function player.spawnPlayer(spawnToPortal, localtion)
+function player.spawnPlayer(firstMapPositionX, firstMapPositionY)
   local map =  mapTilesBuilder.getCurrentMap()
+  if (firstMapPositionX) then
+    player.x = firstMapPositionX
+    player.y = firstMapPositionY
+
+  else  
   local spawnPos = findSpawnLocation(map)
-  if (spawnPos) then
-    player.x = spawnPos.x
-    player.y = spawnPos.y
-  else
-    player.x = 0
-    player.y = 0
+    if (spawnPos) then
+      player.x = spawnPos.x
+      player.y = spawnPos.y
+    else
+      player.x = 0
+      player.y = 0
+    end
   end
 end
 
@@ -161,10 +168,13 @@ function player.checkPlayerTeleportAndSpawn()
     local nextMapNum = mapTilesBuilder.getCurrentMap().nextMapNum
     print("coll gate: ".. player.x)
 
+
     if nextMapNum then
       mapTilesBuilder.loadBuiltTiles(nextMapNum)
       player.spawnPlayer()
     end
+    
+
   end
 end
 

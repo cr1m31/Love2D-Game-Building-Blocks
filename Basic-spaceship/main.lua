@@ -9,7 +9,7 @@ local gatesNavigationModule = require("gatesNavigation")
 
 function love.load()
   mapTilesBuilderModule.loadBuiltTiles(1) -- arg = map number aka level number
-  playerModule.spawnPlayer() -- will spawn player on current map location
+  playerModule.spawnPlayer(80, 200) -- will spawn player on current map location
 end
 
 function love.update(dt)
