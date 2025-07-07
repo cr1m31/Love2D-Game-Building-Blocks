@@ -144,7 +144,7 @@ function findSpawnLocation(map)
   return nil
 end
 
-function player.spawnPlayer()
+function player.spawnPlayer(spawnToPortal, localtion)
   local map =  mapTilesBuilder.getCurrentMap()
   local spawnPos = findSpawnLocation(map)
   if (spawnPos) then
@@ -156,38 +156,16 @@ function player.spawnPlayer()
   end
 end
 
-function checkTeleport()
-  local map = mapTilesBuilder.getCurrentMap()
-  
+function player.checkPlayerTeleportAndSpawn()
+  if( collisionModule.gatesCollisions(player))then
+    local nextMapNum = mapTilesBuilder.getCurrentMap().nextMapNum
+    print("coll gate: ".. player.x)
 
-  local cellWidth = map.cellWidth
-  local cellHeight = map.cellHeight
-  local offsetX = map.x or 0
-  local offsetY = map.y or 0
-
-  local tileX = math.floor((player.x - offsetX) / cellWidth) + 1
-  local tileY = math.floor((player.y - offsetY) / cellHeight) + 1
-
-  if tileY >= 1 and tileY <= #map and
-     tileX >= 1 and tileX <= #(map[1]) then
-    local tileValue = map[tileY][tileX]
-
-    if tileValue == 103 then
-      print("Teleport triggered! Next map is " .. tostring(map.nextMapNum))
-      return true, map.nextMapNum
+    if nextMapNum then
+      mapTilesBuilder.loadBuiltTiles(nextMapNum)
+      player.spawnPlayer()
     end
   end
-
-  return false, nil
-end
-
-function player.checkPlayerTeleportAndSpawn()
-  local isOnGate, nextMapNum = checkTeleport()
-  if isOnGate and nextMapNum then
-    mapTilesBuilder.loadBuiltTiles(nextMapNum)
-    player.spawnPlayer()
-  end
-
 end
 
 function player.drawPlayer()

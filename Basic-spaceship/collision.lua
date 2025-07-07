@@ -34,10 +34,10 @@ function collisionModule.gatesCollisions(aa)
             aa.x > bb.x + bb.width or
             aa.y + aa.height < bb.y or
             aa.y > bb.y + bb.height) then 
-      return true
+      return true, bb
     end
   end
-  return false
+  return false, bb
 end
 
 function collisionModule.updateGroundCollider(player)
