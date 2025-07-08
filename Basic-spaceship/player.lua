@@ -131,13 +131,13 @@ function addGravity(dt)
  player.velocity.y = player.velocity.y + player.mass * dt
 end
 
-function findSpawnLocation(map, tileValue)
+function findSpawnLocation(map)
   for rowNum, row in ipairs(map) do
-    for colNum, tile in ipairs(row) do
-      if tile == tileValue then
+    for colNum, tileValue in ipairs(row) do
+      if tileValue == 115 then
         return {
-          x = (colNum - 1) * map.cellWidth,
-          y = (rowNum - 1) * map.cellHeight,
+          x = (colNum -1) * map.cellWidth,
+          y = (rowNum -1) * map.cellHeight,
         }
       end
     end
@@ -145,20 +145,15 @@ function findSpawnLocation(map, tileValue)
   return nil
 end
 
-function player.spawnPlayer(firstMapPositionX, firstMapPositionY, direction)
-  local map = mapTilesBuilder.getCurrentMap()
-
-  if firstMapPositionX then
+function player.spawnPlayer(firstMapPositionX, firstMapPositionY)
+  local map =  mapTilesBuilder.getCurrentMap()
+  if (firstMapPositionX) then
     player.x = firstMapPositionX
     player.y = firstMapPositionY
-  else
-    local tileToUse = 115  -- default spawn at 's'
-    if direction == "fromPrevious" then
-      tileToUse = 116  -- spawn at 't' if came from previous map
-    end
 
-    local spawnPos = findSpawnLocation(map, tileToUse)
-    if spawnPos then
+  else  
+  local spawnPos = findSpawnLocation(map)
+    if (spawnPos) then
       player.x = spawnPos.x
       player.y = spawnPos.y
     else
@@ -168,7 +163,6 @@ function player.spawnPlayer(firstMapPositionX, firstMapPositionY, direction)
   end
 end
 
-
 function player.checkPlayerTeleportAndSpawn()
   local hitPreviousMapGate, gateInside = collisionModule.previousMapGatesCollisions(player)
   local hitNextMapGate, gateOutside = collisionModule.nextMapGatesCollisions(player)
@@ -177,17 +171,17 @@ function player.checkPlayerTeleportAndSpawn()
     local previousMapNum = mapTilesBuilder.getCurrentMap().previousMapNum
     if previousMapNum then
       mapTilesBuilder.loadBuiltTiles(previousMapNum)
-      player.spawnPlayer(nil, nil, "fromNext")  -- came from next map, so spawn at 115
+      player.spawnPlayer() -- spawn at tile 115 or fallback
     end
   elseif hitNextMapGate then
     local nextMapNum = mapTilesBuilder.getCurrentMap().nextMapNum
     if nextMapNum then
       mapTilesBuilder.loadBuiltTiles(nextMapNum)
-      player.spawnPlayer(nil, nil, "fromPrevious") -- came from previous map, so spawn at 116
+      player.spawnPlayer()
     end
   end
-end
 
+end
 
 
 function player.drawPlayer()
