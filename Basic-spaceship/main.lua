@@ -5,7 +5,6 @@ love.window.setMode( 1024, 768)
 local playerModule = require("player")
 local collisionModule = require("collision")
 local mapTilesBuilderModule = require("mapTilesBuilder")
-local gatesNavigationModule = require("gatesNavigation")
 
 function love.load()
   mapTilesBuilderModule.loadBuiltTiles(1) -- arg = map number aka level number
@@ -21,11 +20,10 @@ function love.draw()
   playerModule.drawPlayer()
   collisionModule.drawColliders()
   mapTilesBuilderModule.drawTilesOnMap()
-  gatesNavigationModule.drawGates()
 end
 
 local currMapNum = 1
-local numberOfMaps = 2
+local numberOfMaps = 3
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f" then
 		fullscreen = not fullscreen
