@@ -4,6 +4,8 @@ love.window.setMode( 1024, 768)
 
 local playerModule = require("player")
 
+local mapManagerModule = require("mapManager")
+
 function love.load()
  
 end
@@ -14,4 +16,5 @@ end
 
 function love.draw()
   playerModule.drawPlayer()
+  mapManagerModule.drawMap()
 end

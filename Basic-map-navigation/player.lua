@@ -15,9 +15,7 @@ function movePlayer(dt)
   if love.keyboard.isDown("d") then
     player.x = player.x + player.speed * dt
   end
-
 end
-
 
 function playerModule.updatePlayer(dt)
   movePlayer(dt)
