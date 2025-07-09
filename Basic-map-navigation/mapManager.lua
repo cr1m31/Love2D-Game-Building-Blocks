@@ -12,20 +12,29 @@ function unloadMapPackageModule(mapModuleName)
     
 end
 
-function mapManagerModule.buildMap()
-    
+function mapManagerModule.buildMapTiles(theMap)
+    local tiles = {}
+  for rowNum, row in ipairs(theMap) do
+    for columnNumber, tileValue in ipairs(row) do
+      if tileValue == 1 then -- add only tiles with value 1 of the map
+        table.insert(tiles, {
+          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x),
+          y = (rowNum - 1) * theMap.cellHeight + (theMap.y),
+          width = theMap.cellWidth,
+          height = theMap.cellHeight,
+        })
+      end
+    end
+  end
+  return tiles
 end
 
+local builtTiles = mapManagerModule.buildMapTiles(currentLoadedMap)
+
 function mapManagerModule.drawMap()
-    for rowIndex, row  in ipairs(currentLoadedMap) do
-        for colIndex, cellValue in ipairs(row) do
-            if (cellValue == 1) then 
-                print(cellValue)
-                local cellX = currentLoadedMap.x + (colIndex -1) * currentLoadedMap.cellWidth
-                local cellY = currentLoadedMap.y + (rowIndex -1) * currentLoadedMap.cellHeight
-                love.graphics.rectangle("line", cellX, cellY, currentLoadedMap.cellWidth, currentLoadedMap.cellHeight)
-            end
-        end
+    
+    for i, tile in ipairs(builtTiles) do
+        love.graphics.rectangle("line", tile.x, tile.x, tile.width, tile.height)
     end
 end
 

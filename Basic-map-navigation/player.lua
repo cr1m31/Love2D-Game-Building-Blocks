@@ -2,7 +2,7 @@ local playerModule = {}
 
 local player = {
   x = 50,
-  y = 0,
+  y = 80,
   width = 40,
   height = 40,
   speed = 100,
