@@ -4,6 +4,8 @@ local frictionModule = require("friction")
 
 local velocityModule = require("velocity")
 
+local mapTilesBuilder = require("mapTilesBuilder")
+
 local player = {
   x = 100,
   y = 350,
@@ -18,6 +20,8 @@ local player = {
   mass = 4,
   groundCollider = {x = 0, y = 0, width = 30, height = 4},
   image = love.graphics.newImage("/images/front-ship-low-res.png"),
+  flameImage = love.graphics.newImage("/images/vertical-flame.png"),
+  spawnPoint = {x = 0, y = 0}
 }
 
 local coll = nil
@@ -127,6 +131,59 @@ function addGravity(dt)
  player.velocity.y = player.velocity.y + player.mass * dt
 end
 
+function findSpawnLocation(map)
+  for rowNum, row in ipairs(map) do
+    for colNum, tileValue in ipairs(row) do
+      if tileValue == 115 then
+        return {
+          x = (colNum -1) * map.cellWidth,
+          y = (rowNum -1) * map.cellHeight,
+        }
+      end
+    end
+  end
+  return nil
+end
+
+function player.spawnPlayer(firstMapPositionX, firstMapPositionY)
+  local map =  mapTilesBuilder.getCurrentMap()
+  if (firstMapPositionX) then
+    player.x = firstMapPositionX
+    player.y = firstMapPositionY
+
+  else  
+  local spawnPos = findSpawnLocation(map)
+    if (spawnPos) then
+      player.x = spawnPos.x
+      player.y = spawnPos.y
+    else
+      player.x = 0
+      player.y = 0
+    end
+  end
+end
+
+function player.checkPlayerTeleportAndSpawn()
+  local hitPreviousMapGate, gateInside = collisionModule.previousMapGatesCollisions(player)
+  local hitNextMapGate, gateOutside = collisionModule.nextMapGatesCollisions(player)
+
+  if hitPreviousMapGate then
+    local previousMapNum = mapTilesBuilder.getCurrentMap().previousMapNum
+    if previousMapNum then
+      mapTilesBuilder.loadBuiltTiles(previousMapNum)
+      player.spawnPlayer() -- spawn at tile 115 or fallback
+    end
+  elseif hitNextMapGate then
+    local nextMapNum = mapTilesBuilder.getCurrentMap().nextMapNum
+    if nextMapNum then
+      mapTilesBuilder.loadBuiltTiles(nextMapNum)
+      player.spawnPlayer()
+    end
+  end
+
+end
+
+
 function player.drawPlayer()
 
   love.graphics.setColor(1, 0.5, 1)
@@ -134,8 +191,11 @@ function player.drawPlayer()
   
   love.graphics.setColor(1, 1, 1)
 
-  love.graphics.draw(player.image, player.x + player.width / 2 - player.image:getWidth() / 2, player.y - player.height)
-
+  --love.graphics.draw(player.image, player.x + player.width / 2 - player.image:getWidth() / 2, player.y - player.height)
+  local flameOffset = {x = - 23, y = 38}
+  if(player.velocity.y < 0) then
+    --love.graphics.draw(player.flameImage, player.x + flameOffset.x , player.y + flameOffset.y,0,0.24,0.24)
+  end
   love.graphics.print("coll: " .. tostring(coll), 200, 250)
 
   love.graphics.print("velX: " .. player.velocity.x .. " velY: " .. player.velocity.y, 200, 200)
