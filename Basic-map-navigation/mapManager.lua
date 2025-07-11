@@ -75,6 +75,10 @@ function mapManagerModule.getCurrentMap()
   end
 end
 
+function mapManagerModule.getBuiltTiles()
+  return builtTiles
+end
+
 function mapManagerModule.drawMap()
     
     for i, tile in ipairs(builtTiles) do
