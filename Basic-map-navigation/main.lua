@@ -6,22 +6,26 @@ local playerModule = require("player")
 
 local mapManagerModule = require("mapManager")
 
-local doorsModule = require("doors")
-
-local collisionModule = require("collision")
 
 function love.load()
-
+  mapManagerModule.loadMapPackageAndBuildTiles("map-1")
 end
 
 function love.update(dt)
   playerModule.updatePlayer(dt)
+
 end
 
 function love.draw()
   playerModule.drawPlayer()
   mapManagerModule.drawMap()
+end
 
-  doorsModule.drawDoors()
-
+function love.keypressed(key, scancode, isrepeat)
+  if(key == "right") then
+    mapManagerModule.loadMapPackageAndBuildTiles(mapManagerModule.getCurrentMap().nextMap)
+  end
+  if(key == "left") then
+    mapManagerModule.loadMapPackageAndBuildTiles(mapManagerModule.getCurrentMap().previousMap)
+  end
 end

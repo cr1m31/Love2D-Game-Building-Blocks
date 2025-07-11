@@ -1,8 +1,5 @@
 local playerModule = {}
 
-local collisionModule = require("collision")
-local doorsModule = require("doors")
-
 local player = {
   x = 50,
   y = 80,
@@ -33,17 +30,8 @@ function movePlayer(dt)
 
 end
 
-function checkCollisionWithDoors()
-  for doorNum, door in ipairs(doorsModule.getDoors()) do
-    if(collisionModule.collisionAABB(player, door )) then
-      print("door coll")
-    end
-  end
-end
-
 function playerModule.updatePlayer(dt)
   movePlayer(dt)
-  checkCollisionWithDoors()
 end
 
 function playerModule.drawPlayer()
