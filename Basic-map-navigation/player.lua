@@ -49,6 +49,8 @@ end
 
 function playerModule.updatePlayer(dt)
   movePlayer(dt)
+  checkPlayerCollisionWithEntyGates()
+  checkPlayerCollisionWithExitGates()
   
 end
 
@@ -59,6 +61,45 @@ function checkPlayerCollisions()
     end
   end
   return false
+end
+
+function checkPlayerCollisionWithEntyGates()
+  for entryGateNum, entryGate in ipairs(mapManagerModule.getEntryGateTiles()) do
+    if (collisionModule.collisionAABB(player, entryGate)) then
+      teleportPlayerToPreviousMap()
+      print("coll with entry gate")
+    end
+  end
+end
+
+function checkPlayerCollisionWithExitGates()
+  for exitGateNum, exitGate in ipairs(mapManagerModule.getExitGateTiles()) do
+    if (collisionModule.collisionAABB(player, exitGate)) then
+      teleportPlayerToNextMap()
+      print("coll with exit gate")
+    end
+  end
+end
+
+function teleportPlayerToPreviousMap()
+  if(mapManagerModule.getCurrentMap().previousMap)then
+    mapManagerModule.loadMapPackageAndBuildTiles(mapManagerModule.getCurrentMap().previousMap)
+    if( mapManagerModule.getExitSpawnPoints()) then
+      player.x = mapManagerModule.getExitSpawnPoints()[1].x
+      player.y = mapManagerModule.getExitSpawnPoints()[1].y
+    end
+  end
+end
+
+function teleportPlayerToNextMap()
+  if(mapManagerModule.getCurrentMap().nextMap) then
+    print("mapManagerModule.getCurrentMap().nextMap" .. mapManagerModule.getCurrentMap().nextMap)
+    mapManagerModule.loadMapPackageAndBuildTiles(mapManagerModule.getCurrentMap().nextMap)
+    if (mapManagerModule.getEntrySpawnPoints()) then
+      player.x = mapManagerModule.getEntrySpawnPoints()[1].x
+      player.y = mapManagerModule.getEntrySpawnPoints()[1],y
+    end
+  end
 end
 
 function playerModule.drawPlayer()

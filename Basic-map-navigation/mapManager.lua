@@ -18,6 +18,8 @@ function mapManagerModule.buildMapTiles(theMap)
     local tiles = {}
     local entryGates = {}
     local exitGates = {}
+    local entrySpawners = {}
+    local exitSpawners = {}
   for rowNum, row in ipairs(theMap) do
     for columnNumber, tileValue in ipairs(row) do
       if tileValue == 1 then -- add only tiles with value 1 of the map
@@ -47,6 +49,24 @@ function mapManagerModule.buildMapTiles(theMap)
         })
       end
 
+      if tileValue == 115 then
+        table.insert(entrySpawners, {
+          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x),
+          y = (rowNum - 1) * theMap.cellHeight + (theMap.y),
+          width = theMap.cellWidth,
+          height = theMap.cellHeight,
+        })
+      end
+
+      if tileValue == 114 then
+        table.insert(exitSpawners, {
+          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x),
+          y = (rowNum - 1) * theMap.cellHeight + (theMap.y),
+          width = theMap.cellWidth,
+          height = theMap.cellHeight,
+        })
+      end
+
     end
   end
   return tiles, entryGates, exitGates
@@ -56,12 +76,13 @@ end
 local builtTiles = {}
 local entryGates = {}
 local exitGates = {}
+local entrySpawners = {}
+local exitSpawners = {}
 
 function mapManagerModule.loadMapPackageAndBuildTiles(mapName)
   local mapsDir = "maps/"
   currentLoadedMap = loadMapPackageModule(mapsDir .. mapName)
-  builtTiles, entryGates, exitGates = mapManagerModule.buildMapTiles(currentLoadedMap)
-
+  builtTiles, entryGates, exitGates, entrySpawners, exitSpawners = mapManagerModule.buildMapTiles(currentLoadedMap)
   if currentLoadedMap.previousMap ~= nil then
     unloadMapPackageModule(mapsDir .. currentLoadedMap.previousMap)
   end
@@ -77,6 +98,22 @@ end
 
 function mapManagerModule.getBuiltTiles()
   return builtTiles
+end
+
+function mapManagerModule.getEntryGateTiles()
+  return entryGates
+end
+
+function mapManagerModule.getExitGateTiles()
+  return exitGates
+end
+
+function mapManagerModule.getEntrySpawnPoints()
+  return entrySpawners
+end
+
+function mapManagerModule.getExitSpawnPoints()
+  return exitSpawners
 end
 
 function mapManagerModule.drawMap()
