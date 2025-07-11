@@ -6,8 +6,12 @@ local playerModule = require("player")
 
 local mapManagerModule = require("mapManager")
 
+local doorsModule = require("doors")
+
+local collisionModule = require("collision")
+
 function love.load()
- 
+
 end
 
 function love.update(dt)
@@ -17,4 +21,7 @@ end
 function love.draw()
   playerModule.drawPlayer()
   mapManagerModule.drawMap()
+
+  doorsModule.drawDoors()
+
 end

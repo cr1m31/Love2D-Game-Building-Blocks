@@ -34,7 +34,7 @@ local builtTiles = mapManagerModule.buildMapTiles(currentLoadedMap)
 function mapManagerModule.drawMap()
     
     for i, tile in ipairs(builtTiles) do
-        love.graphics.rectangle("line", tile.x, tile.x, tile.width, tile.height)
+        love.graphics.rectangle("line", tile.x, tile.y, tile.width, tile.height)
     end
 end
 
