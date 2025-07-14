@@ -10,9 +10,7 @@ local gateManagerModule = require("gateManager")
 
 
 function love.load()
-  mapManagerModule.loadMapPackageAndBuildTiles("map-3")
-
-  gateManagerModule.loadGates()
+  mapManagerModule.loadMapPackageAndBuildTiles("map-1")
 end
 
 function love.update(dt)

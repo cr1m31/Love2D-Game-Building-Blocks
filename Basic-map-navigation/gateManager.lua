@@ -1,29 +1,21 @@
 local gateManagerModule = {}
 local mapManagerModule = require("mapManager")
+local collisionModule = require("collision")
 
-function gateManagerModule.loadGates()
-    for k, v in pairs(mapManagerModule.getCurrentMap().gates) do
-        print("Gate: ", k, " x:", v.x, " Y:", v.y)
+function gateManagerModule.checkGateCollision(player)
+    for gateName, gate in pairs(mapManagerModule.getCurrentMap().gates) do
+        if collisionModule.collisionAABB(player, gate) then
+            return gateName, gate
+        end
     end
+    return nil
 end
 
 function gateManagerModule.drawGates()
-    local gates = mapManagerModule.getCurrentMap().gates
-    local map = mapManagerModule.getCurrentMap().map
-    local gateWidth = nil
-    local gateHeight = nil
-    for k, v in pairs(gates) do
-        if (v.targetGate == "east" or v.targetGate == "west") then
-            gateWidth = map.cellWidth
-            gateHeight = map.cellHeight * 3
-        else
-            gateWidth = map.cellWidth * 3
-            gateHeight = map.cellHeight
-        end
-        
-        love.graphics.rectangle("line", v.x * map.cellWidth, v.y * map.cellHeight, gateWidth, gateHeight)
+    for name, gate in pairs(mapManagerModule.getCurrentMap().gates) do
+        love.graphics.setColor(1,0,0)
+        love.graphics.rectangle("line", gate.x, gate.y, gate.width, gate.height)
     end
-    
 end
 
 return gateManagerModule
