@@ -6,9 +6,13 @@ local playerModule = require("player")
 
 local mapManagerModule = require("mapManager")
 
+local gateManagerModule = require("gateManager")
+
 
 function love.load()
-  mapManagerModule.loadMapPackageAndBuildTiles("map-1")
+  mapManagerModule.loadMapPackageAndBuildTiles("map-3")
+
+  gateManagerModule.loadGates()
 end
 
 function love.update(dt)
@@ -19,13 +23,7 @@ end
 function love.draw()
   playerModule.drawPlayer()
   mapManagerModule.drawMap()
-end
 
-function love.keypressed(key, scancode, isrepeat)
-  if(key == "right") then
-    mapManagerModule.loadMapPackageAndBuildTiles(mapManagerModule.getCurrentMap().nextMap)
-  end
-  if(key == "left") then
-    mapManagerModule.loadMapPackageAndBuildTiles(mapManagerModule.getCurrentMap().previousMap)
-  end
+
+  gateManagerModule.drawGates()
 end

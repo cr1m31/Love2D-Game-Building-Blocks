@@ -8,83 +8,37 @@ end
 local currentLoadedMap = nil
 
 function unloadMapPackageModule(mapModuleName)
-  if(mapModuleName == nil) then
+  if mapModuleName == nil then
   else
     package.loaded[mapModuleName] = nil
   end
 end
 
 function mapManagerModule.buildMapTiles(theMap)
-    local tiles = {}
-    local entryGates = {}
-    local exitGates = {}
-    local entrySpawners = {}
-    local exitSpawners = {}
-  for rowNum, row in ipairs(theMap) do
+  local tiles = {}
+  for rowNum, row in ipairs(theMap.tiles) do
     for columnNumber, tileValue in ipairs(row) do
-      if tileValue == 1 then -- add only tiles with value 1 of the map
+      if tileValue == 1 then
         table.insert(tiles, {
-          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x),
-          y = (rowNum - 1) * theMap.cellHeight + (theMap.y),
-          width = theMap.cellWidth,
-          height = theMap.cellHeight,
+          x = (columnNumber - 1) * theMap.map.cellWidth + theMap.map.x,
+          y = (rowNum - 1) * theMap.map.cellHeight + theMap.map.y,
+          width = theMap.map.cellWidth,
+          height = theMap.map.cellHeight,
         })
       end
-
-      if tileValue == 101 then -- add only entry gates with value 101 of the map
-        table.insert(entryGates, {
-          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x),
-          y = (rowNum - 1) * theMap.cellHeight + (theMap.y),
-          width = theMap.cellWidth,
-          height = theMap.cellHeight,
-        })
-      end
-
-      if tileValue == 120 then -- add only exit gates with value 120 of the map
-        table.insert(exitGates, {
-          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x),
-          y = (rowNum - 1) * theMap.cellHeight + (theMap.y),
-          width = theMap.cellWidth,
-          height = theMap.cellHeight,
-        })
-      end
-
-      if tileValue == 115 then
-        table.insert(entrySpawners, {
-          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x),
-          y = (rowNum - 1) * theMap.cellHeight + (theMap.y),
-          width = theMap.cellWidth,
-          height = theMap.cellHeight,
-        })
-      end
-
-      if tileValue == 114 then
-        table.insert(exitSpawners, {
-          x = (columnNumber - 1) * theMap.cellWidth + (theMap.x),
-          y = (rowNum - 1) * theMap.cellHeight + (theMap.y),
-          width = theMap.cellWidth,
-          height = theMap.cellHeight,
-        })
-      end
-
     end
   end
-  return tiles, entryGates, exitGates
+  return tiles
 end
 
-
 local builtTiles = {}
-local entryGates = {}
-local exitGates = {}
-local entrySpawners = {}
-local exitSpawners = {}
 
 function mapManagerModule.loadMapPackageAndBuildTiles(mapName)
   local mapsDir = "maps/"
   currentLoadedMap = loadMapPackageModule(mapsDir .. mapName)
-  builtTiles, entryGates, exitGates, entrySpawners, exitSpawners = mapManagerModule.buildMapTiles(currentLoadedMap)
-  if currentLoadedMap.previousMap ~= nil then
-    unloadMapPackageModule(mapsDir .. currentLoadedMap.previousMap)
+  builtTiles = mapManagerModule.buildMapTiles(currentLoadedMap)
+  if currentLoadedMap.map.previousMap ~= nil then
+    unloadMapPackageModule(mapsDir .. currentLoadedMap.map.previousMap)
   end
 end
 
@@ -100,38 +54,10 @@ function mapManagerModule.getBuiltTiles()
   return builtTiles
 end
 
-function mapManagerModule.getEntryGateTiles()
-  return entryGates
-end
-
-function mapManagerModule.getExitGateTiles()
-  return exitGates
-end
-
-function mapManagerModule.getEntrySpawnPoints()
-  return entrySpawners
-end
-
-function mapManagerModule.getExitSpawnPoints()
-  return exitSpawners
-end
-
 function mapManagerModule.drawMap()
-    
-    for i, tile in ipairs(builtTiles) do
-        love.graphics.rectangle("fill", tile.x, tile.y, tile.width, tile.height)
-    end
-
-    for entryGateNum, entryGate in ipairs(entryGates) do
-      love.graphics.setColor(0,1,0)
-      love.graphics.rectangle("line", entryGate.x, entryGate.y, entryGate.width, entryGate.height)
-    end
-
-    for exiGateNum, exitGate in ipairs(exitGates) do
-      love.graphics.setColor(0,1,1)
-      love.graphics.rectangle("line", exitGate.x, exitGate.y, exitGate.width, exitGate.height)
-    end
+  for i, tile in ipairs(builtTiles) do
+    love.graphics.rectangle("line", tile.x, tile.y, tile.width, tile.height)
+  end
 end
-
 
 return mapManagerModule

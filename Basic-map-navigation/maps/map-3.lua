@@ -4,7 +4,7 @@ return {
     y = 0,
     cellWidth = 32,
     cellHeight = 32,
-    previousMap = nil
+    previousMap = "map-2"
   },
   
   tiles = {
@@ -14,13 +14,13 @@ return {
     {1,0,0,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,1},
     {1,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,1,0,1},
     {1,1,1,1,1,1,1,1,1,1},
   },
   
   gates = {
-    east = {x = 8, y = 2, targetMap = "map-2", targetGate = "west" }
+    north = {x = 4, y = 1, targetMap = "map-2", targetGate = "south" }
   }
-
+  
 }
 
