@@ -11,7 +11,7 @@ local player = {
   y = 80,
   width = 40,
   height = 40,
-  speed = 300,
+  speed = 600,
 }
 
 function playerModule.loadPlayer()
