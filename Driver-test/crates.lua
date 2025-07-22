@@ -1,0 +1,86 @@
+local cratesModule = {}
+
+
+
+crate = love.graphics.newImage("Images/crate-low.png")
+
+
+local backgroundMod = require("background")
+
+local particlesMod = require("particles")
+
+local counter = 0
+minCounterToSpawnRock = 0
+local maxCounterToSpawnRock = 3
+
+local rockList = {}
+
+function rockModule.createRock(pX, pY)
+    local crate = {
+        x = pX,
+        y = pY,
+        image = crate, 
+
+        height = 0, 
+        width = 0
+    }
+
+    
+    crate.image = crate
+    
+
+    rock.height = rock.image:getHeight()
+    rock.width = rock.image:getWidth()
+
+    table.insert(rockList, rock)
+    return rock
+end
+
+
+function rockModule.checkIfRockIsOffScreen()
+    for i, v in ipairs(rockList) do
+        if v.y > screenHeight then
+            table.remove(rockList, i)
+        end
+    end
+end
+
+function rockModule.moveRocks(dt)
+    for i, v in ipairs(rockList) do
+        v.y = v.y + backgroundMod.getBackground().scrollingSpeed * dt
+    end
+end
+
+function rockModule.checkRockCollision(a)
+    for i, v in ipairs(rockList) do
+        if a.x < v.x + v.width and
+            a.x + a.width > v.x and
+            a.y < v.y + v.height and
+            a.y + a.height > v.y then
+
+                table.remove(rockList, i)
+
+                particlesMod.loopCreate(10, v.x, v.y, 0.5, rock10)                
+        end
+    end
+end
+
+function rockModule.rockSpawner(dt)
+    counter = counter + dt
+
+    if( counter >= math.random(minCounterToSpawnRock, maxCounterToSpawnRock) ) then
+        rockModule.createRock(math.random(135, screenWidth / 1.17), -50, "rock10")
+        counter = 0
+    end
+
+end
+
+function rockModule.draw()
+    for i, v in ipairs(rockList) do
+        love.graphics.draw(v.image, v.x, v.y, 0, 1, 1, 1, 1)
+    end
+end
+
+
+
+return cratesModule
