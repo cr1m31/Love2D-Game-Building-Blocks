@@ -29,7 +29,8 @@ end
 
 function love.draw()
   playerModule.drawPlayer()
-  mapManagerModule.drawMap()
+  mapManagerModule.drawMapTiles()
+  mapManagerModule.drawCollisionTiles()
   gateManagerModule.drawGates()
 
   -- debug processing

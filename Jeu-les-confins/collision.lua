@@ -15,7 +15,7 @@ function collisionModule.collisionAABB(a,b)
 end
 
 function collisionModule.checkPlayerCollisions(player)
-  for _, tile in ipairs(mapManagerModule.getBuiltTiles()) do
+  for _, tile in ipairs(mapManagerModule.getBuiltCollisionTiles()) do
     if (collisionModule.collisionAABB(player, tile)) then 
       return true, tile
     end
