@@ -24,8 +24,11 @@ Voici des exemples de dossiers que vous trouverez :
 
 * **`Basic-collision`** : Contient un jeu de base illustrant les collisions AABB (Axis-Aligned Bounding Box).
 * **`Basic-collision-with-velocity`** : Basé sur `Basic-collision`, cet exemple ajoute la vélocité du joueur et adapte la détection des collisions pour une interaction plus réaliste.
+* **`Basic-little-platformer`** : Petit jeu avec des mouvements du joueur utilisant la vélocité pour la physique. **Attention**, la vitesse des mouvements peut varier selon l'ordinateur exécutant ce code. La friction n'a pas de correction du delta time et la technique du fixed step utilisée dans le jeu Platformer-with-fixed-step-and-asymmetric-jumps.
+* **`Basic-map-navigation`** : Cartes (maps) de niveaux de jeu fixes (une carte par écran) avec des portails pour naviguer entre les cartes et dans les deux sens. Séparation du code des portails des tuiles de collision dans les fichiers (maps) permettant de géer les portails et tuiles séparément. 
 * **`Basic-space-invaders-like`** : Un mini-jeu de tir vertical pour démontrer des mécaniques de gameplay simples.
 * **`Driver-test`** : Un petit jeu de conduite incluant le défilement continu du décor, des collisions, et des effets de particules. (Note : Ce jeu a été en grande partie développé avec l'aide de ChatGPT.)
+* **`Platformer-with-fixed-step-and-asymmetric-jumps`** : Jeu recommencé depuis le début et emprunt de bouts de code des autres dossiers. Petit jeu de plateforme avec des niveaux de jeu fixes et navigation entre les niveaux. Ajout de la vélocité pour les mouvements du joueur, collisions, détection du sol, sauts asymétriques (monté plus lente que la descente), coyote time, et des réparations liées aux fonctionnalités ajoutées etc.
 
 ---
 
