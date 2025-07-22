@@ -28,8 +28,8 @@ Voici des exemples de dossiers que vous trouverez :
 * **`Basic-map-navigation`** : Cartes (maps) de niveaux de jeu fixes (une carte par écran) avec des portails pour naviguer entre les cartes et dans les deux sens. Séparation du code des portails des tuiles de collision dans les fichiers (maps) permettant de géer les portails et tuiles séparément. 
 * **`Basic-space-invaders-like`** : Un mini-jeu de tir vertical pour démontrer des mécaniques de gameplay simples.
 * **`Driver-test`** : Un petit jeu de conduite incluant le défilement continu du décor, des collisions, et des effets de particules. (Note : Ce jeu a été en grande partie développé avec l'aide de ChatGPT.)
-* **`Platformer-with-fixed-step-and-asymmetric-jumps`** : Jeu recommencé depuis le début et emprunt de bouts de code des autres dossiers. Petit jeu de plateforme avec des niveaux de jeu fixes et navigation entre les niveaux. Ajout de la vélocité pour les mouvements du joueur, collisions, détection du sol, sauts asymétriques (monté plus lente que la descente), coyote time, et des réparations liées aux fonctionnalités ajoutées etc.
 * **`Jeu les confins ...`** : Basé sur le code du jeu "Platformer-with-fixed-step-and-asymmetric-jumps". Commencer à tester les mouvements de la physique du jeu et de les comparer sur diverses machines. Continuer d'ajouter des nouvelles fonctionnalités selon un thème et une histoire et ajouter des éléments graphiques plus fidèles à la vision du jeu.
+* **`Platformer-with-fixed-step-and-asymmetric-jumps`** : Jeu recommencé depuis le début et emprunt de bouts de code des autres dossiers. Petit jeu de plateforme avec des niveaux de jeu fixes et navigation entre les niveaux. Ajout de la vélocité pour les mouvements du joueur, collisions, détection du sol, sauts asymétriques (monté plus lente que la descente), coyote time, et des réparations liées aux fonctionnalités ajoutées etc.
 
 ---
 
