@@ -1,29 +1,33 @@
-io.stdout:setvbuf("no") -- See output immediately
+io.stdout:setvbuf("no")
 love.window.setMode(1024, 768)
 love.graphics.setDefaultFilter("nearest", "nearest")
 
-local spritesheetManagerModule = require("spritesheetManager")
+local spritesheetManager = require("spritesheetManager")
+local mapGrid = require("mapGrid")
 
 function love.load()
-    spritesheetManagerModule.getTiles()
+    spritesheetManager.getTiles()
+    mapGrid.load()
 end
 
 function love.update(dt)
-    spritesheetManagerModule.updateDrag()
+    -- nothing for now
 end
 
 function love.draw()
-    spritesheetManagerModule.drawEntireSpriteSheet()
+    mapGrid.draw(love.graphics.newImage("spritesheets/spritesheet.png"))
+    spritesheetManager.drawEntireSpriteSheet()
 end
 
 function love.mousepressed(x, y, button)
     if button == 1 then
-        spritesheetManagerModule.startDrag(x, y)
-    end
-end
-
-function love.mousereleased(x, y, button)
-    if button == 1 then
-        spritesheetManagerModule.stopDrag()
+        -- First check if clicked on spritesheet
+        local selected = spritesheetManager.selectTileAt(x, y)
+        if not selected then
+            local quad = spritesheetManager.getSelectedQuad()
+            if quad then
+                mapGrid.placeTile(x, y, quad)
+            end
+        end
     end
 end
