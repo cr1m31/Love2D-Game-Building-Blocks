@@ -36,7 +36,7 @@ function serializeMapDataModule.exportMapToFile(filename, texturePath)
     end
 
     local tileGrid = mapGrid.getGridData()
-    local collisionGrid = flatCollisionMapFromTileGrid(tileGrid)
+    local collisionGrid = mapGrid.getCollisionGrid()
 
     local mapTable = "return {\n" ..
         "  texturePath = \"" .. texturePath .. "\",\n" ..
