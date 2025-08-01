@@ -3,12 +3,13 @@ io.stdout:setvbuf("no") -- disable output buffering to see debug text directly i
 
 love.window.setMode( 1024, 768)
 
-local buttonsModule = require("buttons")
 local mouseHandlerModule = require("mouseHandler")
 local editorMenuModule = require("editorMenu")
+local dragBoxTestModule = require("dragBoxTest")
+
 
 function love.load()
-    buttonsModule.createButtonsAtLoading()
+    editorMenuModule.createButtonsAtLoading()
 end
 
 
@@ -17,11 +18,17 @@ function love.update()
 end
 
 function love.draw()
-    buttonsModule.drawButtons()
-    editorMenuModule.drawMenu()
+    editorMenuModule.drawEditorPanel()
+    editorMenuModule.drawButtons()
+
+    dragBoxTestModule.drawBox()
 end
 
 
 function love.mousepressed(x, y, button, istouch)
    mouseHandlerModule.loveMousePressed(x, y, button)
+end
+
+function love.mousemoved( x, y, dx, dy, istouch )
+	mouseHandlerModule.loveMouseMoved(x, y, dx, dy)
 end
