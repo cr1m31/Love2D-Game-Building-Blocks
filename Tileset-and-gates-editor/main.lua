@@ -5,6 +5,7 @@ love.window.setMode( 1024, 768)
 
 local buttonsModule = require("buttons")
 local mouseHandlerModule = require("mouseHandler")
+local editorMenuModule = require("editorMenu")
 
 function love.load()
     buttonsModule.createButtonsAtLoading()
@@ -17,6 +18,7 @@ end
 
 function love.draw()
     buttonsModule.drawButtons()
+    editorMenuModule.drawMenu()
 end
 
 
