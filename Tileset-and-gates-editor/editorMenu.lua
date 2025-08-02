@@ -10,41 +10,21 @@ local menuPanel = {
 }
 
 local menuButtons = {
-    tilesetEditor = {
-        x = 0,
-        y = 0,
-        width = 0,
-        height = 0,
-    },
-    gateEditor = {
-        x = 0,
-        y = 0,
-        width = 0,
-        height = 0,
-    },
-    saveButton = {
-        x = 0, 
-        y = 0,
-        width = 0,
-        height = 0,
-    },
-    loadButton = {
-        x = 0,
-        y = 0,
-        width = 0,
-        height = 0,
-    }
+    tilesetEditor = { x = 0, y = 0, width = 0, height = 0 },
+    gateEditor = { x = 0, y = 0, width = 0, height = 0 },
+    saveButton = { x = 0, y = 0, width = 0, height = 0 },
+    loadButton = { x = 0, y = 0, width = 0, height = 0 }
 }
 
-local buttonOrder ={
+local buttonOrder = {
     "tilesetEditor",
     "gateEditor",
     "saveButton",
     "loadButton",
-} 
+}
 
 function setButtonsDimensions(width, height)
-    for name, button in pairs(menuButtons) do
+    for _, button in pairs(menuButtons) do
         button.width = width
         button.height = height
     end
@@ -60,24 +40,30 @@ function attachButtonsToMenuPanel()
     end
 end
 
-function checkButtonClicks()
+-- Unified function to check clicks and handle button actions
+function checkButtons()
+    local clickedOnAny = false
     for _, name in ipairs(buttonOrder) do
         local button = menuButtons[name]
         if mouseHandler.checkIfMouseClickedInRectangleAndIsDown(button) then
             print("Button clicked: " .. name)
-            -- Trigger button action here, like:
+            -- Add button-specific actions here, e.g.:
             -- if name == "saveButton" then saveGame() end
+            clickedOnAny = true
         end
     end
+    return clickedOnAny
 end
 
 function editorMenuModule.update(dt)
-    mouseHandler.drag(menuPanel)
     attachButtonsToMenuPanel()
-    checkButtonClicks()
+
+    if not checkButtons() then
+        mouseHandler.drag(menuPanel)
+    end
 end
 
-function drawButtons()
+local function drawButtons()
     for _, name in ipairs(buttonOrder) do
         local button = menuButtons[name]
         love.graphics.setColor(0.5, 0.5, 0.5)
