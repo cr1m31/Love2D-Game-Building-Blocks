@@ -40,26 +40,25 @@ function attachButtonsToMenuPanel()
     end
 end
 
--- Unified function to check clicks and handle button actions
+-- Check if any button was clicked (only if not dragging)
 function checkButtons()
-    local clickedOnAny = false
     for _, name in ipairs(buttonOrder) do
         local button = menuButtons[name]
-        if mouseHandler.checkIfMouseClickedInRectangleAndIsDown(button) then
+        if mouseHandler.checkIfMouseReleasedInRectangle(button) then
             print("Button clicked: " .. name)
-            -- Add button-specific actions here, e.g.:
-            -- if name == "saveButton" then saveGame() end
-            clickedOnAny = true
+            -- Add button-specific actions here
         end
     end
-    return clickedOnAny
 end
 
 function editorMenuModule.update(dt)
     attachButtonsToMenuPanel()
 
-    if not checkButtons() then
-        mouseHandler.drag(menuPanel)
+    mouseHandler.drag(menuPanel)
+
+    -- Only process buttons when not dragging
+    if not mouseHandler.isDragging() then
+        checkButtons()
     end
 end
 
@@ -69,7 +68,7 @@ local function drawButtons()
         love.graphics.setColor(0.5, 0.5, 0.5)
         love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
         love.graphics.setColor(1, 1, 1)
-        love.graphics.print(name, button.x + 5, button.y + 5) -- small padding for text
+        love.graphics.print(name, button.x + 5, button.y + 5)
     end
 end
 
