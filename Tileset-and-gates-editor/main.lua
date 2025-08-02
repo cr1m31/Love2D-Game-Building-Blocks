@@ -7,7 +7,7 @@ local mouseHandlerModule = require("mouseHandler")
 local editorMenuModule = require("editorMenu") 
 
 function love.load()
-
+    
 end
 
 
@@ -17,6 +17,10 @@ end
 
 function love.draw()
     editorMenuModule.drawMenu()
+end
+
+function love.mousepressed(x, y, button)
+    mouseHandlerModule.mousepressed(x, y, button)
 end
 
 
