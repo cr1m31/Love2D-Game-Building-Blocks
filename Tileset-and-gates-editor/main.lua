@@ -1,31 +1,18 @@
-love.graphics.setDefaultFilter("nearest", "nearest", 0) -- disable antialiasing for real pixel art
-io.stdout:setvbuf("no") -- disable output buffering to see debug text directly in output when running game
-
-love.window.setMode( 1024, 768)
+love.graphics.setDefaultFilter("nearest", "nearest", 0)
+io.stdout:setvbuf("no")
+love.window.setMode(1024, 768)
 
 local mouseHandlerModule = require("mouseHandler")
-local editorMenuModule = require("editorMenu") 
+local editorMenuModule = require("editorMenu")
 
 function love.load()
-    
 end
 
-
 function love.update(dt)
+    mouseHandlerModule.update()
     editorMenuModule.update(dt)
 end
 
 function love.draw()
     editorMenuModule.drawMenu()
 end
-
-function love.mousepressed(x, y, button)
-    mouseHandlerModule.mousepressed(x, y, button)
-end
-
-function love.mousereleased(x, y, button)
-    mouseHandlerModule.mousereleased(x, y, button)
-end
-
-
-

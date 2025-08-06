@@ -5,81 +5,93 @@ local mouseHandler = require("mouseHandler")
 local menuPanel = {
     x = 10,
     y = 10,
-    width = 100,
-    height = 150,
+    width = 140,
+    height = 200
+}
+
+local menuVisible = true
+
+local toggleButton = {
+    x = 0, y = 0, width = 60, height = 25,
+    label = "Hide"
 }
 
 local menuButtons = {
-    tilesetEditor = { x = 0, y = 0, width = 0, height = 0 },
-    gateEditor = { x = 0, y = 0, width = 0, height = 0 },
-    saveButton = { x = 0, y = 0, width = 0, height = 0 },
-    loadButton = { x = 0, y = 0, width = 0, height = 0 }
+    tilesetEditor = { x = 0, y = 0, width = 100, height = 25 },
+    gateEditor = { x = 0, y = 0, width = 100, height = 25 },
+    saveButton = { x = 0, y = 0, width = 100, height = 25 },
+    loadButton = { x = 0, y = 0, width = 100, height = 25 }
 }
 
 local buttonOrder = {
     "tilesetEditor",
     "gateEditor",
     "saveButton",
-    "loadButton",
+    "loadButton"
 }
 
-function setButtonsDimensions(width, height)
-    for _, button in pairs(menuButtons) do
-        button.width = width
-        button.height = height
-    end
-end
+-- Position toggle and menu buttons
+local function positionButtons()
+    -- Toggle button is always shown to the right of the menu
+    toggleButton.x = menuPanel.x + menuPanel.width + 10
+    toggleButton.y = menuPanel.y
 
-setButtonsDimensions(80, 25)
-
-function attachButtonsToMenuPanel()
-    for i, name in ipairs(buttonOrder) do
-        local button = menuButtons[name]
-        button.x = menuPanel.x + menuPanel.width / 2 - button.width / 2
-        button.y = menuPanel.y + 10 + (button.height + 5) * (i - 1)
-    end
-end
-
--- Check if any button was clicked (only if not dragging)
-function checkButtons()
-    for _, name in ipairs(buttonOrder) do
-        local button = menuButtons[name]
-        if mouseHandler.checkIfMouseReleasedInRectangle(button) then
-            print("Button clicked: " .. name)
-            -- Add button-specific actions here
+    if menuVisible then
+        local yOffset = menuPanel.y + 10
+        for i, name in ipairs(buttonOrder) do
+            local button = menuButtons[name]
+            button.x = menuPanel.x + menuPanel.width / 2 - button.width / 2
+            button.y = yOffset + (button.height + 5) * (i - 1)
         end
     end
 end
 
-function editorMenuModule.update(dt)
-    attachButtonsToMenuPanel()
+-- Handle button clicks
+local function checkButtonClicks()
+    -- Toggle menu visibility
+    if mouseHandler.checkIfMouseClickedInRectangle(toggleButton) then
+        menuVisible = not menuVisible
+        toggleButton.label = menuVisible and "Hide" or "Show"
+    end
 
-    mouseHandler.drag(menuPanel)
-
-    -- Only process buttons when not dragging
-    if not mouseHandler.isDragging() then
-        checkButtons()
+    -- Only check menu buttons if menu is visible
+    if menuVisible then
+        for _, name in ipairs(buttonOrder) do
+            local button = menuButtons[name]
+            if mouseHandler.checkIfMouseClickedInRectangle(button) then
+                print("Button clicked:", name)
+                -- Add your specific logic here for each button
+            end
+        end
     end
 end
 
-local function drawButtons()
-    for _, name in ipairs(buttonOrder) do
-        local button = menuButtons[name]
-        love.graphics.setColor(0.5, 0.5, 0.5)
-        love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
-        love.graphics.setColor(1, 1, 1)
-        love.graphics.print(name, button.x + 5, button.y + 5)
-    end
+-- Draw button helper
+local function drawButton(button, label)
+    love.graphics.setColor(0.4, 0.4, 0.4)
+    love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(label, button.x + 5, button.y + 5)
+end
+
+function editorMenuModule.update(dt)
+    positionButtons()
+    checkButtonClicks()
 end
 
 function editorMenuModule.drawMenu()
-    love.graphics.setColor(0.5, 0.5, 0.8)
-    love.graphics.rectangle("fill", menuPanel.x, menuPanel.y, menuPanel.width, menuPanel.height)
-    drawButtons()
-end
+    -- Always draw toggle button
+    drawButton(toggleButton, toggleButton.label)
 
-function editorMenuModule.getMenuPanel()
-    return menuPanel
+    -- Draw menu only if visible
+    if menuVisible then
+        love.graphics.setColor(0.5, 0.5, 0.8)
+        love.graphics.rectangle("fill", menuPanel.x, menuPanel.y, menuPanel.width, menuPanel.height)
+
+        for _, name in ipairs(buttonOrder) do
+            drawButton(menuButtons[name], name)
+        end
+    end
 end
 
 return editorMenuModule
