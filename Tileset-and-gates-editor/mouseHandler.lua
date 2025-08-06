@@ -1,29 +1,23 @@
 local mouseHandlerModule = {}
 
-local wasMouseDown = false
+local lastPressedX, lastPressedY, lastPressedButton = nil, nil, nil
 
 function mouseHandlerModule.update()
-    local mouseDown = love.mouse.isDown(1)
-    wasMouseDown = wasMouseDown or mouseDown
+    lastPressedX, lastPressedY, lastPressedButton = nil, nil, nil
 end
 
-function mouseHandlerModule.checkIfMouseClickedInRectangle(rect)
-    local mouseDown = love.mouse.isDown(1)
-    local x, y = love.mouse.getPosition()
+function mouseHandlerModule.mousepressed(x, y, button)
+    lastPressedX = x
+    lastPressedY = y
+    lastPressedButton = button
+end
 
-    if not mouseDown and wasMouseDown then
-        wasMouseDown = false
-        return mouseHandlerModule.checkIfMouseIsInsideRectangle(x, y, rect)
+function mouseHandlerModule.checkIfMousePressedInRectangle(rect)
+    if lastPressedButton == 1 and lastPressedX and lastPressedY then
+        return lastPressedX > rect.x and lastPressedX < rect.x + rect.width and
+               lastPressedY > rect.y and lastPressedY < rect.y + rect.height
     end
-
     return false
-end
-
-function mouseHandlerModule.checkIfMouseIsInsideRectangle(mousex, mousey, rect)
-    return mousex > rect.x and
-           mousex < rect.x + rect.width and
-           mousey > rect.y and
-           mousey < rect.y + rect.height
 end
 
 return mouseHandlerModule

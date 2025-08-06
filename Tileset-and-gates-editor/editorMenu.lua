@@ -5,15 +5,15 @@ local mouseHandler = require("mouseHandler")
 local menuPanel = {
     x = 10,
     y = 10,
-    width = 140,
-    height = 200
+    width = 120,
+    height = 180
 }
 
 local menuVisible = true
 
-local toggleButton = {
-    x = 0, y = 0, width = 60, height = 25,
-    label = "Hide"
+local toggleButtons = {
+    hide = { x = 0, y = 0, width = 60, height = 25 },
+    show = { x = 0, y = 0, width = 60, height = 25 }
 }
 
 local menuButtons = {
@@ -32,10 +32,14 @@ local buttonOrder = {
 
 -- Position toggle and menu buttons
 local function positionButtons()
-    -- Toggle button is always shown to the right of the menu
-    toggleButton.x = menuPanel.x + menuPanel.width + 10
-    toggleButton.y = menuPanel.y
+    -- Toggle buttons (to the right of menu)
+    toggleButtons.hide.x = menuPanel.x + menuPanel.width + 10
+    toggleButtons.hide.y = menuPanel.y
 
+    toggleButtons.show.x = menuPanel.x + menuPanel.width + 10
+    toggleButtons.show.y = menuPanel.y
+
+    -- Menu buttons
     if menuVisible then
         local yOffset = menuPanel.y + 10
         for i, name in ipairs(buttonOrder) do
@@ -46,29 +50,30 @@ local function positionButtons()
     end
 end
 
--- Handle button clicks
 local function checkButtonClicks()
-    -- Toggle menu visibility
-    if mouseHandler.checkIfMouseClickedInRectangle(toggleButton) then
-        menuVisible = not menuVisible
-        toggleButton.label = menuVisible and "Hide" or "Show"
+    -- Toggle
+    if menuVisible and mouseHandler.checkIfMousePressedInRectangle(toggleButtons.hide) then
+        menuVisible = false
+        return
+    elseif not menuVisible and mouseHandler.checkIfMousePressedInRectangle(toggleButtons.show) then
+        menuVisible = true
+        return
     end
 
-    -- Only check menu buttons if menu is visible
+    -- Menu buttons
     if menuVisible then
         for _, name in ipairs(buttonOrder) do
             local button = menuButtons[name]
-            if mouseHandler.checkIfMouseClickedInRectangle(button) then
-                print("Button clicked:", name)
-                -- Add your specific logic here for each button
+            if mouseHandler.checkIfMousePressedInRectangle(button) then
+                print("Button clicked: " .. name)
+                -- Add specific button logic here
             end
         end
     end
 end
 
--- Draw button helper
 local function drawButton(button, label)
-    love.graphics.setColor(0.4, 0.4, 0.4)
+    love.graphics.setColor(0.5, 0.5, 0.5)
     love.graphics.rectangle("fill", button.x, button.y, button.width, button.height)
     love.graphics.setColor(1, 1, 1)
     love.graphics.print(label, button.x + 5, button.y + 5)
@@ -80,17 +85,21 @@ function editorMenuModule.update(dt)
 end
 
 function editorMenuModule.drawMenu()
-    -- Always draw toggle button
-    drawButton(toggleButton, toggleButton.label)
-
-    -- Draw menu only if visible
     if menuVisible then
+        -- Draw menu panel and its buttons
         love.graphics.setColor(0.5, 0.5, 0.8)
         love.graphics.rectangle("fill", menuPanel.x, menuPanel.y, menuPanel.width, menuPanel.height)
 
         for _, name in ipairs(buttonOrder) do
             drawButton(menuButtons[name], name)
         end
+    end
+
+    -- Always draw the relevant toggle button
+    if menuVisible then
+        drawButton(toggleButtons.hide, "Hide")
+    else
+        drawButton(toggleButtons.show, "Show")
     end
 end
 
