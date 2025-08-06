@@ -1,73 +1,36 @@
 local editorMenuModule = {}
 
-local mouseHandler = require("mouseHandler")
-
-local menuPanel = {
-    x = 10,
-    y = 10,
-    width = 120,
-    height = 180
+local state = {
+    menuVisible = true,
+    menuPanel = { x = 10, y = 10, width = 120, height = 180 },
+    toggleButtons = {
+        hide = { x = 0, y = 0, width = 60, height = 25 },
+        show = { x = 0, y = 0, width = 60, height = 25 }
+    },
+    menuButtons = {
+        tilesetEditor = { x = 0, y = 0, width = 100, height = 25 },
+        gateEditor = { x = 0, y = 0, width = 100, height = 25 },
+        saveButton = { x = 0, y = 0, width = 100, height = 25 },
+        loadButton = { x = 0, y = 0, width = 100, height = 25 }
+    },
+    buttonOrder = {"tilesetEditor", "gateEditor", "saveButton", "loadButton"}
 }
 
-local menuVisible = true
-
-local toggleButtons = {
-    hide = { x = 0, y = 0, width = 60, height = 25 },
-    show = { x = 0, y = 0, width = 60, height = 25 }
-}
-
-local menuButtons = {
-    tilesetEditor = { x = 0, y = 0, width = 100, height = 25 },
-    gateEditor = { x = 0, y = 0, width = 100, height = 25 },
-    saveButton = { x = 0, y = 0, width = 100, height = 25 },
-    loadButton = { x = 0, y = 0, width = 100, height = 25 }
-}
-
-local buttonOrder = {
-    "tilesetEditor",
-    "gateEditor",
-    "saveButton",
-    "loadButton"
-}
-
--- Position toggle and menu buttons
 local function positionButtons()
-    -- Toggle buttons (to the right of menu)
-    toggleButtons.hide.x = menuPanel.x + menuPanel.width + 10
-    toggleButtons.hide.y = menuPanel.y
+    -- Position toggle buttons (to the right of menu)
+    state.toggleButtons.hide.x = state.menuPanel.x + state.menuPanel.width + 10
+    state.toggleButtons.hide.y = state.menuPanel.y
 
-    toggleButtons.show.x = menuPanel.x + menuPanel.width + 10
-    toggleButtons.show.y = menuPanel.y
+    state.toggleButtons.show.x = state.menuPanel.x + state.menuPanel.width + 10
+    state.toggleButtons.show.y = state.menuPanel.y
 
-    -- Menu buttons
-    if menuVisible then
-        local yOffset = menuPanel.y + 10
-        for i, name in ipairs(buttonOrder) do
-            local button = menuButtons[name]
-            button.x = menuPanel.x + menuPanel.width / 2 - button.width / 2
+    -- Position menu buttons vertically inside the menu panel
+    if state.menuVisible then
+        local yOffset = state.menuPanel.y + 10
+        for i, name in ipairs(state.buttonOrder) do
+            local button = state.menuButtons[name]
+            button.x = state.menuPanel.x + state.menuPanel.width / 2 - button.width / 2
             button.y = yOffset + (button.height + 5) * (i - 1)
-        end
-    end
-end
-
-local function checkButtonClicks()
-    -- Toggle
-    if menuVisible and mouseHandler.checkIfMousePressedInRectangle(toggleButtons.hide) then
-        menuVisible = false
-        return
-    elseif not menuVisible and mouseHandler.checkIfMousePressedInRectangle(toggleButtons.show) then
-        menuVisible = true
-        return
-    end
-
-    -- Menu buttons
-    if menuVisible then
-        for _, name in ipairs(buttonOrder) do
-            local button = menuButtons[name]
-            if mouseHandler.checkIfMousePressedInRectangle(button) then
-                print("Button clicked: " .. name)
-                -- Add specific button logic here
-            end
         end
     end
 end
@@ -81,25 +44,54 @@ end
 
 function editorMenuModule.update(dt)
     positionButtons()
-    checkButtonClicks()
 end
 
 function editorMenuModule.drawMenu()
-    if menuVisible then
-        -- Draw menu panel and its buttons
+    if state.menuVisible then
         love.graphics.setColor(0.5, 0.5, 0.8)
-        love.graphics.rectangle("fill", menuPanel.x, menuPanel.y, menuPanel.width, menuPanel.height)
+        love.graphics.rectangle("fill", state.menuPanel.x, state.menuPanel.y, state.menuPanel.width, state.menuPanel.height)
 
-        for _, name in ipairs(buttonOrder) do
-            drawButton(menuButtons[name], name)
+        for _, name in ipairs(state.buttonOrder) do
+            drawButton(state.menuButtons[name], name)
         end
     end
 
-    -- Always draw the relevant toggle button
-    if menuVisible then
-        drawButton(toggleButtons.hide, "Hide")
+    if state.menuVisible then
+        drawButton(state.toggleButtons.hide, "Hide")
     else
-        drawButton(toggleButtons.show, "Show")
+        drawButton(state.toggleButtons.show, "Show")
+    end
+end
+
+-- Single interface function that returns all needed data
+function editorMenuModule.getClickableElements()
+    return {
+        menuVisible = state.menuVisible,
+        toggleButtons = state.toggleButtons,
+        menuButtons = state.menuButtons,
+        buttonOrder = state.buttonOrder
+    }
+end
+
+function editorMenuModule.toggleMenu()
+    state.menuVisible = not state.menuVisible
+end
+
+function editorMenuModule.handleMenuButtonClick(buttonName)
+    print("Menu button clicked: " .. buttonName)
+    -- Add button-specific logic here based on buttonName
+    if buttonName == "tilesetEditor" then
+        -- Handle tileset editor logic
+        print("Opening tileset editor...")
+    elseif buttonName == "gateEditor" then
+        -- Handle gate editor logic
+        print("Opening gate editor...")
+    elseif buttonName == "saveButton" then
+        -- Handle save logic
+        print("Saving...")
+    elseif buttonName == "loadButton" then
+        -- Handle load logic
+        print("Loading...")
     end
 end
 
