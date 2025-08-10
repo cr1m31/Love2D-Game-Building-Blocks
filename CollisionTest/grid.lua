@@ -9,7 +9,7 @@ local grid = {
   {1,1,1,1,1,1,1,1},
 }
 
-local gridCellDimension = 20
+local gridCellDimension = 50
 
 function buildGrid()
   local tiles = {}
@@ -37,9 +37,9 @@ for lineNumber, line in ipairs(grid) do
   allTiles = lineNumber * #line
 end
 
-print("all tiles: " .. allTiles)
-
-print("built tiles: " .. #builtTiles)
+function gridModule.getBuiltTiles()
+  return builtTiles
+end
 
 function gridModule.draw()
   for i, tile in ipairs(builtTiles) do
