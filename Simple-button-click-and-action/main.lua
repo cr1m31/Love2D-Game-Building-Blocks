@@ -1,3 +1,5 @@
+io.stdout:setvbuf("no")
+
 local buttonsModule = require("buttons")
 
 function love.draw()
