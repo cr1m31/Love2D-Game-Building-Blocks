@@ -21,8 +21,6 @@ function buildGrid()
           {
             x = (colNum - 1) * gridCellDimension,
             y = (rowNum - 1) * gridCellDimension,
-            width = gridCellDimension,
-            height = gridCellDimension,
           })
       end
     end
@@ -43,7 +41,7 @@ print("built tiles: " .. #builtTiles)
 
 function gridModule.draw()
   for i, tile in ipairs(builtTiles) do
-    love.graphics.rectangle("line", tile.x, tile.y, tile.width, tile.height)
+    love.graphics.rectangle("line", tile.x, tile.y, gridCellDimension, gridCellDimension)
   end
 end
 
