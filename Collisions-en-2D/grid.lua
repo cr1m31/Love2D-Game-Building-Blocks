@@ -35,6 +35,10 @@ for lineNumber, line in ipairs(grid) do
   allTiles = lineNumber * #line
 end
 
+function gridModule.getBuiltTiles()
+  return builtTiles
+end
+
 print("all tiles: " .. allTiles)
 
 print("built tiles: " .. #builtTiles)
