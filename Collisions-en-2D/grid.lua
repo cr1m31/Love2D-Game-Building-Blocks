@@ -30,18 +30,21 @@ end
 
 local builtTiles = buildGrid()
 
-local allTiles = 0
-for lineNumber, line in ipairs(grid) do
-  allTiles = lineNumber * #line
+function aabbCollision(aa, bb)
+  return aa.x < bb.x + gridCellDimension and
+    aa.x + aa.width > bb.x and
+    aa.y < bb.y + gridCellDimension and
+    aa.y + aa.height > bb.y
 end
 
-function gridModule.getBuiltTiles()
-  return builtTiles
+function gridModule.checkCollisionsBetweenPlayerAndTiles(player)
+  for _, tile in ipairs(builtTiles) do
+    if aabbCollision(player, tile) then
+      return true
+    end
+  end
+  return false
 end
-
-print("all tiles: " .. allTiles)
-
-print("built tiles: " .. #builtTiles)
 
 function gridModule.draw()
   for i, tile in ipairs(builtTiles) do

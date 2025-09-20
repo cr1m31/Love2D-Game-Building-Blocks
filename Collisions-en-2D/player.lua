@@ -1,43 +1,33 @@
 local playerModule = {}
 
-local collisionModule = require("collision")
 local gridModule = require("grid")
 
 local player = {
-  x = 40,
+  x = 20,
   y = 30,
-  width = 15,
-  height = 15,
+  width = 20,
+  height = 40,
 }
 
-local isColliding = false
+local playerCollidingWithTile = false
 
 function playerModule.update(x, y)
   player.x = x
   player.y = y
   
-  isColliding = false
-  
-  for i, j in ipairs( gridModule.getBuiltTiles() ) do
-    if collisionModule.aabbCollision(player, j ) then
-      isColliding = true
-    end
-  end
-  
-  
+  playerCollidingWithTile = gridModule.checkCollisionsBetweenPlayerAndTiles(player)
 end
 
 function playerModule.draw()
-  
-  if isColliding then
+  if playerCollidingWithTile then
     love.graphics.setColor(1,0,0)
   else
     love.graphics.setColor(1,1,1)
   end
+  love.graphics.print(tostring(playerCollidingWithTile), 100, 180 )
+
   
   love.graphics.rectangle("fill", player.x, player.y, player.width, player.height)
-  
-  
 end
 
 return playerModule
