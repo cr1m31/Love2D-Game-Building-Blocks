@@ -3,8 +3,8 @@ io.stdout:setvbuf("no")
 local gridModule = require("grid")
 local playerModule = require("player")
 
-function love.update()
-  playerModule.update( love.mouse.getX(), love.mouse.getY() )
+function love.update(dt)
+  playerModule.update(dt)
 end
 
 function love.draw()

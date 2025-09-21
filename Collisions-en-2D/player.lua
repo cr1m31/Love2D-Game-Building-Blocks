@@ -3,28 +3,57 @@ local playerModule = {}
 local gridModule = require("grid")
 
 local player = {
-  x = 20,
-  y = 30,
+  x = 80,
+  y = 80,
   width = 20,
   height = 40,
+  speed = 100,
 }
 
-local playerCollidingWithTile = false
+function playerModule.update(dt)
+  movePlayer(dt)
+end
 
-function playerModule.update(x, y)
-  player.x = x
-  player.y = y
+function movePlayer(dt)
+  local oldPlayerX = player.x
+  local oldPlayerY = player.y
   
-  playerCollidingWithTile = gridModule.checkCollisionsBetweenPlayerAndTiles(player)
+  -- left
+  if love.keyboard.isDown("a") then
+    player.x = player.x - player.speed * dt
+  end
+  -- right
+  if love.keyboard.isDown("d") then
+    player.x = player.x + player.speed * dt
+  end
+  
+  if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
+    player.x = oldPlayerX
+  end
+  
+  -- up
+  if love.keyboard.isDown("w") then
+    player.y = player.y - player.speed * dt
+  end
+  -- down
+  if love.keyboard.isDown("s") then
+    player.y = player.y + player.speed * dt
+  end
+  
+  if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
+    player.y = oldPlayerY
+  end
+  
+  
 end
 
 function playerModule.draw()
-  if playerCollidingWithTile then
+  if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     love.graphics.setColor(1,0,0)
   else
     love.graphics.setColor(1,1,1)
   end
-  love.graphics.print(tostring(playerCollidingWithTile), 100, 180 )
+  love.graphics.print(tostring( gridModule.checkCollisionsBetweenPlayerAndTiles(player) ), 100, 180 )
 
   
   love.graphics.rectangle("fill", player.x, player.y, player.width, player.height)

@@ -9,7 +9,7 @@ local grid = {
   {1,1,1,1,1,1,1,1},
 }
 
-local gridCellDimension = 20
+local gridCellDimension = 60
 
 function buildGrid()
   local tiles = {}
