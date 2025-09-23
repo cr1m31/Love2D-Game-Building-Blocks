@@ -38,11 +38,15 @@ function aabbCollision(aa, bb)
 end
 
 function gridModule.checkCollisionsBetweenPlayerAndTiles(player)
+  local tilesProcessed = 0
   for _, tile in ipairs(builtTiles) do
+    tilesProcessed = tilesProcessed + 1
     if aabbCollision(player, tile) then
+      print("nb tiles once collided : " .. tilesProcessed)
       return true
     end
   end
+  print("tilesProcessed : " .. tilesProcessed)
   return false
 end
 
@@ -51,6 +55,5 @@ function gridModule.draw()
     love.graphics.rectangle("line", tile.x, tile.y, gridCellDimension, gridCellDimension)
   end
 end
-
 
 return gridModule

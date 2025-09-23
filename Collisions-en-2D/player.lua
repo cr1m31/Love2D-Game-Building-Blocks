@@ -7,7 +7,7 @@ local player = {
   y = 80,
   width = 20,
   height = 40,
-  speed = 100,
+  speed = 200,
 }
 
 function playerModule.update(dt)
