@@ -7,10 +7,10 @@ local player = {
   y = 80,
   width = 20,
   height = 40,
-  speed = 200,
   velocity = {x = 0, y = 0},
-  acceleration = 150,
+  acceleration = 10,
   gravity = {x = 0, y = 9.81},
+  friction = 2,
 }
 
 function playerModule.update(dt)
@@ -28,6 +28,11 @@ function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
   
+  player.velocity.y = player.velocity.y + player.gravity.y * dt
+  
+  -- !! set max velocity before to add constant friction !!
+  --addFriction(dt)
+  
   -- left
   if love.keyboard.isDown("a") then
     player.velocity.x = player.velocity.x - player.acceleration * dt
@@ -37,9 +42,17 @@ function movePlayer(dt)
     player.velocity.x = player.velocity.x + player.acceleration * dt
   end
   
+  -- really important, apply velocity on player motion before collision response
+  player.x = player.x + player.velocity.x
+  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.x = oldPlayerX
+    
+    player.velocity.x = 0
+    
   end
+  
+  
   
   -- up
   if love.keyboard.isDown("w") then
@@ -50,16 +63,27 @@ function movePlayer(dt)
     player.velocity.y = player.velocity.y + player.acceleration * dt
   end
   
+  -- really important, apply velocity on player motion before collision response
+  player.y = player.y + player.velocity.y
+  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
+    
+    
     player.y = oldPlayerY
+    
+    player.velocity.y = 0
+    
   end
-  
-  player.x = player.x + player.velocity.x * dt
-  player.y = player.y + player.velocity.y * dt
-  player.velocity.y = player.velocity.y + player.gravity.y * dt
-  
-  
-  
+
+end
+
+function addFriction(dt)
+  if player.velocity.x > 0 then
+    player.velocity.x = math.max(0, player.velocity.x - player.friction * dt)
+    
+  elseif player.velocity.x < 0 then
+    player.velocity.x = math.min(0, player.velocity.x + player.friction * dt)
+  end
 end
 
 function playerModule.draw()
