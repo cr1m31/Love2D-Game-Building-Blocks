@@ -2,52 +2,59 @@ local playerModule = {}
 
 local gridModule = require("grid")
 
+function lerp(a,b,t) return (1-t)*a + t*b end
+
 local player = {
   x = 80,
   y = 80,
   width = 20,
   height = 40,
-  speed = 200,
   velocity = {x = 0, y = 0},
-  acceleration = 150,
-  gravity = {x = 0, y = 9.81},
+  acceleration = 15,
 }
 
 function playerModule.update(dt)
   movePlayer(dt)
 end
 
--- youtube tutorial about physics
--- https://youtu.be/jF1mnftlB-Q?si=KXcSXW6eGjW3lz4x
--- formula
-
 function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
   
+  player.velocity.x = lerp(player.velocity.x, 0, 0.02)
+  
   -- left
   if love.keyboard.isDown("a") then
-    player.x = player.x - player.speed * dt
+    player.velocity.x = player.velocity.x - player.acceleration * dt
   end
   -- right
   if love.keyboard.isDown("d") then
-    player.x = player.x + player.speed * dt
+    player.velocity.x = player.velocity.x + player.acceleration * dt
   end
   
+  player.x = player.x + player.velocity.x
+  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
+    player.velocity.x = 0
+    
     player.x = oldPlayerX
   end
   
   -- up
   if love.keyboard.isDown("w") then
-    player.y = player.y - player.speed * dt
+    player.velocity.y = player.velocity.y - player.acceleration * dt
   end
   -- down
   if love.keyboard.isDown("s") then
-    player.y = player.y + player.speed * dt
+    player.velocity.y = player.velocity.y + player.acceleration * dt
   end
   
+  player.y = player.y + player.velocity.y
+
+  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
+    player.velocity.y = 0
+    
     player.y = oldPlayerY
   end
   

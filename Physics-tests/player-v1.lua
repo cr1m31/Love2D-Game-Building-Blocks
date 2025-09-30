@@ -8,6 +8,7 @@ local player = {
   width = 20,
   height = 40,
   velocity = {x = 0, y = 0},
+  velocityLimit = {x = 2, y = 3},
   acceleration = 10,
   gravity = {x = 0, y = 9.81},
   friction = 2,
@@ -30,8 +31,10 @@ function movePlayer(dt)
   
   player.velocity.y = player.velocity.y + player.gravity.y * dt
   
+  limitVelocity()
+  
   -- !! set max velocity before to add constant friction !!
-  --addFriction(dt)
+  addFriction(dt)
   
   -- left
   if love.keyboard.isDown("a") then
@@ -75,6 +78,20 @@ function movePlayer(dt)
     
   end
 
+end
+
+function limitVelocity()
+  if player.velocity.x > player.velocityLimit.x then
+    player.velocity.x = player.velocityLimit.x
+  elseif player.velocity.x < - player.velocityLimit.x then
+    player.velocity.x = - player.velocityLimit.x
+  end
+  
+  if player.velocity.y > player.velocityLimit.y then
+    player.velocity.y = player.velocityLimit.y
+  elseif player.velocity.y < - player.velocityLimit.y then
+    player.velocity.y = - player.velocityLimit.y
+  end
 end
 
 function addFriction(dt)
