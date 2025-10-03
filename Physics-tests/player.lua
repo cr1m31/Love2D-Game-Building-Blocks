@@ -50,14 +50,13 @@ function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
   
-  -- left
-  if love.keyboard.isDown("a") then
-    player.velocity.x = player.velocity.x - player.acceleration * dt
-  end
-  -- right
-  if love.keyboard.isDown("d") then
-    player.velocity.x = player.velocity.x + player.acceleration * dt
-  end
+  local dx, dy = getRawInput()
+  dx, dy = normalizeVector(dx, dy)
+
+  player.velocity.x = player.velocity.x + dx * player.acceleration * dt
+  
+  
+  
   
   player.x = player.x + player.velocity.x
   
@@ -67,14 +66,7 @@ function movePlayer(dt)
     player.x = oldPlayerX
   end
   
-  -- up
-  if love.keyboard.isDown("w") then
-    player.velocity.y = player.velocity.y - player.acceleration * dt
-  end
-  -- down
-  if love.keyboard.isDown("s") then
-    player.velocity.y = player.velocity.y + player.acceleration * dt
-  end
+  player.velocity.y = player.velocity.y + dy * player.acceleration * dt
   
   player.y = player.y + player.velocity.y
   
@@ -87,19 +79,15 @@ function movePlayer(dt)
 end
 
 function limitVelocity()
-  if player.velocity.x > player.velocityLimit.x then
-    player.velocity.x = player.velocityLimit.x
-  elseif player.velocity.x < - player.velocityLimit.x then
-    player.velocity.x = - player.velocityLimit.x
+  local len = math.sqrt(player.velocity.x^2 + player.velocity.y^2)
+  local maxLen = player.velocityLimit.x -- same limit for x/y
+
+  if len > maxLen then
+    player.velocity.x = player.velocity.x / len * maxLen
+    player.velocity.y = player.velocity.y / len * maxLen
   end
-  
-  if player.velocity.y > player.velocityLimit.y then
-    player.velocity.y = player.velocityLimit.y
-  elseif player.velocity.y < - player.velocityLimit.y then
-    player.velocity.y = - player.velocityLimit.y
-  end
-  
 end
+
 
 function addLinearFriction(dt)
   if player.velocity.x > 0 then
@@ -113,6 +101,31 @@ function addLinearFriction(dt)
   elseif player.velocity.y < 0 then
     player.velocity.y = math.min(0, player.velocity.y + player.friction * dt)
   end
+end
+
+function getRawInput()
+  local dx, dy = 0, 0
+  if love.keyboard.isDown("a") then
+    dx = dx - 1 
+  end
+  if love.keyboard.isDown("d") then
+    dx = dx + 1 
+  end
+  if love.keyboard.isDown("w") then
+    dy = dy - 1
+  end
+  if love.keyboard.isDown("s") then
+    dy = dy + 1
+  end
+  return dx, dy
+end
+
+function normalizeVector(x, y)
+  local len = math.sqrt(x * x + y * y)
+  if len > 0 then
+    return x / len, y / len
+  end
+  return 0, 0
 end
 
 function playerModule.draw()
