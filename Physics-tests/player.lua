@@ -7,15 +7,15 @@ local player = {
   y = 80,
   width = 20,
   height = 40,
-  acceleration = 10,
+  acceleration = 18,
   velocity = {x = 0, y = 0},
-  velocityLimit = {x = 2, y = 2},
-  friction = 2.99,
+  velocityLimit = {x = 3, y = 3},
+  friction = 7,
   
   gravity = {x = 0, y = 4},
 }
 
-local debugVectorLengthMultiplier = 30
+local debugVectorLengthMultiplier = 20
 
 local debugSquareForVectorLength = {
   x = 0,
