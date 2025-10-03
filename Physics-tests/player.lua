@@ -15,14 +15,35 @@ local player = {
   gravity = {x = 0, y = 4},
 }
 
+local debugVectorLengthMultiplier = 30
+
+local debugSquareForVectorLength = {
+  x = 0,
+  y = 0,
+  width = 0,
+  height = 0,
+}
+
+function updateSquareVectorSize()
+  local cx = player.x + player.width / 2
+  local cy = player.y + player.height / 2
+
+  local halfW = player.velocityLimit.x * debugVectorLengthMultiplier
+  local halfH = player.velocityLimit.y * debugVectorLengthMultiplier
+
+  debugSquareForVectorLength.x = cx - halfW
+  debugSquareForVectorLength.y = cy - halfH
+  debugSquareForVectorLength.width = halfW * 2
+  debugSquareForVectorLength.height = halfH * 2
+end
+
+
 function playerModule.update(dt)
   movePlayer(dt)
-  
   limitVelocity()
-  
   addLinearFriction(dt)
   
-  
+  updateSquareVectorSize()
 end
 
 function movePlayer(dt)
@@ -46,7 +67,6 @@ function movePlayer(dt)
     player.x = oldPlayerX
   end
   
-
   -- up
   if love.keyboard.isDown("w") then
     player.velocity.y = player.velocity.y - player.acceleration * dt
@@ -103,9 +123,29 @@ function playerModule.draw()
   end
 
   
-  love.graphics.rectangle("fill", player.x, player.y, player.width, player.height)
+  love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
   
   love.graphics.print("velx: " .. player.velocity.x .. " vely: " .. player.velocity.y, 100, 200)
+
+  love.graphics.print("vec len: " .. math.sqrt(player.velocity.x^2 + player.velocity.y^2), 100, 300 )
+  
+  love.graphics.line(player.x + player.width / 2,
+    player.y + player.height / 2,
+    (player.x + player.width / 2) + player.velocity.x * debugVectorLengthMultiplier,
+    (player.y + player.height / 2) + player.velocity.y * debugVectorLengthMultiplier)
+  
+  love.graphics.rectangle("line", 
+    debugSquareForVectorLength.x, 
+    debugSquareForVectorLength.y, 
+    debugSquareForVectorLength.width, 
+    debugSquareForVectorLength.height)
+
+  -- Debug circle (radius = velocityLimit.x * multiplier)
+  local cx = player.x + player.width / 2
+  local cy = player.y + player.height / 2
+  local radius = player.velocityLimit.x * debugVectorLengthMultiplier
+
+  love.graphics.circle("line", cx, cy, radius)
 
 end
 
