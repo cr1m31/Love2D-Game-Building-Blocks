@@ -9,7 +9,7 @@ local player = {
   height = 40,
   acceleration = 18,
   velocity = {x = 0, y = 0},
-  velocityLimit = {x = 3, y = 3},
+  velocityLimit = 3, -- single scalar limit
   friction = 7,
   
   gravity = {x = 0, y = 4},
@@ -28,8 +28,8 @@ function updateSquareVectorSize()
   local cx = player.x + player.width / 2
   local cy = player.y + player.height / 2
 
-  local halfW = player.velocityLimit.x * debugVectorLengthMultiplier
-  local halfH = player.velocityLimit.y * debugVectorLengthMultiplier
+  local halfW = player.velocityLimit * debugVectorLengthMultiplier
+  local halfH = player.velocityLimit * debugVectorLengthMultiplier
 
   debugSquareForVectorLength.x = cx - halfW
   debugSquareForVectorLength.y = cy - halfH
@@ -54,40 +54,24 @@ function movePlayer(dt)
   dx, dy = normalizeVector(dx, dy)
 
   player.velocity.x = player.velocity.x + dx * player.acceleration * dt
+  player.velocity.y = player.velocity.y + dy * player.acceleration * dt
   
-  
-  
-  
+  -- Move X before horizontal collision test
   player.x = player.x + player.velocity.x
   
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.velocity.x = 0
-    
     player.x = oldPlayerX
   end
   
-  player.velocity.y = player.velocity.y + dy * player.acceleration * dt
-  
+  -- Move Y before verticval collision test
   player.y = player.y + player.velocity.y
   
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.velocity.y = 0
-    
     player.y = oldPlayerY
   end
-  
 end
-
-function limitVelocity()
-  local len = math.sqrt(player.velocity.x^2 + player.velocity.y^2)
-  local maxLen = player.velocityLimit.x -- same limit for x/y
-
-  if len > maxLen then
-    player.velocity.x = player.velocity.x / len * maxLen
-    player.velocity.y = player.velocity.y / len * maxLen
-  end
-end
-
 
 function addLinearFriction(dt)
   if player.velocity.x > 0 then
@@ -105,18 +89,10 @@ end
 
 function getRawInput()
   local dx, dy = 0, 0
-  if love.keyboard.isDown("a") then
-    dx = dx - 1 
-  end
-  if love.keyboard.isDown("d") then
-    dx = dx + 1 
-  end
-  if love.keyboard.isDown("w") then
-    dy = dy - 1
-  end
-  if love.keyboard.isDown("s") then
-    dy = dy + 1
-  end
+  if love.keyboard.isDown("a") then dx = dx - 1 end
+  if love.keyboard.isDown("d") then dx = dx + 1 end
+  if love.keyboard.isDown("w") then dy = dy - 1 end
+  if love.keyboard.isDown("s") then dy = dy + 1 end
   return dx, dy
 end
 
@@ -128,6 +104,16 @@ function normalizeVector(x, y)
   return 0, 0
 end
 
+-- Circular clamp
+function limitVelocity()
+  local len = math.sqrt(player.velocity.x^2 + player.velocity.y^2)
+  local maxLen = player.velocityLimit
+  if len > maxLen then
+    player.velocity.x = (player.velocity.x / len) * maxLen
+    player.velocity.y = (player.velocity.y / len) * maxLen
+  end
+end
+
 function playerModule.draw()
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     love.graphics.setColor(1,0,0)
@@ -135,11 +121,9 @@ function playerModule.draw()
     love.graphics.setColor(1,1,1)
   end
 
-  
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
   
   love.graphics.print("velx: " .. player.velocity.x .. " vely: " .. player.velocity.y, 100, 200)
-
   love.graphics.print("vec len: " .. math.sqrt(player.velocity.x^2 + player.velocity.y^2), 100, 300 )
   
   love.graphics.line(player.x + player.width / 2,
@@ -153,13 +137,11 @@ function playerModule.draw()
     debugSquareForVectorLength.width, 
     debugSquareForVectorLength.height)
 
-  -- Debug circle (radius = velocityLimit.x * multiplier)
+  -- Debug circle (radius = velocityLimit * multiplier)
   local cx = player.x + player.width / 2
   local cy = player.y + player.height / 2
-  local radius = player.velocityLimit.x * debugVectorLengthMultiplier
-
+  local radius = player.velocityLimit * debugVectorLengthMultiplier
   love.graphics.circle("line", cx, cy, radius)
-
 end
 
 return playerModule
