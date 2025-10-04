@@ -16,33 +16,11 @@ local player = {
   gravity = {x = 0, y = 4},
 }
 
-local debugVectorLengthMultiplier = 20
-
-local debugSquareForVectorLength = {
-  x = 0,
-  y = 0,
-  width = 0,
-  height = 0,
-}
-
-function updateSquareVectorSize()
-  local cx = player.x + player.width / 2
-  local cy = player.y + player.height / 2
-
-  local halfW = player.velocityLimit * debugVectorLengthMultiplier
-  local halfH = player.velocityLimit * debugVectorLengthMultiplier
-
-  debugSquareForVectorLength.x = cx - halfW
-  debugSquareForVectorLength.y = cy - halfH
-  debugSquareForVectorLength.width = halfW * 2
-  debugSquareForVectorLength.height = halfH * 2
-end
-
 function playerModule.update(dt)
   movePlayer(dt)
   limitVelocity()
   addLinearFriction(dt)
-  updateSquareVectorSize()
+  vectorLogic.updateSquareVectorSize(player)
 end
 
 function movePlayer(dt)
@@ -108,20 +86,9 @@ function playerModule.draw()
 
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
   
-  local velLen = vectorLogic.length(player.velocity.x, player.velocity.y)
-  love.graphics.print("velx: " .. player.velocity.x .. " vely: " .. player.velocity.y, 100, 200)
-  love.graphics.print("vec len: " .. velLen, 100, 300)
-  
-  -- Debug visuals
-  local cx = player.x + player.width / 2
-  local cy = player.y + player.height / 2
-  vectorLogic.drawDebug(cx, cy, player.velocity.x, player.velocity.y, player.velocityLimit)
+  vectorLogic.drawDebug(player)
 
-  love.graphics.rectangle("line", 
-    debugSquareForVectorLength.x, 
-    debugSquareForVectorLength.y, 
-    debugSquareForVectorLength.width, 
-    debugSquareForVectorLength.height)
+  
 end
 
 return playerModule
