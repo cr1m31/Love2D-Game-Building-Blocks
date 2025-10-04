@@ -1,6 +1,8 @@
+-- player.lua
 local playerModule = {}
 
 local gridModule = require("grid")
+local vectorLogic = require("vectorLogic")
 
 local player = {
   x = 80,
@@ -11,7 +13,6 @@ local player = {
   velocity = {x = 0, y = 0},
   velocityLimit = 3, -- single scalar limit
   friction = 7,
-  
   gravity = {x = 0, y = 4},
 }
 
@@ -37,12 +38,10 @@ function updateSquareVectorSize()
   debugSquareForVectorLength.height = halfH * 2
 end
 
-
 function playerModule.update(dt)
   movePlayer(dt)
   limitVelocity()
   addLinearFriction(dt)
-  
   updateSquareVectorSize()
 end
 
@@ -51,22 +50,20 @@ function movePlayer(dt)
   local oldPlayerY = player.y
   
   local dx, dy = getRawInput()
-  dx, dy = normalizeVector(dx, dy)
+  dx, dy = vectorLogic.normalize(dx, dy)
 
   player.velocity.x = player.velocity.x + dx * player.acceleration * dt
   player.velocity.y = player.velocity.y + dy * player.acceleration * dt
   
   -- Move X before horizontal collision test
   player.x = player.x + player.velocity.x
-  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.velocity.x = 0
     player.x = oldPlayerX
   end
   
-  -- Move Y before verticval collision test
+  -- Move Y before vertical collision test
   player.y = player.y + player.velocity.y
-  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.velocity.y = 0
     player.y = oldPlayerY
@@ -96,52 +93,35 @@ function getRawInput()
   return dx, dy
 end
 
-function normalizeVector(x, y)
-  local len = math.sqrt(x * x + y * y)
-  if len > 0 then
-    return x / len, y / len
-  end
-  return 0, 0
-end
-
--- Circular clamp
+-- Circular clamp using vectorLogic
 function limitVelocity()
-  local len = math.sqrt(player.velocity.x^2 + player.velocity.y^2)
-  local maxLen = player.velocityLimit
-  if len > maxLen then
-    player.velocity.x = (player.velocity.x / len) * maxLen
-    player.velocity.y = (player.velocity.y / len) * maxLen
-  end
+  player.velocity.x, player.velocity.y =
+    vectorLogic.limit(player.velocity.x, player.velocity.y, player.velocityLimit)
 end
 
 function playerModule.draw()
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
-    love.graphics.setColor(1,0,0)
+    love.graphics.setColor(1, 0, 0)
   else
-    love.graphics.setColor(1,1,1)
+    love.graphics.setColor(1, 1, 1)
   end
 
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
   
+  local velLen = vectorLogic.length(player.velocity.x, player.velocity.y)
   love.graphics.print("velx: " .. player.velocity.x .. " vely: " .. player.velocity.y, 100, 200)
-  love.graphics.print("vec len: " .. math.sqrt(player.velocity.x^2 + player.velocity.y^2), 100, 300 )
+  love.graphics.print("vec len: " .. velLen, 100, 300)
   
-  love.graphics.line(player.x + player.width / 2,
-    player.y + player.height / 2,
-    (player.x + player.width / 2) + player.velocity.x * debugVectorLengthMultiplier,
-    (player.y + player.height / 2) + player.velocity.y * debugVectorLengthMultiplier)
-  
+  -- Debug visuals
+  local cx = player.x + player.width / 2
+  local cy = player.y + player.height / 2
+  vectorLogic.drawDebug(cx, cy, player.velocity.x, player.velocity.y, player.velocityLimit)
+
   love.graphics.rectangle("line", 
     debugSquareForVectorLength.x, 
     debugSquareForVectorLength.y, 
     debugSquareForVectorLength.width, 
     debugSquareForVectorLength.height)
-
-  -- Debug circle (radius = velocityLimit * multiplier)
-  local cx = player.x + player.width / 2
-  local cy = player.y + player.height / 2
-  local radius = player.velocityLimit * debugVectorLengthMultiplier
-  love.graphics.circle("line", cx, cy, radius)
 end
 
 return playerModule
