@@ -11,7 +11,7 @@ local player = {
   height = 40,
   acceleration = 18,
   velocity = {x = 0, y = 0},
-  velocityLimit = 3, -- single scalar limit
+  velocityLimit = 3,
   friction = 7,
   gravity = {x = 0, y = 4},
 }
@@ -35,6 +35,7 @@ function movePlayer(dt)
   
   -- Move X before horizontal collision test
   player.x = player.x + player.velocity.x
+  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.velocity.x = 0
     player.x = oldPlayerX
@@ -42,6 +43,7 @@ function movePlayer(dt)
   
   -- Move Y before vertical collision test
   player.y = player.y + player.velocity.y
+  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.velocity.y = 0
     player.y = oldPlayerY
@@ -88,7 +90,6 @@ function playerModule.draw()
   
   vectorLogic.drawDebug(player)
 
-  
 end
 
 return playerModule
