@@ -1,73 +1,90 @@
 local vectorLogic = {}
 
-local debugVectorLengthMultiplier = 20
+-- Debug visualization settings
+local debugVelocityVisualizationScale = 20
 
-local debugSquareForVectorLength = {
+-- Defines the area used to visualize the player's velocity limit
+local playerVelocityDebugArea = {
   x = 0,
   y = 0,
   width = 0,
   height = 0,
 }
 
--- Normalize a 2D vector
-function vectorLogic.normalize(x, y)
-  local lenSq = x * x + y * y
-  if lenSq == 0 then
+---------------------------------------------------------
+-- Vector math utilities
+---------------------------------------------------------
+
+-- Normalize a 2D vector and return (x, y, magnitude)
+function vectorLogic.normalizeVector2D(vectorX, vectorY)
+  local magnitudeSquared = vectorX * vectorX + vectorY * vectorY
+  if magnitudeSquared == 0 then
     return 0, 0, 0
   end
-  local len = math.sqrt(lenSq)
-  return x / len, y / len, len
+  local magnitude = math.sqrt(magnitudeSquared)
+  return vectorX / magnitude, vectorY / magnitude, magnitude
 end
 
-function vectorLogic.limit(x, y, maxLen)
-  local lenSq = x * x + y * y
-  if lenSq > maxLen * maxLen then
-    local scale = maxLen / math.sqrt(lenSq)
-    return x * scale, y * scale
+-- Limit the magnitude of a 2D vector
+function vectorLogic.limitVectorMagnitude(vectorX, vectorY, maxMagnitude)
+  local magnitudeSquared = vectorX * vectorX + vectorY * vectorY
+  if magnitudeSquared > maxMagnitude * maxMagnitude then
+    local scale = maxMagnitude / math.sqrt(magnitudeSquared)
+    return vectorX * scale, vectorY * scale
   end
-  return x, y
+  return vectorX, vectorY
 end
 
-function vectorLogic.length(x, y)
-  return math.sqrt(x * x + y * y)
+-- Get the magnitude (length) of a 2D vector
+function vectorLogic.getVectorMagnitude(vectorX, vectorY)
+  return math.sqrt(vectorX * vectorX + vectorY * vectorY)
 end
 
-function vectorLogic.updateSquareVectorSize(player)
-  local cx = player.x + player.width / 2
-  local cy = player.y + player.height / 2
+---------------------------------------------------------
+-- Debug visualization logic for player velocity
+---------------------------------------------------------
 
-  local halfW = player.velocityLimit * debugVectorLengthMultiplier
-  local halfH = player.velocityLimit * debugVectorLengthMultiplier
+function vectorLogic.updatePlayerVelocityDebugArea(player)
+  local playerCenterX = player.x + player.width / 2
+  local playerCenterY = player.y + player.height / 2
 
-  debugSquareForVectorLength.x = cx - halfW
-  debugSquareForVectorLength.y = cy - halfH
-  debugSquareForVectorLength.width = halfW * 2
-  debugSquareForVectorLength.height = halfH * 2
+  local halfWidth = player.velocityLimit * debugVelocityVisualizationScale
+  local halfHeight = player.velocityLimit * debugVelocityVisualizationScale
+
+  playerVelocityDebugArea.x = playerCenterX - halfWidth
+  playerVelocityDebugArea.y = playerCenterY - halfHeight
+  playerVelocityDebugArea.width = halfWidth * 2
+  playerVelocityDebugArea.height = halfHeight * 2
 end
 
-function vectorLogic.drawDebug(player)
-  local multiplier = 20
+function vectorLogic.drawPlayerVelocityDebug(player)
+  local scale = debugVelocityVisualizationScale
 
-  local centerX = player.x + player.width / 2
-  local centerY = player.y + player.height / 2
+  local playerCenterX = player.x + player.width / 2
+  local playerCenterY = player.y + player.height / 2
 
+  -- Draw the velocity vector
   love.graphics.line(
-    centerX, centerY,
-    centerX + player.velocity.x * multiplier,
-    centerY + player.velocity.y * multiplier
+    playerCenterX, playerCenterY,
+    playerCenterX + player.velocity.x * scale,
+    playerCenterY + player.velocity.y * scale
   )
 
-  love.graphics.circle("line", centerX, centerY, player.velocityLimit * multiplier)
+  -- Draw the velocity limit circle
+  love.graphics.circle("line", playerCenterX, playerCenterY, player.velocityLimit * scale)
 
-  local velLen = vectorLogic.length(player.velocity.x, player.velocity.y)
-  love.graphics.print("velx: " .. player.velocity.x .. " vely: " .. player.velocity.y, 100, 200)
-  love.graphics.print("vec len: " .. velLen, 100, 300)
+  -- Display velocity and magnitude info
+  local velocityMagnitude = vectorLogic.getVectorMagnitude(player.velocity.x, player.velocity.y)
+  love.graphics.print("Velocity X: " .. player.velocity.x .. " | Velocity Y: " .. player.velocity.y, 100, 200)
+  love.graphics.print("Velocity Magnitude: " .. velocityMagnitude, 100, 300)
 
-  love.graphics.rectangle("line",
-    debugSquareForVectorLength.x,
-    debugSquareForVectorLength.y,
-    debugSquareForVectorLength.width,
-    debugSquareForVectorLength.height
+  -- Draw debug boundary square
+  love.graphics.rectangle(
+    "line",
+    playerVelocityDebugArea.x,
+    playerVelocityDebugArea.y,
+    playerVelocityDebugArea.width,
+    playerVelocityDebugArea.height
   )
 end
 

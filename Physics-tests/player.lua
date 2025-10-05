@@ -20,35 +20,41 @@ function playerModule.update(dt)
   movePlayer(dt)
   limitVelocity()
   addLinearFriction(dt)
-  vectorLogic.updateSquareVectorSize(player)
+  vectorLogic.updatePlayerVelocityDebugArea(player)
 end
+
+---------------------------------------------------------
+-- Player movement and control logic
+---------------------------------------------------------
 
 function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
   
-  local dx, dy = getRawInput()
-  dx, dy = vectorLogic.normalize(dx, dy)
+  local inputX, inputY = getRawInput()
+  inputX, inputY = vectorLogic.normalizeVector2D(inputX, inputY)
 
-  player.velocity.x = player.velocity.x + dx * player.acceleration * dt
-  player.velocity.y = player.velocity.y + dy * player.acceleration * dt
+  player.velocity.x = player.velocity.x + inputX * player.acceleration * dt
+  player.velocity.y = player.velocity.y + inputY * player.acceleration * dt
   
-  -- Move X before horizontal collision test
+  -- Move horizontally before collision test
   player.x = player.x + player.velocity.x
-  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.velocity.x = 0
     player.x = oldPlayerX
   end
   
-  -- Move Y before vertical collision test
+  -- Move vertically before collision test
   player.y = player.y + player.velocity.y
-  
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
     player.velocity.y = 0
     player.y = oldPlayerY
   end
 end
+
+---------------------------------------------------------
+-- Friction and velocity limitation
+---------------------------------------------------------
 
 function addLinearFriction(dt)
   if player.velocity.x > 0 then
@@ -64,6 +70,15 @@ function addLinearFriction(dt)
   end
 end
 
+function limitVelocity()
+  player.velocity.x, player.velocity.y =
+    vectorLogic.limitVectorMagnitude(player.velocity.x, player.velocity.y, player.velocityLimit)
+end
+
+---------------------------------------------------------
+-- Input handling
+---------------------------------------------------------
+
 function getRawInput()
   local dx, dy = 0, 0
   if love.keyboard.isDown("a") then dx = dx - 1 end
@@ -73,11 +88,9 @@ function getRawInput()
   return dx, dy
 end
 
--- Circular clamp using vectorLogic
-function limitVelocity()
-  player.velocity.x, player.velocity.y =
-    vectorLogic.limit(player.velocity.x, player.velocity.y, player.velocityLimit)
-end
+---------------------------------------------------------
+-- Drawing and debugging
+---------------------------------------------------------
 
 function playerModule.draw()
   if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
@@ -87,9 +100,7 @@ function playerModule.draw()
   end
 
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
-  
-  vectorLogic.drawDebug(player)
-
+  vectorLogic.drawPlayerVelocityDebug(player)
 end
 
 return playerModule
