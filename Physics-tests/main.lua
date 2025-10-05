@@ -1,7 +1,7 @@
 io.stdout:setvbuf("no")
 
 local gridModule = require("grid")
-local playerModule = require("player")
+local playerModule = require("player-v3")
 
 function love.update(dt)
   playerModule.update(dt)
