@@ -10,7 +10,7 @@ local player = {
   width = 20,
   height = 40,
   velocity = {x = 0, y = 0},
-  acceleration = 15,
+  acceleration = 85,
 }
 
 function playerModule.update(dt)
@@ -21,7 +21,11 @@ function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
   
+  
+  
   player.velocity.x = lerp(player.velocity.x, 0, 0.02)
+  
+  player.velocity.y = lerp(player.velocity.y, 0, 0.02)
   
   -- left
   if love.keyboard.isDown("a") then
@@ -34,10 +38,20 @@ function movePlayer(dt)
   
   player.x = player.x + player.velocity.x
   
-  if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
-    player.velocity.x = 0
-    
-    player.x = oldPlayerX
+  local collCheckX, tileX = gridModule.checkCollisionsBetweenPlayerAndTiles(player)
+  if collCheckX then
+    if player.velocity.x > 0 then
+      
+      player.x = tileX.x - player.width
+      
+      player.velocity.x = 0
+      
+    elseif player.velocity.x < 0 then
+      player.x = tileX.x + 50
+      
+      player.velocity.x = 0
+      
+    end
   end
   
   -- up
@@ -51,11 +65,20 @@ function movePlayer(dt)
   
   player.y = player.y + player.velocity.y
 
-  
-  if gridModule.checkCollisionsBetweenPlayerAndTiles(player) then
-    player.velocity.y = 0
-    
-    player.y = oldPlayerY
+  local collCheckY, tileY = gridModule.checkCollisionsBetweenPlayerAndTiles(player)
+  if collCheckY then
+    if player.velocity.y > 0 then
+      
+      player.y = tileY.y - player.height
+      
+      player.velocity.y = 0
+      
+    elseif player.velocity.y < 0 then
+      player.y = tileY.y + 50
+      
+      player.velocity.y = 0
+      
+    end
   end
   
 end

@@ -50,7 +50,7 @@ function gridModule.checkCollisionsBetweenPlayerAndTiles(player)
   for _, tile in ipairs(builtTiles) do
     tilesProcessed = tilesProcessed + 1
     if aabbCollision(player, tile) then
-      return true
+      return true, tile
     end
   end
   return false
