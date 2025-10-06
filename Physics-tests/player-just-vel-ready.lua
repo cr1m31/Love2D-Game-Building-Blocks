@@ -21,6 +21,8 @@ function movePlayer(dt)
   local oldPlayerX = player.x
   local oldPlayerY = player.y
   
+  
+  
   player.velocity.x = lerp(player.velocity.x, 0, 0.02)
   
   player.velocity.y = lerp(player.velocity.y, 0, 0.02)
@@ -37,19 +39,18 @@ function movePlayer(dt)
   player.x = player.x + player.velocity.x
   
   local collCheckX, tileX = gridModule.checkCollisionsBetweenPlayerAndTiles(player)
-  
   if collCheckX then
-    if player.velocity.x > 0 then 
+    if player.velocity.x > 0 then
+      
       player.x = tileX.x - player.width
       
       player.velocity.x = 0
-    
-    end
-    
-    if player.velocity.x < 0 then
+      
+    elseif player.velocity.x < 0 then
       player.x = tileX.x + 50
       
       player.velocity.x = 0
+      
     end
   end
   
@@ -65,19 +66,18 @@ function movePlayer(dt)
   player.y = player.y + player.velocity.y
 
   local collCheckY, tileY = gridModule.checkCollisionsBetweenPlayerAndTiles(player)
-  
   if collCheckY then
-    if player.velocity.y > 0 then 
+    if player.velocity.y > 0 then
+      
       player.y = tileY.y - player.height
       
       player.velocity.y = 0
-    
-    end
-    
-    if player.velocity.y < 0 then
+      
+    elseif player.velocity.y < 0 then
       player.y = tileY.y + 50
       
       player.velocity.y = 0
+      
     end
   end
   
