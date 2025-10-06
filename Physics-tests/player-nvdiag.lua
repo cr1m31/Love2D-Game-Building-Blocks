@@ -8,10 +8,20 @@ local player = {
   width = 20,
   height = 40,
   speed = 400,
+  diagonalSpeed = 400 / 1.414,
+  defaultSpeed = 400,
 }
+
+
+local x = 1
+local y = 1
+
+print(math.sqrt(x * x + y * y))
 
 function playerModule.update(dt)
   movePlayer(dt)
+  
+  limitDiagonalSpeed()
 end
 
 function movePlayer(dt)
@@ -45,6 +55,15 @@ function movePlayer(dt)
     player.y = oldPlayerY
   end
   
+end
+
+function limitDiagonalSpeed()
+  if ( love.keyboard.isDown("a") or love.keyboard.isDown("d") ) and
+    ( love.keyboard.isDown("w") or love.keyboard.isDown("s") ) then
+    player.speed = player.diagonalSpeed
+  else
+    player.speed = player.defaultSpeed
+  end
 end
 
 function playerModule.draw()

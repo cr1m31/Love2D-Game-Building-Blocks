@@ -11,8 +11,10 @@ local player = {
   defaultSpeed = 400,
   diagonalSpeed = 400 / 1.414
 }
+
 local x = 1
 local y = 1
+
 print(math.sqrt(x * x + y * y))
 
 function playerModule.update(dt)
