@@ -1,7 +1,7 @@
 io.stdout:setvbuf("no")
 
 local gridModule = require("grid")
-local playerModule = require("player-no-vec-limit-diag-speed")
+local playerModule = require("player-nvdiag")
 
 function love.update(dt)
   playerModule.update(dt)
