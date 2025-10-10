@@ -3,6 +3,23 @@ io.stdout:setvbuf("no") -- disable output buffering to see debug text directly i
 local SCREENWIDTH = love.graphics.getWidth()
 local SCREENHEIGHT = love.graphics.getHeight()
 
+-- vector formulas
+
+-- matrix
+-- [i , j]  (i = x, j = y) = x and y of the vector tip or arrow or direction
+-- [aX,aY] = vector a
+-- [bX,bY] = vector b
+
+-- how to multiply two vectors (and obtain a third vector c) with a formula and matrix
+--  (aY - bY)i + (bX - aX)j
+--  (  cX   )i + (   cY  )j
+
+
+-- ' [v] = |magnitude| of vector'
+-- find the  magnitude of a vector
+-- [v] = square root of { (vX * vX) + (vY * vY) }
+
+
 -- first vector code structure or type, with 4 variables (origin and vector tip)
 local vectorArrow = {
   x1 = SCREENWIDTH / 2, -- origin
