@@ -31,6 +31,8 @@ function love.load()
   origin.y = 250
 end
 
+-- create a function to add to vectors like position + vector to create the full vector = origin + vector
+
 function love.update()
   local mouseX, mouseY = love.mouse.getPosition()
   vector.x = mouseX - 8
