@@ -42,23 +42,23 @@ end
 
 -- create a function to add to vectors like position + vector to create the full vector = origin + vector
 function testAddingOriginTodirectionalVectorMatrix(originX, originY)
-  directionalVectorMatrix[1][1] = directionalVectorMatrix[1][1] + originX
-  directionalVectorMatrix[2][1] = directionalVectorMatrix[2][1] + originY
+  directionalVectorMatrix[1][1] = vectorOrigin.x + originX
+  directionalVectorMatrix[2][1] = vectorOrigin.y + originY
 end
 
 local xOriginOfVectorMatrix = 0
 local yOriginOfVectorMatrix = 0
 function love.keypressed(key, scancode, isrepeat)
   if key == "left" then
-    testAddingOriginTodirectionalVectorMatrix(- 20, 0)
+    testAddingOriginTodirectionalVectorMatrix(- 60, 0)
   elseif  key == "right" then
-    testAddingOriginTodirectionalVectorMatrix(20, 0)
+    testAddingOriginTodirectionalVectorMatrix(60, 0)
   end
   
   if key == "up" then
-    testAddingOriginTodirectionalVectorMatrix(0, - 20)
+    testAddingOriginTodirectionalVectorMatrix(0, - 60)
   elseif key == "down" then 
-    testAddingOriginTodirectionalVectorMatrix(0, 20)
+    testAddingOriginTodirectionalVectorMatrix(0, 60)
   end
 end
 
