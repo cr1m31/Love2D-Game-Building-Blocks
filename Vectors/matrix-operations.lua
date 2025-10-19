@@ -1,15 +1,38 @@
 local SCREENWIDTH = love.graphics.getWidth()
 local SCREENHEIGHT = love.graphics.getHeight()
 
--- a column vector
--- (x)
--- (y)
+--[[----------------------------------------------------------------------------
+  2D VECTORS AND MATRICES (CURRENT IMPLEMENTATION)
+  
+  A 2D vector (point) is represented as:
+    { x, y }
 
--- 2x2 matrix
--- [x , y]
--- [x1,y1]
+  A line is represented as two 2D vectors:
+    {
+      {x1, y1},  -- start point
+      {x2, y2},  -- end point
+    }
 
--- it is better to use 3x3 matrix for any transformations (shearing, scaling, rotating, translating = moving)
+  We are currently using a **2x2 matrix** for linear transformations
+  such as **projection**, **scaling**, **rotation**, or **shearing**
+  (as long as translation is NOT required).
+
+  A 2x2 matrix looks like:
+      | a  b |
+      | c  d |
+
+  When multiplied by a vector (x, y), the result is:
+      x' = a*x + b*y
+      y' = c*x + d*y
+
+  This is pure linear transformation around the origin (0,0).
+  To include translation (movement), we would need a 3x3 matrix
+  and homogeneous coordinates (x, y, 1). That’s optional and can
+  be added later when we upgrade to full transformation matrices.
+  
+  
+  
+  -- it is better to use 3x3 matrix for any transformations (shearing, scaling, rotating, translating = moving)
 -- because translating a set of points needs extra dimension in the matrix
 -- and also to be able to use the same matrix shape on each operation to simplify the logic of functions
 
@@ -27,75 +50,72 @@ local SCREENHEIGHT = love.graphics.getHeight()
 -- [x]
 -- [y]
 -- [1]
+----------------------------------------------------------------------------]]--
 
--- ' [v] = |magnitude| of vector'
--- find the  magnitude of a vector
--- [v] = square root of { (vX * vX) + (vY * vY) }
-
--- 2x2 matrix
-local twoByTwoMatrix = {
-  {1,2}, -- {a,b}, or {x1,y1}
-  {3,4}, -- {c,d},    {x2,y2}
+-- Initial line segment (two points)
+local line = {
+    {0, -80},  -- start point (x1, y1)
+    {20,  80}, -- end point   (x2, y2)
 }
 
-local twoByTwoMatrix2 = {
-    {a},
-    {b},
-    {c},
-    {d},
+-- 2x2 projection matrix onto the X-axis
+-- Effect: keep x component, remove y component
+local PROJ_X_AXIS = {
+    {1, 0},
+    {0, 0},
 }
 
-local matrixToProj = {
-  {0,-80},
-  {20,80},
+-- 2x2 projection matrix onto the Y-axis
+-- Effect: remove x component, keep y component
+local PROJ_Y_AXIS = {
+    {0, 0},
+    {0, 1},
 }
 
-local twoByTwoMatrixProjectionOnXAxis = {  -- [1 0] -- allow to project vector on x axis
-  {1,0},                                   -- [0 0]
-  {0,0},
-}
+-- Multiply a 2D vector (x,y) by a 2x2 matrix
+function projectVector(v, m)
+    local x = v[1]
+    local y = v[2]
+    v[1] = m[1][1] * x + m[1][2] * y
+    v[2] = m[2][1] * x + m[2][2] * y
+end
 
-local twoByTwoMatrixProjectionOnYAxis = {  -- [0 0] -- allow to project vector on y axis
-  {0,0},                                   -- [0 1]
-  {0,1},
-}
-
-function projectVectorHorizontally(vec, matrix)
-  local a,b,c,d = matrix[1][1], matrix[1][2], matrix[2][1], matrix[2][2]
-  vec[1][1] = vec[1][1] * a 
-  vec[1][2] = vec[1][2] * b
-  vec[2][1] = vec[2][1] * c
-  vec[2][2] = vec[2][2] * d
+-- Apply projection to a line (two vectors)
+function projectLine(line, m)
+    projectVector(line[1], m)
+    projectVector(line[2], m)
 end
 
 function love.load()
-  local a1,b1,c1,d1 = matrixToProj[1][1], matrixToProj[1][2], matrixToProj[2][1], matrixToProj[2][2]
-
-  projectVectorHorizontally(matrixToProj, twoByTwoMatrixProjectionOnXAxis)
-
-  
-  print("a1: " .. a1 .. " b1: " .. b1 .. " c1: " .. c1 .. " d1: " .. d1)
-  
+    -- Project the initial line onto the X-axis as a default example
+    projectLine(line, PROJ_X_AXIS)
 end
 
 function love.keypressed(key, scancode, isrepeat)
-  if key == "left" then
-    
-  elseif  key == "right" then
-    
-  end
-  
-  if key == "up" then
-    
-  elseif key == "down" then 
-    
-  end
+    if key == "left" then
+        -- reset and project on X-axis
+        line = {
+            {0, -80},
+            {20, 80}
+        }
+        projectLine(line, PROJ_X_AXIS)
+
+    elseif key == "right" then
+        -- reset and project on Y-axis
+        line = {
+            {0, -80},
+            {20, 80}
+        }
+        projectLine(line, PROJ_Y_AXIS)
+    end
 end
 
 function love.draw()
-  local offset = 80
-  local a,b,c,d = matrixToProj[1][1], matrixToProj[1][2], matrixToProj[2][1], matrixToProj[2][2]
-  love.graphics.line(a + offset,b + offset,c + offset,d + offset)
-  love.graphics.print("initial point", a + offset, b + offset)
-  love.graphics.print("end point", c + offset, d + offset)
+    local offset = 80
+    local x1, y1 = line[1][1] + offset, line[1][2] + offset
+    local x2, y2 = line[2][1] + offset, line[2][2] + offset
+
+    love.graphics.line(x1, y1, x2, y2)
+    love.graphics.print("start", x1, y1)
+    love.graphics.print("end", x2, y2)
 end
