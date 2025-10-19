@@ -9,6 +9,25 @@ local SCREENHEIGHT = love.graphics.getHeight()
 -- [x , y]
 -- [x1,y1]
 
+-- it is better to use 3x3 matrix for any transformations (shearing, scaling, rotating, translating = moving)
+-- because translating a set of points needs extra dimension in the matrix
+-- and also to be able to use the same matrix shape on each operation to simplify the logic of functions
+
+-- 3x3 matrix
+-- [a,b,tx]
+-- [c,d,ty]
+-- [0, 0,1]
+
+-- a, b	Control x (scaling, rotation, shear)
+-- c, d	Control y (scaling, rotation, shear)
+-- tx, ty	Translation (movement)
+-- last row	0 0 1 → keeps matrix valid in 2D
+
+-- and the vector x,y,1 that is used with such 3x3 matrix for operations
+-- [x]
+-- [y]
+-- [1]
+
 -- ' [v] = |magnitude| of vector'
 -- find the  magnitude of a vector
 -- [v] = square root of { (vX * vX) + (vY * vY) }
