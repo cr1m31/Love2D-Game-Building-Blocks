@@ -14,6 +14,14 @@ local SCREENHEIGHT = love.graphics.getHeight()
 --  (aY - bY)i + (bX - aX)j
 --  (  cX   )i + (   cY  )j
 
+-- a column vector
+-- [x]
+-- [y]
+
+-- 2x2 matrix
+-- [x , y]
+-- [x1,y1]
+
 
 -- ' [v] = |magnitude| of vector'
 -- find the  magnitude of a vector
@@ -27,6 +35,53 @@ local vectorArrow = {
   x2 = 500, -- end point
   y2 = 250, -- end point
 }
+
+-- 2x2 matrix
+local twoByTwoMatrix = {
+  {1,2}, -- {a,b}, or {x1,y1}
+  {3,4}, -- {c,d},    {x2,y2}
+}
+
+local twoByTwoMatrix2 = {
+    {a},
+    {b},
+    {c},
+    {d},
+}
+
+local twoByTwoMatrixProjectionOnXAxis = {  -- [1 0] -- allow to project vector on x axis
+  {1,0},                                   -- [0 0]
+  {0,0},
+}
+
+local twoByTwoMatrixProjectionOnYAxis = {  -- [0 0] -- allow to project vector on y axis
+  {0,0},                                   -- [0 1]
+  {0,1},
+}
+
+--print("a: x1 : " .. twoByTwoMatrix[1][1])
+--print("b: y1 : " .. twoByTwoMatrix[1][2])
+--print("c: x2 : " .. twoByTwoMatrix[2][1])
+--print("d: y2 : " .. twoByTwoMatrix[2][2])
+
+for i = 1, #twoByTwoMatrix do
+  --print("i: " .. i)
+  for j = 1, #twoByTwoMatrix[i] do
+    --print(" j: " .. j)
+    
+    
+    --print("twoByTwoMatrix: " .. twoByTwoMatrix[i][j])
+    
+    if i == 1 and j == 1 then
+      print(" x1 " .. twoByTwoMatrix[i][j])
+    elseif i == 1 and j == 2 then
+      print(" y1 " .. twoByTwoMatrix[i][j])
+    end
+    if j == 2 then
+      print("y1 and y2 " .. twoByTwoMatrix[i][j])
+    end
+  end
+end
 
 -- second vector code structure in two parts, origin and end, tip, direction or arrow
 local directionalVector = {
