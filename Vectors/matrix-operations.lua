@@ -1,7 +1,30 @@
-io.stdout:setvbuf("no") -- disable output buffering to see debug text directly in output when running game
-
 local SCREENWIDTH = love.graphics.getWidth()
 local SCREENHEIGHT = love.graphics.getHeight()
+
+-- vector formulas
+
+-- matrix
+-- [i , j]  (i = x, j = y) = x and y of the vector tip or arrow or direction
+-- [aX,aY] = vector a
+-- [bX,bY] = vector b
+
+-- how to multiply two vectors (and obtain a third vector c) with a formula and matrix
+--  (aY - bY)i + (bX - aX)j
+--  (  cX   )i + (   cY  )j
+
+-- a column vector
+-- [x]
+-- [y]
+
+-- 2x2 matrix
+-- [x , y]
+-- [x1,y1]
+
+
+-- ' [v] = |magnitude| of vector'
+-- find the  magnitude of a vector
+-- [v] = square root of { (vX * vX) + (vY * vY) }
+
 
 -- first vector code structure or type, with 4 variables (origin and vector tip)
 local vectorArrow = {
@@ -10,6 +33,53 @@ local vectorArrow = {
   x2 = 500, -- end point
   y2 = 250, -- end point
 }
+
+-- 2x2 matrix
+local twoByTwoMatrix = {
+  {1,2}, -- {a,b}, or {x1,y1}
+  {3,4}, -- {c,d},    {x2,y2}
+}
+
+local twoByTwoMatrix2 = {
+    {a},
+    {b},
+    {c},
+    {d},
+}
+
+local twoByTwoMatrixProjectionOnXAxis = {  -- [1 0] -- allow to project vector on x axis
+  {1,0},                                   -- [0 0]
+  {0,0},
+}
+
+local twoByTwoMatrixProjectionOnYAxis = {  -- [0 0] -- allow to project vector on y axis
+  {0,0},                                   -- [0 1]
+  {0,1},
+}
+
+--print("a: x1 : " .. twoByTwoMatrix[1][1])
+--print("b: y1 : " .. twoByTwoMatrix[1][2])
+--print("c: x2 : " .. twoByTwoMatrix[2][1])
+--print("d: y2 : " .. twoByTwoMatrix[2][2])
+
+for i = 1, #twoByTwoMatrix do
+  --print("i: " .. i)
+  for j = 1, #twoByTwoMatrix[i] do
+    --print(" j: " .. j)
+    
+    
+    --print("twoByTwoMatrix: " .. twoByTwoMatrix[i][j])
+    
+    if i == 1 and j == 1 then
+      print(" x1 " .. twoByTwoMatrix[i][j])
+    elseif i == 1 and j == 2 then
+      print(" y1 " .. twoByTwoMatrix[i][j])
+    end
+    if j == 2 then
+      print("y1 and y2 " .. twoByTwoMatrix[i][j])
+    end
+  end
+end
 
 -- second vector code structure in two parts, origin and end, tip, direction or arrow
 local directionalVector = {
@@ -42,23 +112,23 @@ end
 
 -- create a function to add to vectors like position + vector to create the full vector = origin + vector
 function testAddingOriginTodirectionalVectorMatrix(originX, originY)
-  directionalVectorMatrix[1][1] = directionalVectorMatrix[1][1] + originX
-  directionalVectorMatrix[2][1] = directionalVectorMatrix[2][1] + originY
+  directionalVectorMatrix[1][1] = vectorOrigin.x + originX
+  directionalVectorMatrix[2][1] = vectorOrigin.y + originY
 end
 
 local xOriginOfVectorMatrix = 0
 local yOriginOfVectorMatrix = 0
 function love.keypressed(key, scancode, isrepeat)
   if key == "left" then
-    testAddingOriginTodirectionalVectorMatrix(- 20, 0)
+    testAddingOriginTodirectionalVectorMatrix(- 60, 0)
   elseif  key == "right" then
-    testAddingOriginTodirectionalVectorMatrix(20, 0)
+    testAddingOriginTodirectionalVectorMatrix(60, 0)
   end
   
   if key == "up" then
-    testAddingOriginTodirectionalVectorMatrix(0, - 20)
+    testAddingOriginTodirectionalVectorMatrix(0, - 60)
   elseif key == "down" then 
-    testAddingOriginTodirectionalVectorMatrix(0, 20)
+    testAddingOriginTodirectionalVectorMatrix(0, 60)
   end
 end
 

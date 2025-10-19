@@ -1,5 +1,3 @@
-io.stdout:setvbuf("no")
-
 local SCREENWIDTH = love.graphics.getWidth()
 local SCREENHEIGHT = love.graphics.getHeight()
 
