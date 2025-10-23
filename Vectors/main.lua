@@ -1,4 +1,4 @@
 io.stdout:setvbuf("no") -- disable output buffering to see debug text directly in output when running game
 
-local vectors = require("simple-vector")
+local vectors = require("simpleVector.simple-vector")
 
