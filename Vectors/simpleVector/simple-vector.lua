@@ -48,7 +48,7 @@ local xInversionMatrix = {
 }
 function invertXaxis()
     local vx, vy = vector.x, vector.y
-    vector.x = (xInversionMatrix[1][1] * vx) + (xInversionMatrix[1][2] * vy) + centerX
+    vector.x = (xInversionMatrix[1][1] * vx + centerX) + (xInversionMatrix[1][2] * vy + centerX) 
     vector.y = (xInversionMatrix[2][1] * vx) + (xInversionMatrix[2][2] * vy) 
 end
 
