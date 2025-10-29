@@ -18,6 +18,9 @@ local vectorTipRadius = 6
 --    1,0,
 --    0,0
 --}
+
+-- local vectorStucture = {x = 0, y = 0}
+
 local function matrixMultiplyVector(m, v)
     -- multiply each horizontal row of the matrix by the column vector (vertical) to get new x and y
     local x = m[1] * v.x + m[2] * v.y
