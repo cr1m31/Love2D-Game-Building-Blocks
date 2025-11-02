@@ -4,7 +4,12 @@ local vectorUnitModule = require("vector-unit")
 local playerModule = require("player")
 
 function love.update()
+  
+  playerModule.update()
+  
   vectorUnitModule.update()
+  
+  
 end
 
 function love.draw()

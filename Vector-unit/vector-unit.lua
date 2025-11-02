@@ -25,14 +25,19 @@ local vectorLimitBox = {
 vectorLimitBox.width = 100
 vectorLimitBox.height = 100
 
-local x, y, w, h = playerModule.getPlayerPosAndDimensions()
+
 
 function vectorUnitModule.update()
   
-  origin.x, origin.y = x + w * 0.5, y + h * 0.5
+  local playerInst = playerModule.getPlayerAttributes()
   
-  vectorLimitBox.x = x
-  vectorLimitBox.y = y
+  origin.x, origin.y = playerInst.x + playerInst.width * 0.5, playerInst.y + playerInst.height * 0.5
+  
+  vectorLimitBox.x = playerInst.x
+  vectorLimitBox.y = playerInst.y
+  
+  vector.x = playerInst.velocity.x * 50
+  vector.y = playerInst.velocity.y * 50
   
 end
 
@@ -41,7 +46,7 @@ function vectorUnitModule.draw()
   
   love.graphics.circle("line", origin.x + vector.x, origin.y + vector.y, 10) 
   
-  love.graphics.rectangle("line", origin.x - 100, origin.y - 100, 200, 200)
+  love.graphics.rectangle("line", origin.x - 50, origin.y - 50, 100, 100)
 end
 
 return vectorUnitModule
