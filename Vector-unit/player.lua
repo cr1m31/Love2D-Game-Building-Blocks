@@ -38,8 +38,6 @@ end
 
 function playerModule.update(dt)
   movePlayer(dt)
-  
-  vectorLogic.update(player)
 end
 
 function playerModule.draw()

@@ -5,7 +5,11 @@ local playerModule = require("player")
 
 function love.update(dt)
   playerModule.update(dt)
+  
+  local player = playerModule.getPlayerAttributes()
+  vectorUnitModule.update(player)
 end
+
 
 function love.draw()
   playerModule.draw()
