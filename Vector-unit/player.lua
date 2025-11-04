@@ -1,5 +1,7 @@
 local playerModule = {}
 
+local vectorLogic = require("vectorLogic")
+
 local player = {
   x = 100,
   y = 200,
@@ -9,39 +11,35 @@ local player = {
   acceleration = 2
 }
 
-function movePlayer()
-  if love.keyboard.isDown("a") then
-    player.velocity.x = - 1
-  end
-  if love.keyboard.isDown("d") then
-    player.velocity.x = 1
-  end
-  
-  if love.keyboard.isDown("w") then
-    player.velocity.y = - 1
-  end
-  if love.keyboard.isDown("s") then
-    player.velocity.y = 1
-  end
-  
-  if love.keyboard.isDown("a") or love.keyboard.isDown("d") or love.keyboard.isDown("w") or love.keyboard.isDown("s") then
-    
-  else
-    player.velocity.x = 0
-    player.velocity.y = 0
-  end
-  
-  player.x = player.x + player.velocity.x
-  player.y = player.y + player.velocity.y
-  
+function movePlayer(dt)
+local inputX, inputY = getVectorInputDirection()
+  inputX, inputY = vectorLogic.getNormalizedVector(inputX, inputY)
+
+  player.velocity.x = player.velocity.x + inputX * player.acceleration * dt
+  player.velocity.y = player.velocity.y + inputY * player.acceleration * dt
+end
+
+function getVectorInputDirection()
+  local dx, dy = 0, 0
+  if love.keyboard.isDown("a") then 
+    dx = dx - 1 end
+  if love.keyboard.isDown("d") then 
+    dx = dx + 1 end
+  if love.keyboard.isDown("w") then 
+    dy = dy - 1 end
+  if love.keyboard.isDown("s") then 
+    dy = dy + 1 end
+  return dx, dy
 end
 
 function playerModule.getPlayerAttributes()
   return player
 end
 
-function playerModule.update()
-  movePlayer()
+function playerModule.update(dt)
+  movePlayer(dt)
+  
+  vectorLogic.update(player)
 end
 
 function playerModule.draw()
