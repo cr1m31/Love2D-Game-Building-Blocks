@@ -23,11 +23,14 @@ local vectorLimitBox = {
 vectorLimitBox.width = 100
 vectorLimitBox.height = 100
 
-local vectorDrawLengthModifier = 50
+function vectorUnitModule.getNormalizedVector(x, y)
+  local magnitude = math.sqrt(x * x + y * y)
 
-function vectorUnitModule.getNormalizedVector()
-  local magnitude = math.sqrt( (vector.x * vector.x) + (vector.y * vector.y) )
-  return vector.x / magnitude, vector.y / magnitude, magnitude
+  if magnitude == 0 then -- prevent a division by zero error
+    return 0, 0
+  end
+
+  return x / magnitude, y / magnitude
 end
 
 function vectorUnitModule.update(playerInst)
@@ -42,9 +45,7 @@ function vectorUnitModule.update(playerInst)
 end
 
 function vectorUnitModule.draw()
-  love.graphics.print("normalized vector :" .. vectorUnitModule.getNormalizedVector() .. " vecx : " .. vector.x .. " vecy : " .. vector.y, 250, 400 )
-  
-  love.graphics.line(origin.x, origin.y, origin.x + (vector.x * vectorDrawLengthModifier), origin.y + (vector.y * vectorDrawLengthModifier ))
+  love.graphics.line(origin.x, origin.y, origin.x + vector.x, origin.y + vector.y)
   
   love.graphics.circle("line", origin.x + vector.x, origin.y + vector.y, 10) 
   
