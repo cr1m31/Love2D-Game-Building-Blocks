@@ -8,7 +8,8 @@ local player = {
   width = 40,
   height = 60,
   velocity = {x = 0, y = 0},
-  acceleration = 200
+  acceleration = 200,
+  velocityLimit = {x = 50, y = 50}
 }
 
 function movePlayer(dt)
@@ -49,6 +50,8 @@ end
 
 function playerModule.update(dt)
   movePlayer(dt)
+  
+  vectorLogic.limitVelocity(player)
 end
 
 function playerModule.draw()
