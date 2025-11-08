@@ -57,7 +57,7 @@ function vectorLogic.draw()
   
   love.graphics.circle("line", origin.x + vector.x, origin.y + vector.y, 10) 
   
-  love.graphics.rectangle("line", origin.x - 50, origin.y - 50, 100, 100)
+  love.graphics.rectangle("line", origin.x - 80, origin.y - 80, 160, 160)
 end
 
 return vectorLogic

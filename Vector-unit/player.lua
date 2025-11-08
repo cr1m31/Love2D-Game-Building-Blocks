@@ -8,8 +8,8 @@ local player = {
   width = 40,
   height = 60,
   velocity = {x = 0, y = 0},
-  acceleration = 800,
-  velocityLimit = 50,
+  acceleration = 300,
+  velocityLimit = 80,
 }
 
 function movePlayer(dt)
@@ -55,7 +55,7 @@ end
 function playerModule.draw()
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
   
-  love.graphics.circle("line", player.x + player.width * 0.5, player.y + player.height * 0.5, 50)
+  love.graphics.circle("line", player.x + player.width * 0.5, player.y + player.height * 0.5, 80)
   
   love.graphics.print("velx : " .. player.velocity.x .. " vely : " .. player.velocity.y, 250, 400)
 end
