@@ -8,14 +8,12 @@ local player = {
   width = 40,
   height = 60,
   velocity = {x = 0, y = 0},
-  acceleration = 200,
-  velocityLimit = {x = 50, y = 50}
+  acceleration = 800,
+  velocityLimit = 50,
 }
 
 function movePlayer(dt)
   local inputX, inputY = getInputDirectionVector()
-
-  inputX, inputY = vectorLogic.getNormalizedVector(inputX, inputY)
 
   player.velocity.x = player.velocity.x + inputX * player.acceleration * dt
   player.velocity.y = player.velocity.y + inputY * player.acceleration * dt
@@ -51,11 +49,13 @@ end
 function playerModule.update(dt)
   movePlayer(dt)
   
-  vectorLogic.limitVelocity(player)
+  vectorLogic.normalizeVectorAndLimitVelocity(player)
 end
 
 function playerModule.draw()
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
+  
+  love.graphics.circle("line", player.x + player.width * 0.5, player.y + player.height * 0.5, 50)
   
   love.graphics.print("velx : " .. player.velocity.x .. " vely : " .. player.velocity.y, 250, 400)
 end

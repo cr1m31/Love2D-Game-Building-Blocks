@@ -23,39 +23,33 @@ local vectorLimitBox = {
 vectorLimitBox.width = 100
 vectorLimitBox.height = 100
 
-function vectorLogic.limitVelocity(player)
-  local vx, vy = player.velocity.x, player.velocity.y
-  local mag = math.sqrt(vx * vx + vy * vy)
+-- Normalize the player's velocity vector and limit its maximum magnitude
+function vectorLogic.normalizeVectorAndLimitVelocity(player)
+    local vx, vy = player.velocity.x, player.velocity.y
 
-  -- Calculate magnitude limit based on your x/y velocity limits
-  local maxMag = math.sqrt(player.velocityLimit.x^2 + player.velocityLimit.y^2)
+    local magnitude = math.sqrt(vx * vx + vy * vy)
 
-  if mag > maxMag then
-    player.velocity.x = (vx / mag) * maxMag
-    player.velocity.y = (vy / mag) * maxMag
-  end
+    if magnitude == 0 then
+        return
+    end
+
+    if magnitude > player.velocityLimit then
+        local normalizationFactor = player.velocityLimit / magnitude
+        player.velocity.x = vx * normalizationFactor
+        player.velocity.y = vy * normalizationFactor
+    end
 end
 
 
-function vectorLogic.getNormalizedVector(x, y)
-  local magnitude = math.sqrt(x * x + y * y)
+function vectorLogic.update(player)
+  origin.x = player.x + player.width * 0.5
+  origin.y = player.y + player.height * 0.5
 
-  if magnitude == 0 then -- prevent a division by zero error
-    return 0, 0
-  end
+  vectorLimitBox.x = player.x
+  vectorLimitBox.y = player.y
 
-  return x / magnitude, y / magnitude
-end
-
-function vectorLogic.update(playerInst)
-  origin.x = playerInst.x + playerInst.width * 0.5
-  origin.y = playerInst.y + playerInst.height * 0.5
-
-  vectorLimitBox.x = playerInst.x
-  vectorLimitBox.y = playerInst.y
-
-  vector.x = playerInst.velocity.x
-  vector.y = playerInst.velocity.y
+  vector.x = player.velocity.x
+  vector.y = player.velocity.y
 end
 
 function vectorLogic.draw()
