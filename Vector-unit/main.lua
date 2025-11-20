@@ -1,17 +1,11 @@
-io.stdout:setvbuf("no") -- disable output buffering to see debug text directly in output when running game
+io.stdout:setvbuf("no") -- disable output buffering to see debug text immediately
 
-local vectorUnitModule = require("vectorLogic")
 local playerModule = require("player")
 
 function love.update(dt)
-  playerModule.update(dt)
-  
-  local player = playerModule.getPlayerAttributes()
-  vectorUnitModule.update(player)
+    playerModule.update(dt)
 end
 
 function love.draw()
-  playerModule.draw()
-  
-  vectorUnitModule.draw()  
+    playerModule.draw()
 end
