@@ -25,21 +25,30 @@ vectorLimitBox.height = 100
 
 -- Normalize the player's velocity vector and limit its maximum magnitude
 function vectorLogic.normalizeVectorAndLimitVelocity(player)
-    local vx, vy = player.velocity.x, player.velocity.y
+    -- store old velocity
+    local oldVelocityX = player.velocity.x
+    local oldVelocityY = player.velocity.y
 
-    local magnitude = math.sqrt(vx * vx + vy * vy)
+    -- get magnitude before square root of it
+    local magnitudeSquared = oldVelocityX * oldVelocityX + oldVelocityY * oldVelocityY
+    if magnitudeSquared == 0 then return end
 
-    if magnitude == 0 then
-        return
-    end
-
-    if magnitude > player.velocityLimit then
-        local normalizationFactor = player.velocityLimit / magnitude
-        player.velocity.x = vx * normalizationFactor
-        player.velocity.y = vy * normalizationFactor
+    local limit = player.velocityLimit
+    -- square limit to compare with squared magnitude
+    local limitSquared = limit * limit
+    
+    -- avoid calling sqrt unnecessarily; only compute magnitude if speed exceeds the limit
+    if magnitudeSquared > limitSquared then
+        local magnitude = math.sqrt(magnitudeSquared)
+        
+        -- scaling factor to reduce the velocity to the speed limit
+        local scalingFactor = limit / magnitude
+        
+        -- apply the scaling factor to each velocity component
+        player.velocity.x = oldVelocityX * scalingFactor
+        player.velocity.y = oldVelocityY * scalingFactor
     end
 end
-
 
 function vectorLogic.update(player)
   origin.x = player.x + player.width * 0.5
