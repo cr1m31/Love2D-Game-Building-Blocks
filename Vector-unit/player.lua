@@ -23,10 +23,14 @@ end
 
 function getInputDirectionVector()
     local dx, dy = 0, 0
-    if love.keyboard.isDown("a") then dx = dx - 1 end
-    if love.keyboard.isDown("d") then dx = dx + 1 end
-    if love.keyboard.isDown("w") then dy = dy - 1 end
-    if love.keyboard.isDown("s") then dy = dy + 1 end
+    if love.keyboard.isDown("a") then
+      dx = dx - 1 end
+    if love.keyboard.isDown("d") then
+      dx = dx + 1 end
+    if love.keyboard.isDown("w") then
+      dy = dy - 1 end
+    if love.keyboard.isDown("s") then
+      dy = dy + 1 end
     return dx, dy
 end
 

@@ -6,15 +6,17 @@ function vectorLogic.normalizeVectorAndLimitVelocity(player)
     local oldVelocityY = player.velocity.y
 
     local magnitudeSquared = oldVelocityX * oldVelocityX + oldVelocityY * oldVelocityY
-    if magnitudeSquared == 0 then return end
+    if magnitudeSquared == 0 then 
+      return 
+    end
 
-    local limit = player.velocityLimit
-    local limitSquared = limit * limit
+    local limitSquared = player.velocityLimit * player.velocityLimit
 
     -- avoid calling sqrt unless speed exceeds limit
     if magnitudeSquared > limitSquared then
         local magnitude = math.sqrt(magnitudeSquared)
-        local scalingFactor = limit / magnitude
+        
+        local scalingFactor = player.velocityLimit / magnitude
         player.velocity.x = oldVelocityX * scalingFactor
         player.velocity.y = oldVelocityY * scalingFactor
     end
