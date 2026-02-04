@@ -54,7 +54,9 @@ end
 
 function playerModule.draw()
     -- Draw the player rectangle
-    love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
+    -- round x and y coordinates to avoid float values to stop jitter images or shapes also add 0.5 to offset the lines 
+    --     to render them clearly
+    love.graphics.rectangle("line", math.floor(player.x) + 0.5, math.floor(player.y) + 0.5, player.width, player.height)
 
     -- Draw the velocity vector (origin at center of player)
     local originX = player.x + player.width * 0.5
