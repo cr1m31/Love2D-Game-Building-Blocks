@@ -1,74 +1,56 @@
 local playerModule = {}
-local vectorLogic = require("vectorLogic")
 
 local player = {
-    x = 100,
-    y = 200,
-    width = 40,
-    height = 60,
-    velocity = {x = 0, y = 0},
-    acceleration = 300,
-    velocityLimit = 80,
+  x = 300,
+  y = 300,
+  width = 50,
+  height = 70,
+  speed = 100
 }
 
+function rawPlayerInput()
+  local moveX, moveY = 0, 0 -- reset to zero each update
+  
+  if love.keyboard.isDown("a") then
+    moveX = moveX - 1
+  end
+  if love.keyboard.isDown("d") then
+    moveX = moveX + 1
+  end
+  
+  if love.keyboard.isDown("w") then
+    moveY = moveY - 1
+  end
+  
+  if love.keyboard.isDown("s") then
+    moveY = moveY + 1
+  end
+  
+  return moveX, moveY
+end
+
 function movePlayer(dt)
-    local inputX, inputY = getInputDirectionVector()
-
-    player.velocity.x = player.velocity.x + inputX * player.acceleration * dt
-    player.velocity.y = player.velocity.y + inputY * player.acceleration * dt
-
-    player.x = player.x + player.velocity.x * dt
-    player.y = player.y + player.velocity.y * dt
-end
-
-function getInputDirectionVector()
-    local directionVectorX, directionVectorY = 0, 0
-    
-    if love.keyboard.isDown("a") then
-      directionVectorX = directionVectorX - 1 
-    end
-    
-    if love.keyboard.isDown("d") then
-      directionVectorX = directionVectorX + 1 
-    end
-    
-    if love.keyboard.isDown("w") then
-      directionVectorY = directionVectorY - 1 
-    end
-    
-    if love.keyboard.isDown("s") then
-      directionVectorY = directionVectorY + 1 
-    end
-    
-    return directionVectorX, directionVectorY
-end
-
-function playerModule.getPlayerAttributes()
-    return player
+  local inputX, inputY = rawPlayerInput()
+  
+  player.x = player.x + inputX * player.speed * dt
+  player.y = player.y + inputY * player.speed * dt
 end
 
 function playerModule.update(dt)
-    movePlayer(dt)
-    vectorLogic.normalizeVectorAndLimitVelocity(player)
+  movePlayer(dt)
 end
 
+--[[--
+  - rounding objects (player rectangle) positions with math floor to always draw objects on pixels not on float values
+  - adding some offset (0.5) pixel to draw lines with full color otherwise the line may be on half a line
+--]]--
+
+local drawLinesOffset = 0.5
 function playerModule.draw()
-    -- Draw the player rectangle
-    -- round x and y coordinates to avoid float values to stop jitter images or shapes also add 0.5 to offset the lines 
-    --     to render them clearly
-    love.graphics.rectangle("line", math.floor(player.x) + 0.5, math.floor(player.y) + 0.5, player.width, player.height)
-
-    -- Draw the velocity vector (origin at center of player)
-    local originX = player.x + player.width * 0.5
-    local originY = player.y + player.height * 0.5
-    love.graphics.line(originX, originY, originX + player.velocity.x, originY + player.velocity.y)
-    love.graphics.circle("line", originX + player.velocity.x, originY + player.velocity.y, 10)
-
-    -- Draw velocity limit circle around player
-    love.graphics.circle("line", originX, originY, player.velocityLimit)
-
-    -- Debug text
-    love.graphics.print("velx: " .. player.velocity.x .. " vely: " .. player.velocity.y, 250, 400)
+  love.graphics.rectangle("line", math.floor(player.x) + drawLinesOffset, math.floor(player.y) + drawLinesOffset, player.width, player.height)
+  
+  local inputX, inputY = rawPlayerInput()
+  love.graphics.print("inputX = " .. inputX .. " inputY = " .. inputY, 100, 200)
 end
 
 return playerModule
