@@ -1,12 +1,8 @@
 local vectorModule = {}
 
 function vectorModule.normalizeVector(player)
-  -- take a triangle with three sides abc
-  -- a = length of the side on the y axis |
-  -- b = length of the side on the x axis ̣__
-  -- c = length of the hypotenuse (= magnitude of the vector)
   -- formula:: a^ + b^ = c^ (^ = squared = **)
-  -- c = square root of (a^ + b^)
+  -- c = square root of (a^ + b^) = magnitude of vector
   
   local magnitude = 0
   local oldX = player.velocity.x
