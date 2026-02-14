@@ -1,11 +1,11 @@
-io.stdout:setvbuf("no") -- disable output buffering to see debug text immediately
+io.stdout:setvbuf("no") 
 
-local playerMod = require("player")
+local vecrorMod = require("vector")
 
-function love.update(dt)
-  playerMod.update(dt)
+function love.update()
+  vecrorMod.update()
 end
 
 function love.draw()
-  playerMod.draw()
+  vecrorMod.draw()
 end
