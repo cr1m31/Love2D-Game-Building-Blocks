@@ -6,16 +6,15 @@ function normalizeVector()
   local squaredMagnitude = vector.x * vector.x + vector.y * vector.y
   
   local magnitude = math.sqrt(squaredMagnitude)
+  print(magnitude)
+  --vector.x = vector.x / magnitude
+  --vector.y = vector.y / magnitude
   
-  vector.x = vector.x / magnitude
-  vector.y = vector.y / magnitude
-  
-  magnitude = magnitude / magnitude
 end
 
 function vectorModule.update()
-  vector.x = love.mouse.getX()
-  vector.y = love.mouse.getY()
+  -- vector.x = love.mouse.getX()
+  -- vector.y = love.mouse.getY()
   
   normalizeVector()
 end
