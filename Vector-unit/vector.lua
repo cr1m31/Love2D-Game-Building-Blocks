@@ -5,6 +5,10 @@ local origin = {x = love.graphics.getWidth() / 2, y = love.graphics.getHeight() 
 
 local vectorFakeScaling = 25
 
+function getMagnitudeFun()
+  return math.sqrt(vector.x * vector.x + vector.y * vector.y)
+end
+
 function normalizeVector()
   local squaredMagnitude = vector.x * vector.x + vector.y * vector.y
   
@@ -24,6 +28,12 @@ end
 
 local getMagnitude = 0
 
+function resetVector(x, y)
+  vector.x = x
+  vector.y = y
+  local mag = getMagnitudeFun()
+end
+
 -- key n to normalize vector and v to get it back as before
 function love.keypressed(key, scan, isrepeat)
   if key == "n" then
@@ -31,8 +41,7 @@ function love.keypressed(key, scan, isrepeat)
   end
   
   if key == "v" then
-    vector.x = 5
-    vector.y = - 8
+    resetVector(5, -8)
   end
 end
 
@@ -43,7 +52,7 @@ function vectorModule.draw()
   love.graphics.line(origin.x, origin.y, vector.x * vectorFakeScaling + origin.x ,vector.y * vectorFakeScaling + origin.y)
   love.graphics.circle("line", vector.x * vectorFakeScaling + origin.x, vector.y * vectorFakeScaling + origin.y, 8)
   
-  love.graphics.print("x : " .. vector.x .. "\n y : " .. vector.y .. "\n magnitude : " .. getMagnitude, 100, 100)
+  love.graphics.print("x : " .. vector.x .. "\n y : " .. vector.y .. "\n magnitude : " .. getMagnitudeFun(), 100, 100)
 end
 
 return vectorModule
