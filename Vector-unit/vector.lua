@@ -1,58 +1,42 @@
 local vectorModule = {}
 
-local vector = {x = 5, y = - 8}
+local vector = {x = 0, y = 0}
 local origin = {x = love.graphics.getWidth() / 2, y = love.graphics.getHeight() / 2}
+local magnitude = 0
 
-local vectorFakeScaling = 25
-
-function getMagnitudeFun()
-  return math.sqrt(vector.x * vector.x + vector.y * vector.y)
+function initializeVector(x, y)
+  vector.x = x
+  vector.y = y
+  magnitude = math.sqrt(vector.x * vector.x + vector.y * vector.y)
 end
 
 function normalizeVector()
-  local squaredMagnitude = vector.x * vector.x + vector.y * vector.y
-  
-  local magnitude = math.sqrt(squaredMagnitude)
-
-  if magnitude == 0 then
-    return
-  end
-  
   vector.x = vector.x / magnitude
   vector.y = vector.y / magnitude
-  
   magnitude = magnitude / magnitude
-  
-  return magnitude
 end
 
-local getMagnitude = 0
-
-function resetVector(x, y)
-  vector.x = x
-  vector.y = y
-  local mag = getMagnitudeFun()
-end
-
--- key n to normalize vector and v to get it back as before
 function love.keypressed(key, scan, isrepeat)
+  if key == "i" then
+    initializeVector(3, 4)
+  end 
+  
   if key == "n" then
-    getMagnitude = normalizeVector()
+    normalizeVector()
   end
   
-  if key == "v" then
-    resetVector(5, -8)
-  end
 end
 
-  
-
+local scalingFactor = 30
 
 function vectorModule.draw()
-  love.graphics.line(origin.x, origin.y, vector.x * vectorFakeScaling + origin.x ,vector.y * vectorFakeScaling + origin.y)
-  love.graphics.circle("line", vector.x * vectorFakeScaling + origin.x, vector.y * vectorFakeScaling + origin.y, 8)
+  love.graphics.circle("line", vector.x * scalingFactor + origin.x, vector.y * scalingFactor + origin.y, 8)
+  love.graphics.circle("fill", origin.x, origin.y, 4)
   
-  love.graphics.print("x : " .. vector.x .. "\n y : " .. vector.y .. "\n magnitude : " .. getMagnitudeFun(), 100, 100)
+  love.graphics.line(origin.x, origin.y, vector.x * scalingFactor + origin.x, vector.y * scalingFactor + origin.y)
+  
+  love.graphics.print("x : " .. vector.x .. "\n y : " .. vector.y .. "\n magnitude : " .. magnitude, 100, 100)
 end
+
 
 return vectorModule
