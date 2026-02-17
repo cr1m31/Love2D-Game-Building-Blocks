@@ -11,6 +11,7 @@ function initializeVector(x, y)
 end
 
 function normalizeVector()
+  magnitude = math.sqrt(vector.x * vector.x + vector.y * vector.y)
   vector.x = vector.x / magnitude
   vector.y = vector.y / magnitude
   magnitude = magnitude / magnitude
