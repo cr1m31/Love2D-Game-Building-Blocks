@@ -13,7 +13,7 @@ end
 
 local horizontalLine = {
   x1 = 100, 
-  y1 = love.graphics.getHeight() / 2, 
+  y1 = love.graphics.getHeight() / 2,
   x2 = love.graphics.getWidth() - 100, 
   y2 = love.graphics.getHeight() / 2
 }

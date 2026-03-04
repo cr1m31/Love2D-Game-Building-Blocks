@@ -1,32 +1,35 @@
 local vectorModule = {}
 
-local displayMod = require("display")
-
-local vector = {x = 0, y = 0}
+local vector = {x = 4, y = 3}
+local unitVector = {x = 0, y = 0}
 local origin = {x = love.graphics.getWidth() / 2, y = love.graphics.getHeight() / 2}
-local magnitude = 0
 
-function vectorModule.initializeVector(x, y)
-  vector.x = x
-  vector.y = y
-  magnitude = math.sqrt(vector.x * vector.x + vector.y * vector.y)
+function calculateMagnitude()
+  local magnitude = math.sqrt(vector.x * vector.x + vector.y * vector.y)
+  return magnitude
 end
 
-function vectorModule.normalizeVector()
-  magnitude = math.sqrt(vector.x * vector.x + vector.y * vector.y)
+function normalizeVector()
+  local processedMagnitude = calculateMagnitude()
+  unitVector.x = unitVector.x / processedMagnitude
+  unitVector.y = unitVector.y / processedMagnitude
   
-  -- prevent 0 division
-  if magnitude == 0 then
-    return
-  end 
+  local normalizedMagnitude = processedMagnitude / processedMagnitude
   
-  vector.x = vector.x / magnitude
-  vector.y = vector.y / magnitude
-  magnitude = magnitude / magnitude
+  return normalizedMagnitude
 end
 
+local vectorScaling = 20
 function vectorModule.draw()
-  displayMod.draw(vector, origin, magnitude)
+  love.graphics.print("magnitude : " .. calculateMagnitude(), 200, 200)
+  
+  love.graphics.print("normalized magnitude : " .. normalizeVector(), 200, 250 )
+  love.graphics.setColor(1,1,1)
+  love.graphics.line(origin.x, origin.y,vectorScaling * vector.x + origin.x,vectorScaling * vector.y + origin.y)
+  love.graphics.setColor(1,0,0)
+  love.graphics.line(origin.x + 20, origin.y + 20 ,unitVector.x * vectorScaling + origin.x + 20, unitVector.y * vectorScaling + origin.y + 40)
+  love.graphics.setColor(1,1,1)
+  love.graphics.circle("line", origin.x, origin.y, 10)
 end
 
 return vectorModule
