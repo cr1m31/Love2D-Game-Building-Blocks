@@ -27,7 +27,7 @@ function vectorModule.draw()
   love.graphics.setColor(1,1,1)
   love.graphics.line(origin.x, origin.y,vectorScaling * vector.x + origin.x,vectorScaling * vector.y + origin.y)
   love.graphics.setColor(1,0,0)
-  love.graphics.line(origin.x + 20, origin.y + 20 ,unitVector.x * vectorScaling + origin.x + 20, unitVector.y * vectorScaling + origin.y + 40)
+  love.graphics.line(origin.x - 80, origin.y - 80 ,unitVector.x * vectorScaling + origin.x + 80, unitVector.y * vectorScaling + origin.y + 75)
   love.graphics.setColor(1,1,1)
   love.graphics.circle("line", origin.x, origin.y, 10)
 end
