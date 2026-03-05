@@ -21,8 +21,10 @@ function vectorModule.init()
   unitVector.y = vector.y
   
   newMag = normalizeVector()
-  print(newMag)
-  print("unit vector x : " .. unitVector.x .. " unitVector.y : " .. unitVector.y)
+  print("old magnitude: " .. math.sqrt(vector.x * vector.x + vector.y * vector.y))
+  print("new magnitude: " .. newMag)
+  print("vector.x : " .. vector.x .. " vector.y : " .. vector.y)
+  print("unitVector x : " .. unitVector.x .. " unitVector.y : " .. unitVector.y)
 end
 
 function vectorModule.draw()
