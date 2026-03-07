@@ -3,8 +3,9 @@ io.stdout:setvbuf("no")
 local vectorMod = require("vector")
 
 function love.load()
-  vectorMod.load()
+  vectorMod.init()
 end
+
 
 function love.draw()
   vectorMod.draw()
