@@ -5,11 +5,11 @@ local vectorMod = require("vectors")
 local player = {
   x = 300,
   y = 300,
-  width = 50,
-  height = 70,
-  acceleration = 300,
+  width = 30,
+  height = 30,
+  acceleration = 60,
   velocity = {x = 0, y = 0},
-  velocityLimit = 120
+  velocityLimit = 60
 }
 
 function rawPlayerInput()
