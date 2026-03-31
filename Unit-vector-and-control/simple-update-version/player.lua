@@ -1,83 +1,67 @@
 local playerModule = {}
 
-local vectorMod = require("vectors")
-
 local player = {
-  x = 300,
-  y = 300,
-  width = 30,
-  height = 30,
-  acceleration = 6000,
+  x = 100,
+  y = 200,
+  width = 50,
+  height = 50,
   velocity = {x = 0, y = 0},
-  velocityLimit = 60
+  acceleration = 0.5,
+  speed = 60,
 }
 
-function rawPlayerInput()
-  local moveX, moveY = 0, 0 -- reset to zero each update
+function normalizeVelocity()
+  local magnitude = math.sqrt(player.velocity.x * player.velocity.x + player.velocity.y * player.velocity.y)
+  if magnitude == 0 then
+    return
+  end
   
+  player.velocity.x = player.velocity.x / magnitude
+  player.velocity.y = player.velocity.y / magnitude
+end
+
+
+function movePlayer(dt)
+
   if love.keyboard.isDown("a") then
-    moveX = moveX - 1
+    player.velocity.x = player.velocity.x - player.speed * player.acceleration * dt
   end
   if love.keyboard.isDown("d") then
-    moveX = moveX + 1
+    player.velocity.x = player.velocity.x + player.speed * player.acceleration * dt
   end
   
   if love.keyboard.isDown("w") then
-    moveY = moveY - 1
+    player.velocity.y = player.velocity.y - player.speed * player.acceleration * dt
   end
-  
   if love.keyboard.isDown("s") then
-    moveY = moveY + 1
+    player.velocity.y = player.velocity.y + player.speed * player.acceleration * dt
   end
   
-  if love.keyboard.isDown("a") or
-    love.keyboard.isDown("d") or
-    love.keyboard.isDown("w") or
-    love.keyboard.isDown("s") then
-  else  
-    return false
-  
-  end
-  
-  return moveX, moveY
+  player.x = player.x + player.velocity.x
+  player.y = player.y + player.velocity.y
 end
 
-function movePlayer(dt)
-  
-  if rawPlayerInput() then
-    local inputX, inputY = rawPlayerInput()
-    
-    player.velocity.x = player.velocity.x + inputX * player.acceleration * dt
-    player.velocity.y = player.velocity.y + inputY * player.acceleration * dt
-    
-    player.x = player.x + player.velocity.x * dt
-    player.y = player.y + player.velocity.y * dt
-  end
-end
 
 function playerModule.update(dt)
   movePlayer(dt)
   
-  vectorMod.normalizeVector(player)
+  normalizeVelocity()
 end
 
---[[--
-  - rounding objects (player rectangle) positions with math floor to always draw objects on pixels not on float values
-  - adding some offset (0.5) pixel to draw lines with full color otherwise the line may be on half a line
---]]--
 
-local drawLinesOffset = 0.5
 function playerModule.draw()
-  love.graphics.rectangle("line", math.floor(player.x) + drawLinesOffset, math.floor(player.y) + drawLinesOffset, player.width, player.height)
-  if rawPlayerInput() then
-    local inputX, inputY = rawPlayerInput()
-    love.graphics.print("inputX = " .. inputX .. " inputY = " .. inputY, 100, 200)
-    
-    
-  end
-  love.graphics.print("velx = " .. player.velocity.x .. " velY = " .. player.velocity.y, 150, 300)
-    
-  vectorMod.draw(player)
+  love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
+  
+  
+  -- draw velocity vector
+  local vectorScaler = 60
+  local playerCenter = {x = player.x + player.width * 0.5, y = player.y + player.height * 0.5}
+  love.graphics.line(playerCenter.x, playerCenter.y, playerCenter.x + player.velocity.x * vectorScaler, playerCenter.y + player.velocity.y * vectorScaler)
+  
+  love.graphics.circle("line", playerCenter.x, playerCenter.y, vectorScaler)
+  
+  love.graphics.print("velx : " .. player.velocity.x .. " vely : " .. player.velocity.y, 100, 100)
 end
+
 
 return playerModule
