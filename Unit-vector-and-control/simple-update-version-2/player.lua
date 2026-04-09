@@ -19,11 +19,11 @@ function getRawPlayerInput()
   if love.keyboard.isDown("d") then
     inputX = inputX + 1
   end
-  if love.keyboard.isDown("w")
-  then inputY = inputY - 1
+  if love.keyboard.isDown("w") then
+    inputY = inputY - 1
   end
-  if love.keyboard.isDown("s")
-  then inputY = inputY + 1
+  if love.keyboard.isDown("s") then
+    inputY = inputY + 1
   end
   
   return inputX, inputY
