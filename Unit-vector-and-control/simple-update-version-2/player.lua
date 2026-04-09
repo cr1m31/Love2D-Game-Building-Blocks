@@ -6,7 +6,7 @@ local player = {
   width = 50,
   height = 50,
   velocity = {x = 0, y = 0},
-  acceleration = 10,
+  acceleration = 1,
   maxSpeed = 2.5,
 }
 
