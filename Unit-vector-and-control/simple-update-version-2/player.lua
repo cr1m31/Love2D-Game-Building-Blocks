@@ -6,42 +6,64 @@ local player = {
   width = 50,
   height = 50,
   velocity = {x = 0, y = 0},
-  acceleration = 10
+  acceleration = 10,
+  maxSpeed = 2.5,
 }
 
--- Normalize input
-function normalizeInputDirection(moveX, moveY)
-  local magnitude = math.sqrt(moveX * moveX + moveY * moveY)
+function getRawPlayerInput()
+  local inputX, inputY = 0, 0
+  
+  if love.keyboard.isDown("a") then
+    inputX = inputX - 1
+  end
+  if love.keyboard.isDown("d") then
+    inputX = inputX + 1
+  end
+  if love.keyboard.isDown("w")
+  then inputY = inputY - 1
+  end
+  if love.keyboard.isDown("s")
+  then inputY = inputY + 1
+  end
+  
+  return inputX, inputY
+end
+
+function normalizeInputDirection(inputX, inputY)
+  local magnitude = math.sqrt(inputX * inputX + inputY * inputY)
   
   if magnitude == 0 then
     return 0, 0
   end
   
-  return moveX / magnitude, moveY / magnitude
+  return inputX / magnitude, inputY / magnitude
 end
 
--- Input
-function getRawPlayerInput()
-  local moveX = 0
-  local moveY = 0
+function movePlayer(dt)
+  local inputX, inputY = getRawPlayerInput()
   
-  if love.keyboard.isDown("a") then moveX = moveX - 1 end
-  if love.keyboard.isDown("d") then moveX = moveX + 1 end
-  if love.keyboard.isDown("w") then moveY = moveY - 1 end
-  if love.keyboard.isDown("s") then moveY = moveY + 1 end
+  normalizedInputX, normalizedInputY = normalizeInputDirection(inputX, inputY)
+
+  player.velocity.x = player.velocity.x + normalizedInputX * player.acceleration * dt
+  player.velocity.y = player.velocity.y + normalizedInputY * player.acceleration * dt
   
-  return moveX, moveY
+  player.x = player.x + player.velocity.x -- test on another computer if * dt is necessary here ? (if speed is exacly the same)
+  player.y = player.y + player.velocity.y -- test on another computer if * dt is necessary here ? (if speed is exacly the same)
+end
+
+function limitMaxSpeed() -- NEED TO UNDERSTAND THIS DEEPLY !!
+  -- velocityMagnitude = speed
+  local velocityMagnitude = math.sqrt(player.velocity.x * player.velocity.x + player.velocity.y * player.velocity.y)
+  if velocityMagnitude > player.maxSpeed then
+    player.velocity.x = (player.velocity.x / velocityMagnitude) * player.maxSpeed
+    player.velocity.y = (player.velocity.y / velocityMagnitude) * player.maxSpeed
+  end
 end
 
 function playerModule.update(dt)
-  local moveX, moveY = getRawPlayerInput()
-  moveX, moveY = normalizeInputDirection(moveX, moveY)
-
-  player.velocity.x = player.velocity.x + moveX * player.acceleration * dt
-  player.velocity.y = player.velocity.y + moveY * player.acceleration * dt
-
-  player.x = player.x + player.velocity.x -- test on another computer if * dt is necessary here ? (if speed is exacly the same)
-  player.y = player.y + player.velocity.y -- test on another computer if * dt is necessary here ? (if speed is exacly the same)
+  movePlayer(dt)
+  
+  limitMaxSpeed()
 end
 
 function playerModule.draw()
@@ -60,7 +82,7 @@ function playerModule.draw()
     playerCenter.y + player.velocity.y * vectorScaler
   )
 
-  love.graphics.circle("line", playerCenter.x, playerCenter.y, vectorScaler)
+  love.graphics.circle("line", playerCenter.x, playerCenter.y, vectorScaler * player.maxSpeed)
   love.graphics.print("velx: " .. player.velocity.x, 100, 100)
   love.graphics.print("vely: " .. player.velocity.y, 100, 115)
 end
