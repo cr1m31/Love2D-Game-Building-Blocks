@@ -15,17 +15,11 @@ function timer(dt)
   return seconds
 end
 
-
-function getRawPlayerInput(dt)
+function getRawPlayerInput()
   local inputX, inputY = 0, 0
   
   if love.keyboard.isDown("a") then
-    
-    if checkVectorLength() then
-    else
-      inputX = inputX - 1
-      timer(dt)
-    end
+    inputX = inputX - 1
   end
   if love.keyboard.isDown("d") then
     inputX = inputX + 1
@@ -36,16 +30,8 @@ function getRawPlayerInput(dt)
   if love.keyboard.isDown("s") then
     inputY = inputY + 1
   end
-  
   if love.keyboard.isDown("d") and
   love.keyboard.isDown("s") then
-    if checkVectorLength() then
-      inputX = 0
-      inputY = 0
-    else
-      timer(dt)
-      
-    end
   end
   
   return inputX, inputY
@@ -61,17 +47,29 @@ function love.keypressed(key, scan, isrepeat)
   end
 end
 
-function checkVectorLength()
-  local magnitude = math.sqrt(player.velocity.x * player.velocity.x + player.velocity.y * player.velocity.y)
+function limitMaxSpeed(dt)
+  local velocityMagnitude = math.sqrt(player.velocity.x * player.velocity.x + player.velocity.y * player.velocity.y)
   
-  if magnitude >= 2 then
-    return true
+  if velocityMagnitude == 0 then
+    return
   end
+  
+  local maxSpeed = 2
+  if velocityMagnitude > maxSpeed then -- verify if magnitude of velocity (player speed) is greater than some maximum speed
+    -- normalize velocity to a unit vector (player.velocity / velocityMagnitude)
+    -- then important as the vector's length = 1 (unit vector) we need to multiply it by a max speed 
+      -- to obtain the maximum vector length ...
+    player.velocity.x = (player.velocity.x / velocityMagnitude) * maxSpeed
+    player.velocity.y = (player.velocity.y / velocityMagnitude) * maxSpeed
+    
+  else
+    timer(dt) -- increase timer only if max speed is reached
+  end
+  
 end
 
-
-function normalizeInput(dt)
-  local inputX, inputY = getRawPlayerInput(dt)
+function normalizeInput()
+  local inputX, inputY = getRawPlayerInput()
   
   local magnitude = math.sqrt(inputX * inputX + inputY * inputY)
   
@@ -84,7 +82,8 @@ end
 
 function movePlayer(dt)
   
-  local normalizedX, normalizedY = normalizeInput(dt)
+  local normalizedX, normalizedY = normalizeInput()
+  
   player.velocity.x = player.velocity.x + normalizedX * player.acceleration * dt
   player.velocity.y = player.velocity.y + normalizedY * player.acceleration * dt
   
@@ -95,6 +94,8 @@ end
 
 function playerModule.update(dt)
   movePlayer(dt)
+  
+  limitMaxSpeed(dt)
 end
   
 local vectorScaler = 60
