@@ -1,7 +1,5 @@
 local playerModule = {}
 
-local vectorMod = require("vector")
-
 local player = {
   x = love.graphics.getWidth() / 2 - 25,
   y = love.graphics.getHeight() / 2 - 25,
@@ -9,9 +7,8 @@ local player = {
   height = 50,
   velocity = {x = 0, y = 0},
   acceleration = 10,
+  maxSpeed = 2,
 }
-
-local timerCopy = 0
 
 function getRawInputs(dt)
   local inputX, inputY = 0, 0
@@ -32,82 +29,48 @@ function getRawInputs(dt)
   return inputX, inputY
 end
 
-function checkVectorLength()
-  local playerCenter = {x = - ( (love.graphics.getWidth() / 2) - player.x - (player.width / 2) ), y = - ( (love.graphics.getHeight() / 2) - player.y - (player.height / 2) )}
-  
-  local vectorLen = math.sqrt(playerCenter.x * playerCenter.x + playerCenter.y * playerCenter.y)
-  if vectorLen > 220 then
-    return true
-  end
-  
-  return false
-end
-
-
-function resetTest()
-  vectorMod.resetTimer()
-    timerCopy = 0
-  
-  player.velocity.x = 0
-  player.velocity.y = 0
-  
-  player.x = love.graphics.getWidth() / 2 - 25
-  player.y = love.graphics.getHeight() / 2 - 25
-end
-
-function love.keypressed(key, scan, isrepeat)
-  if key == "r" then
-    resetTest()
-  end
-end
-
-function limitMaxSpeed()
-  local magnitude = math.sqrt(player.velocity.x * player.velocity.x + player.velocity.y * player.velocity.y)
+function normalizeInput(inX, inY)
+  local magnitude = math.sqrt(inX * inX + inY * inY)
   
   if magnitude == 0 then
-    return
+    return 0, 0 -- prevent returning nill if no magnitude also prevents zero division
   end
-  local maxSpeed = 2
-  player.velocity.x = (player.velocity.x / magnitude) * maxSpeed
-  player.velocity.y = (player.velocity.y / magnitude) * maxSpeed
+  
+  return inX / magnitude, inY / magnitude
 end
 
-
-function playerModule.update(dt)
-  
-  
+function movePlayer(dt)
   local rawInputX, rawInputY = getRawInputs(dt)
   
-  if rawInputX == 0 and rawInputY == 0 then
-  else
-    if checkVectorLength() == false then
-      timerCopy = vectorMod.timerTest(dt)
-    end
-
-  end
-  
-  
-  local normalizedInputX, normalizedInputY = vectorMod.normalizeInput(rawInputX, rawInputY)
+  local normalizedInputX, normalizedInputY = normalizeInput(rawInputX, rawInputY)
   
   player.velocity.x = player.velocity.x + normalizedInputX * player.acceleration * dt
   player.velocity.y = player.velocity.y + normalizedInputY * player.acceleration * dt
   
   player.x = player.x + player.velocity.x
   player.y = player.y + player.velocity.y
+end
+
+function limitMaxSpeed()
+  local magnitude = math.sqrt(player.velocity.x * player.velocity.x + player.velocity.y * player.velocity.y)
+  if magnitude == 0 then
+    return
+  end
   
+  if magnitude > player.maxSpeed then -- condition to have immediate uturn enabled
+    player.velocity.x = (player.velocity.x / magnitude) * player.maxSpeed
+    player.velocity.y = (player.velocity.y / magnitude) * player.maxSpeed
+  end
   
+end
+
+function playerModule.update(dt)
+  movePlayer(dt)
   limitMaxSpeed()
 end
 
-
 function playerModule.draw()
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
-  love.graphics.circle("line", player.x + player.width / 2, player.y + player.height / 2, 20)
-  love.graphics.print("timerCopy : " .. timerCopy, 100, 150)
-  
-  love.graphics.circle("line", love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5, 220)
-  
 end
-
 
 return playerModule
