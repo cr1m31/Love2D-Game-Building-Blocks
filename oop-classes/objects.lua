@@ -3,6 +3,7 @@ local objects = {}
 -- https://www.lua.org/pil/16.html
 -- tables as objects
 Account = {balance = 0}
+
 function Account.withdraw(self, v)
   
   self.balance = self.balance - v
@@ -18,6 +19,17 @@ a1 = Account
 
 a2 = Account
 
+
+-- new object test
+MyObject = {test = 0}
+
+function MyObject.analyse(self)
+  self.test = self.test + 10
+  print("self.test : " .. self.test)
+end
+
+testobj = MyObject
+
 function objects.load()
   a1.withdraw(a1, 100.0) -- needs to add the table itself as the self param
 
@@ -26,8 +38,14 @@ function objects.load()
   a2:withdraw(100.0)
 
   a1.deposit(Account, 100.0)
+  
+  testobj.analyse(testobj)
+  testobj:analyse()
 
 end
+
+
+
 
 
 return objects
