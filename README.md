@@ -85,3 +85,19 @@ Pixel Wooden Crate par artisticdude (https://opengameart.org/content/pixel-woode
 Les assets de yurinikolai proviennent de OpenGameArt.org (https://opengameart.org/users/yurinikolai). 
 Pour les détails de licence spécifiques à ces assets, veuillez vous référer au fichier readme situé dans 
 le dossier des images du jeu.
+
+Crédits des Assets pour Jeu-les-confins
+Tous les assets suivants sont sous licence CC0 (domaine public), sauf indication contraire.
+
+Platformer 32x32 (Preview)
+Author: Madarck
+(https://opengameart.org/content/platformer-32x32-preview)
+
+background
+Author: ramses2099
+(https://opengameart.org/content/background-3)
+
+
+### Tutoriels
+Tutoriel sur les opérations de multiplication de matrices et vecteurs
+https://www.youtube.com/watch?v=GFwU85rDx5M
