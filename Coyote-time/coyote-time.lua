@@ -20,7 +20,6 @@ local platform = {
 }
 
 function movePlayer(dt)
-  
   local oldX = player.x
   local oldY = player.y
   
@@ -31,31 +30,20 @@ function movePlayer(dt)
     player.velocity.x = player.velocity.x + player.speed * player.acceleration * dt
   end
   
+  -- NEED TO CHANGE PLAYER POSITION BEFORE COLLISION CHECK !! (TO PREVENT WALL STICKING)
+  player.x = player.x + player.velocity.x
   if not collisionCheck(player, platform) then
-    
-    
     player.x = oldX
     player.velocity.x = 0
   end
   
-  
-  -- ALSO NEED TO FIND WHY WALL STICKING HAPPENS WHEN PLAYER TOUCHES SIDES ???
-  
-  
-  player.x = player.x + player.velocity.x
+  -- NEED TO CHANGE PLAYER POSITION BEFORE COLLISION CHECK !! (TO PREVENT GROUND STICKING)
   player.y = player.y + player.velocity.y
   
-  -- NEED TO FIND WHY COLLISION IS WORKING (NO GROUND STICKING) WHEN MOVING THIS CODE AFTER PLAYER POSITION UPDATE ???
   if not collisionCheck(player, platform) then
-    
     player.y = oldY
-    player.velocity.y = 0
-  
-  else
-  
-    
+    player.velocity.y = 0    
   end
-  
 end
 
 function collisionCheck(aa, bb)
@@ -69,17 +57,14 @@ function addGravity(dt)
   player.velocity.y = player.velocity.y + player.gravity * dt
 end
 
-
 function coyoteTimeModule.update(dt)
   movePlayer(dt)
   addGravity(dt)
 end
 
-
 function coyoteTimeModule.draw()
   love.graphics.rectangle("fill", player.x, player.y, player.width, player.height)
   love.graphics.rectangle("fill", platform.x, platform.y, platform.width, platform.height)
 end
-
 
 return coyoteTimeModule
