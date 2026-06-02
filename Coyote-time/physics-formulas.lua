@@ -4,35 +4,42 @@
 
 -- 1. SPEED FORMULA
 -- Formula: Speed = (distance) / (1 second)
--- Example: Speed = (8 meters) / (1 second) = 8 m/s
--- d = distance (meters)
--- t = time baseline (always evaluated per 1 second)
 
 
--- 2. ACCELERATION FORMULA (Standard View)
+-- 2. ACCELERATION FORMULA
 -- Formula: Acceleration = (Change in speed) / (Time passed)
 -- Example: Acceleration = (24 meters / 1 second) / 3 seconds = 8 m/s^2
--- acc = m/s^2
+-- acc = m/s^2 --- or = (m / s) / s
 
 
--- 3. ACCELERATION FORMULA (Literal Unit Breakdown)
--- Formula: Acceleration = (meters / 1 second) / time passed
--- Example: Acceleration = (24 meters / 1 second) / 3 seconds = 8 m/s^2
--- acc = (m/s) / s
-
-
--- 4. GRAVITATIONAL ACCELERATION (ON EARTH)
+-- 4. GRAVITATIONAL ACCELERATION (g = gravitational acceleration not gravity)
 -- Constant Baseline: g = 9.8 m/s^2
 -- Example: Gravity = (9.8 meters / 1 second) / 1 second passed
--- g     = fixed baseline multiplier for Earth's gravity
--- m/s^2 = shorthand for (m/s)/s; the "^2" is just the time unit, do NOT square 9.8
 
 
 -- 5. WEIGHT FORMULA
 -- Formula: Weight = mass * gravitational acceleration
--- Example: Weight = (10 kg mass) * (9.8 m/s^2 gravity) = 98 Newtons
+-- Example: Weight = (10 kg mass) * (9.8 m/s^2 gravitational acceleration) = 98 Newtons
+
 -- Formula: W = m * g
 -- W = weight (pulling force measured in Newtons or Pounds)
 -- m = mass (unchanging matter inside the object measured in Kilograms)
 -- g = gravitational acceleration multiplier (always 9.8 on Earth)
+
+
+-- ==============================================
+-- Newton's Law of Universal Gravitation
+
+local gravitational_constant = 6.6743e-11
+
+-- Example variables: Earth and a 10 kg object
+local mass_of_object_one = 5.972e24  -- Mass of Earth in kg
+local mass_of_object_two = 10.0      -- Mass of object in kg
+local distance_between_centers = 6371000  -- Radius of Earth in meters
+
+-- Formula with full names
+local gravitational_force = gravitational_constant * (mass_of_object_one * mass_of_object_two) / (distance_between_centers ^ 2)
+
+print("Gravitational Force: " .. gravitational_force .. " Newtons")
+
 -- ============================================================================

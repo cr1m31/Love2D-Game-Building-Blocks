@@ -63,7 +63,9 @@ function coyoteTimeModule.update(dt)
 end
 
 function coyoteTimeModule.draw()
+  love.graphics.setColor(1,1,1)
   love.graphics.rectangle("fill", player.x, player.y, player.width, player.height)
+  love.graphics.setColor(0,1,0)
   love.graphics.rectangle("fill", platform.x, platform.y, platform.width, platform.height)
 end
 
