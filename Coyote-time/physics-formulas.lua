@@ -1,0 +1,24 @@
+
+-- SPEED FORMULA
+-- s = distance / time
+-- Speed = (distance) / (1 second)
+---------------
+-- ACCELERATION FORMULA (m = meters)
+-- acc = m/s^2 --- or = (m / s) / s
+-- Acceleration = (Change in speed) / (Time passed)
+-- Acceleration = (24 meters / 1 second) / 3 seconds
+---------------
+-- GRAVITATIONAL ACCELERATION (g = gravitational acceleration not gravity) (always 9.8 on Earth)
+-- g = 9.8 m/s^2 (m = meters)
+-- gravitational acceleration = (9.8 meters / 1 second) / 1 second passed
+---------------
+-- MASS = (unchanging matter inside the object measured in Kilograms)
+---------------
+-- WEIGHT FORMULA (m = mass)
+-- W = m * g
+-- Weight = mass * gravitational acceleration
+-- Weight = force measured in Newtons or Pounds
+---------------
+-- DRAG
+-- terminal velocity is reached when the drag force equals the pull of gravity and this stops acceleration when falling
+-- so drag is like some air friction preventing a falling object to accelerate indefinately
