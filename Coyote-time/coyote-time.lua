@@ -1,14 +1,15 @@
 local coyoteTimeModule = {}
+local pixelPerMeter = 60
+local gravitationalAcceleration =  9.8 * pixelPerMeter
 
 local player = {
   x = 200,
   y = 100,
   width = 50,
   height = 50,
-  speed = 10,
+  speed = 150,
   velocity = {x = 0, y = 0},
-  acceleration = 3,
-  gravity = 8.1,
+  acceleration = 6,
   jumpForce = 3,
 }
 
@@ -31,14 +32,14 @@ function movePlayer(dt)
   end
   
   -- NEED TO CHANGE PLAYER POSITION BEFORE COLLISION CHECK !! (TO PREVENT WALL STICKING)
-  player.x = player.x + player.velocity.x
+  player.x = player.x + player.velocity.x * dt -- times dt converts pixels per second into pixels per frame
   if not collisionCheck(player, platform) then
     player.x = oldX
     player.velocity.x = 0
   end
   
   -- NEED TO CHANGE PLAYER POSITION BEFORE COLLISION CHECK !! (TO PREVENT GROUND STICKING)
-  player.y = player.y + player.velocity.y
+  player.y = player.y + player.velocity.y * dt -- times dt converts pixels per second into pixels per frame
   
   if not collisionCheck(player, platform) then
     player.y = oldY
@@ -54,7 +55,7 @@ function collisionCheck(aa, bb)
 end
 
 function addGravity(dt)
-  player.velocity.y = player.velocity.y + player.gravity * dt
+  player.velocity.y = player.velocity.y + (gravitationalAcceleration * dt)
 end
 
 function coyoteTimeModule.update(dt)
