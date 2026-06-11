@@ -47,7 +47,7 @@ function movePlayer(dt)
     player.x = oldX
   end
   
-  addGravity(dt)  -- !!! ADD GRAVITY BEFORE MOVING THE PLAYER DOWN !!!
+  addGravity(dt)  -- !!! ADD GRAVITY BEFORE MOVING THE PLAYER VERTICALLY !!!
   ---------------------- Or the player will keep be pushed down in the floor then 
   ---------------------- pulled back to  old y position so no stable velocity.y
   
