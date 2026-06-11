@@ -24,7 +24,7 @@ local bottomBoxCollider =
 local platform = {
   x = 150,
   y = 260,
-  width = 500,
+  width = 700,
   height = 30,
 }
 
@@ -42,18 +42,21 @@ function movePlayer(dt)
   -- NEED TO CHANGE PLAYER POSITION BEFORE COLLISION CHECK !! (TO PREVENT WALL STICKING)
   player.x = player.x + player.velocity.x * dt -- times dt converts pixels per second into pixels per frame
   if collisionCheckInside(player, platform) then
-    player.x = oldX
+    
     player.velocity.x = 0
+    player.x = oldX
   end
+  
+  addGravity(dt)  -- !!! ADD GRAVITY BEFORE MOVING THE PLAYER DOWN !!!
+  ---------------------- Or the player will keep be pushed down in the floor then 
+  ---------------------- pulled back to  old y position so no stable velocity.y
   
   -- NEED TO CHANGE PLAYER POSITION BEFORE COLLISION CHECK !! (TO PREVENT GROUND STICKING)
   player.y = player.y + player.velocity.y * dt -- times dt converts pixels per second into pixels per frame
   
   if collisionCheckInside(player, platform) then
-    player.y = oldY
     player.velocity.y = 0
-  else
-    addGravity(dt)
+    player.y = oldY
   end
 end
 
@@ -77,7 +80,7 @@ end
 
 function playerJump(key)
   if key == "space" and checkIfPlayerIsGrounded() then
-    player.velocity.y = - player.jumpForce
+    player.velocity.y = - player.jumpForce -- adding instant jump not progressive force...
   end
 end
 
@@ -119,6 +122,9 @@ function coyoteTimeModule.draw()
   
   love.graphics.print("velx : " .. player.velocity.x .. " vely : " .. player.velocity.y, 100, 300)
   love.graphics.print("isGrounded : " .. tostring(checkIfPlayerIsGrounded()), 100, 330)
+  
+  -- draw movement vector magnified
+  love.graphics.line(player.x + player.width / 2, player.y + player.height / 2, player.x + player.width / 2 + player.velocity.x, player.y + player.height / 2 + player.velocity.y)
 end
 
 function love.keypressed(key, scancode, isrepeat)
