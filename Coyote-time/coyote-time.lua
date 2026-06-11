@@ -7,9 +7,8 @@ local player = {
   y = 100,
   width = 50,
   height = 50,
-  speed = 150,
   velocity = {x = 0, y = 0},
-  horizontalAcceleration = 6,
+  horizontalAcceleration = 600,
   jumpForce = 3,
 }
 
@@ -25,10 +24,10 @@ function movePlayer(dt)
   local oldY = player.y
   
   if love.keyboard.isDown("a") then
-    player.velocity.x = player.velocity.x - player.speed * player.horizontalAcceleration * dt
+    player.velocity.x = player.velocity.x - player.horizontalAcceleration * dt
   end
   if love.keyboard.isDown("d") then
-    player.velocity.x = player.velocity.x + player.speed * player.horizontalAcceleration * dt
+    player.velocity.x = player.velocity.x + player.horizontalAcceleration * dt
   end
   
   -- NEED TO CHANGE PLAYER POSITION BEFORE COLLISION CHECK !! (TO PREVENT WALL STICKING)
