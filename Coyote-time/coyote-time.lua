@@ -78,30 +78,38 @@ function checkIfPlayerIsGrounded()
   return false
 end
 
+-- debug jump height
+local startPlayerY = 0
+local highestJumpY = 0
+
 function playerJump(key)
   if key == "space" and checkIfPlayerIsGrounded() then
     player.velocity.y = - player.jumpForce -- adding instant jump not progressive force...
   end
+  
+  startPlayerY = player.y
+  highestJumpY = 0
 end
 
-
-
--- !!!!    !!!!!!!!    !!!!!!!!    !!!!!!!!    !!!!
--- WRONG, NEED TO CHANGE IN MIN MAX OR CORRECT AS IN MY VIDEO ABOUT NORMALIZING PLAYER MOVEMENT (TOP DOWN GAME)
-function limitMaxSpeed()
-  local magnitude = math.sqrt(player.velocity.x * player.velocity.x + player.velocity.y * player.velocity.y)
-  
-  if magnitude >= player.maxSpeed.x then
-    player.velocity.x = (player.velocity.x / magnitude) * player.maxSpeed.x
+function limitMaxSpeed() -- limit max speed in four directions for platformer controls with different gravity max speed limit than horizontal max movement speed ...
+  -- right
+  if player.velocity.x > player.maxSpeed.x then
+    player.velocity.x = player.maxSpeed.x
   end
-  if magnitude >= player.maxSpeed.y then
-    player.velocity.y = (player.velocity.y / magnitude) * player.maxSpeed.y
+  -- left
+  if player.velocity.x < - player.maxSpeed.x then
+    player.velocity.x = - player.maxSpeed.x
   end
   
+  -- down
+  if player.velocity.y > player.maxSpeed.y then
+    player.velocity.y = player.maxSpeed.y
+  end
+  -- up
+  if player.velocity.y < - player.maxSpeed.y then
+    player.velocity.y = - player.maxSpeed.y
+  end
 end
--- !!!!    !!!!!!!!    !!!!!!!!    !!!!!!!!    !!!!
-
-
 
 function coyoteTimeModule.update(dt)
   movePlayer(dt)
@@ -110,6 +118,14 @@ function coyoteTimeModule.update(dt)
   bottomBoxCollider.y = player.y + 5
   
   limitMaxSpeed()
+  
+  
+  if not checkIfPlayerIsGrounded() then
+    local currentHeight = startPlayerY - player.y
+    if currentHeight > highestJumpY then
+      highestJumpY = currentHeight
+    end
+  end
 end
 
 function coyoteTimeModule.draw()
@@ -121,7 +137,13 @@ function coyoteTimeModule.draw()
   love.graphics.rectangle("line", bottomBoxCollider.x, bottomBoxCollider.y, bottomBoxCollider.width, bottomBoxCollider.height)
   
   love.graphics.print("velx : " .. player.velocity.x .. " vely : " .. player.velocity.y, 100, 300)
-  love.graphics.print("isGrounded : " .. tostring(checkIfPlayerIsGrounded()), 100, 330)
+  -- degug ground distance
+  love.graphics.print("dist : " .. player.y - platform.y + player.height, 100, 330)
+  
+  -- peak
+  love.graphics.print("peak : " .. highestJumpY, 100, 390)
+  
+  love.graphics.print("isGrounded : " .. tostring(checkIfPlayerIsGrounded()), 100, 360)
   
   -- draw movement vector magnified
   love.graphics.line(player.x + player.width / 2, player.y + player.height / 2, player.x + player.width / 2 + player.velocity.x, player.y + player.height / 2 + player.velocity.y)
