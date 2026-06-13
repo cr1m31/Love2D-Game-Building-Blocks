@@ -1,5 +1,8 @@
 local playerModule = {}
 
+local coyoteTimer = 0.0
+local coyoteDuration = 0.25
+
 local player = {
   x = 120,
   y = 100,
@@ -24,45 +27,30 @@ function movePlayer(dt)
   if love.keyboard.isDown("d") then
     player.x = player.x + player.speed * dt
   end
-  
 end
-local timer = 0.0
+
+function collisionCheck(aa, bb)
+  return aa.x + aa.width > bb.x and
+    aa.x < bb.x + bb.width and
+    aa.y + aa.height > bb.y and
+    aa.y < bb.y + bb.height
+end
+
 function jump()
-  player.y = player.y - player.jumpHeight
-end
-
-function checkIfCanJumpCoyote()
-  if timer > -0.1 and timer < 0.3 then
-    return true
-  else 
-    return false
-  end
-end
-
-
-function updateTimer(dt)
-  timer = timer + dt
-end
-
-function checkIfGrounded()
-  if player.y + player.height < platform.y or player.y > platform.y + platform.height or player.x + player.width < platform.x then
-    return false
-  else 
-    return true
+  if coyoteTimer > 0 then
+    player.y = player.y - player.jumpHeight
+    coyoteTimer = 0
   end
 end
 
 function love.keypressed(key, scan, isrepeat)
-  if key == "space" and checkIfCanJumpCoyote() then
+  if key == "space" then
     jump()
-    
-    --timer = 0
   end
   
   if key == "r" then
     resetPosition()
-  end
-  
+  end  
 end
 
 function resetPosition()
@@ -70,36 +58,27 @@ function resetPosition()
   player.y = 100
 end
 
-
 function addGravity()
   player.y = player.y + player.gravity
 end
 
-
-
-
-
 function playerModule.update(dt)
   movePlayer(dt)
-  if not checkIfGrounded() then
-    addGravity()
-  end
-  
-  if not checkIfGrounded() then
-    updateTimer(dt)
+   
+  if collisionCheck(player, platform) then
+    coyoteTimer = coyoteDuration
   else
-    timer = 0
+    addGravity()
+    if coyoteTimer > 0 then
+      coyoteTimer = coyoteTimer - dt
+    end
   end
 end
-
 
 function playerModule.draw()
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
   love.graphics.rectangle("fill", platform.x, platform.y, platform.width, platform.height)
-  
-  love.graphics.print("timer : " .. timer, 100, 300)
+  love.graphics.print("coyoteTimer : " .. coyoteTimer, 100, 300)
 end
-
-
 
 return playerModule
