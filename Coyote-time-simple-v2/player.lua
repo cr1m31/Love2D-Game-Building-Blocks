@@ -8,9 +8,9 @@ local player = {
   y = 200,
   width = 40,
   height = 50,
-  gravity = 2,
+  gravity = 1,
   speed = 60,
-  jumpForce = 50,
+  jumpForce = 120,
 }
 
 local platform = {
@@ -62,11 +62,17 @@ function love.keypressed(key, scan, isrepeat)
 end
 
 function playerModule.update(dt)
+  
+  local oldPlayerY = player.y
   movePlayer(dt)
+  addGravity() -- add gravity before collision check (this prevents player entering the ground a little)
+  
   if checkCollision(player, platform) then
     coyoteTimer = coyoteDuration
+    
+    player.y = oldPlayerY -- move player back once colliding
   else    
-    addGravity()
+    -- do not add gravity here or the player will enter the ground a little bit)
     if coyoteTimer > 0 then
       coyoteTimer = coyoteTimer - dt
     end
