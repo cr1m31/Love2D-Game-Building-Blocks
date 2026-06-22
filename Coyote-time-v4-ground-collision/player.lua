@@ -41,12 +41,38 @@ function checkCollision(aa, bb)
 end
 
 function movePlayer(dt)
+  local oldPlayerX = player.x
+  local oldPlayerY = player.y
+  
   if love.keyboard.isDown("a") then
     player.x = player.x - player.speed * dt
   end
   if love.keyboard.isDown("d") then
     player.x = player.x + player.speed * dt
   end
+  
+  -- horizontal collision check
+  if checkCollision(player, platform) then
+    player.x = oldPlayerX
+  end
+  
+  addGravity()
+  
+  -- vertical collision check
+  if checkCollision(player, platform) then
+    player.y = oldPlayerY
+  end
+  
+  if checkCollision(groundCollider, platform) then
+    coyoteMeter = coyoteDuration
+  else
+    if coyoteMeter > 0 then
+      coyoteMeter = coyoteMeter - dt
+    end
+  end
+  
+  
+  
   
 end
 
@@ -80,28 +106,12 @@ end
 
 
 function playerModule.update(dt)
-  local oldPlayerY = player.y
+  
   movePlayer(dt)
   
   placeGroundCollider()
   
-  addGravity()
   
-  if checkCollision(groundCollider, platform) then
-    
-  end
-  
-  
-  if checkCollision(player, platform) then
-    player.y = oldPlayerY
-    
-    coyoteMeter = coyoteDuration
-    
-  else
-    if coyoteMeter > 0 then
-      coyoteMeter = coyoteMeter - dt
-    end
-  end
   
 end
 
