@@ -3,6 +3,8 @@ local playerModule = {}
 local coyoteMeter = 0.0
 local coyoteDuration = 0.5
 
+local tiles = {}
+
 local player = {
   x = 150,
   y = 200,
@@ -20,13 +22,25 @@ local groundCollider = {
   height = 20,
 }
 
-
 local platform = {
   x = 100,
   y = 300,
   width = 700,
   height = 20,
-  
+}
+
+local lowPlatform = {
+  x = 10,
+  y = 500,
+  width = 700,
+  height = 20,
+}
+
+local wall = {
+  x = 300,
+  y = 150,
+  width = 80,
+  height = 100,
 }
 
 function addGravity()
@@ -51,29 +65,33 @@ function movePlayer(dt)
     player.x = player.x + player.speed * dt
   end
   
-  -- horizontal collision check
-  if checkCollision(player, platform) then
-    player.x = oldPlayerX
+  for i, tile in ipairs(tiles) do
+    -- horizontal collision check
+    if checkCollision(player, tile) then
+      player.x = oldPlayerX
+    end
   end
   
   addGravity()
   
-  -- vertical collision check
-  if checkCollision(player, platform) then
-    player.y = oldPlayerY
-  end
-  
-  if checkCollision(groundCollider, platform) then
-    coyoteMeter = coyoteDuration
-  else
-    if coyoteMeter > 0 then
-      coyoteMeter = coyoteMeter - dt
+  for i, tile in ipairs(tiles) do
+    
+    
+    -- need to fix as ground collider is still in the platform after jump and coyotetimer got not properly emptyied at this exact moment
+    if checkCollision(groundCollider, tile) and checkCollision(player, tile) then
+      coyoteMeter = coyoteDuration
+    else
+      if coyoteMeter > 0 then
+        coyoteMeter = coyoteMeter - dt
+      end
     end
+    
+    -- vertical collision check
+    if checkCollision(player, tile) then
+      player.y = oldPlayerY
+    end
+    
   end
-  
-  
-  
-  
 end
 
 function playerJump()
@@ -104,6 +122,13 @@ function placeGroundCollider()
   groundCollider.y = player.y + player.height - groundCollider.height + 5
 end
 
+function playerModule.load()
+  table.insert(tiles, platform)
+  table.insert(tiles, wall)
+  table.insert(tiles, lowPlatform)
+end
+
+
 
 function playerModule.update(dt)
   
@@ -119,7 +144,10 @@ end
 function playerModule.draw()
   love.graphics.setColor(1,1,1)
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
-  love.graphics.rectangle("line", platform.x, platform.y, platform.width, platform.height)
+  
+  for i, tile in ipairs(tiles) do
+    love.graphics.rectangle("line", tile.x, tile.y, tile.width, tile.height)
+  end
   
   love.graphics.print("coyote time : " .. coyoteMeter, 300, 300)
   
