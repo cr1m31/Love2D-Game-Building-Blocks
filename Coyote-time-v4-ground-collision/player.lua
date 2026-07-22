@@ -3,6 +3,8 @@ local playerModule = {}
 local coyoteMeter = 0.0
 local coyoteDuration = 0.5
 
+local isJumping = false
+
 local tiles = {}
 
 local player = {
@@ -89,6 +91,7 @@ function movePlayer(dt)
     -- vertical collision check
     if checkCollision(player, tile) then
       player.y = oldPlayerY
+      isJumping = false
     end
     
   end
@@ -97,6 +100,7 @@ end
 function playerJump()
   
   if coyoteMeter > 0 then
+    isJumping = true
     player.y = player.y - player.jumpForce
   end
   coyoteMeter = 0
@@ -150,6 +154,7 @@ function playerModule.draw()
   end
   
   love.graphics.print("coyote time : " .. coyoteMeter, 300, 300)
+  love.graphics.print("is jumping : " .. tostring(isJumping), 300, 330)
   
   -- ground collider
   love.graphics.setColor(1,0,0)
