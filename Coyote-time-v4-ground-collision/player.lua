@@ -3,8 +3,6 @@ local playerModule = {}
 local coyoteMeter = 0.0
 local coyoteDuration = 0.5
 
-local isJumping = false
-
 local tiles = {}
 
 local player = {
@@ -56,10 +54,7 @@ function checkCollision(aa, bb)
     aa.y < bb.y + bb.height
 end
 
-function movePlayer(dt)
-  local oldPlayerX = player.x
-  local oldPlayerY = player.y
-  
+function movePlayerHorizontally(dt, oldX)
   if love.keyboard.isDown("a") then
     player.x = player.x - player.speed * dt
   end
@@ -70,45 +65,58 @@ function movePlayer(dt)
   for i, tile in ipairs(tiles) do
     -- horizontal collision check
     if checkCollision(player, tile) then
-      player.x = oldPlayerX
+      player.x = oldX
     end
-  end
-  
-  addGravity()
-  
-  for i, tile in ipairs(tiles) do
-    
-    
-    -- need to fix as ground collider is still in the platform after jump and coyotetimer got not properly emptyied at this exact moment
-    if checkCollision(groundCollider, tile) and checkCollision(player, tile) then
-      coyoteMeter = coyoteDuration
-    else
-      if coyoteMeter > 0 then
-        coyoteMeter = coyoteMeter - dt
-      end
-    end
-    
-    -- vertical collision check
-    if checkCollision(player, tile) then
-      player.y = oldPlayerY
-      isJumping = false
-    end
-    
   end
 end
 
-function playerJump()
+function movePlayer(dt)
+  local oldPlayerX = player.x
+  local oldPlayerY = player.y
   
+  movePlayerHorizontally(dt, oldPlayerX)
+  
+  addGravity()
+  
+  -- placing ground collider before collision checks
+  placeGroundCollider()
+  
+  -- reset boolean each update
+  local grounded = false
+  
+  for i, tile in ipairs(tiles) do
+    if checkCollision(groundCollider, tile) then
+      grounded = true
+    end
+    
+    -- vertical collision check happens for each tile
+    if checkCollision(player, tile) then
+      player.y = oldPlayerY
+    end
+  end
+  
+  -- update coyote timer once after checking all tiles
+  if grounded then
+    coyoteMeter = coyoteDuration
+  else
+    if coyoteMeter > 0 then
+      coyoteMeter = coyoteMeter - dt
+      -- avoid value under zero
+      if coyoteMeter < 0 then
+          coyoteMeter = 0
+      end
+    end
+  end
+end
+
+function playerJump()  
   if coyoteMeter > 0 then
-    isJumping = true
     player.y = player.y - player.jumpForce
   end
   coyoteMeter = 0
 end
 
-
 function love.keypressed(key, scan, isrepeat)
-  
   if key == "space" then
     playerJump()
   end
@@ -117,7 +125,6 @@ function love.keypressed(key, scan, isrepeat)
     player.x = 150
     player.y = 200
   end
-  
   
 end
 
@@ -132,18 +139,9 @@ function playerModule.load()
   table.insert(tiles, lowPlatform)
 end
 
-
-
 function playerModule.update(dt)
-  
   movePlayer(dt)
-  
-  placeGroundCollider()
-  
-  
-  
 end
-
 
 function playerModule.draw()
   love.graphics.setColor(1,1,1)
