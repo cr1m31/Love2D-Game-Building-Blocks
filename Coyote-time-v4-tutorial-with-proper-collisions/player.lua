@@ -34,6 +34,13 @@ function addGravity()
   player.velocity.y = 10
 end
 
+function collisionCheck(aa, bb)
+  return aa.x + aa.width > bb.x and
+    aa.x < bb.x + bb.width and
+    aa.y + aa.height > bb.y and
+    aa.y < bb.y + bb.height
+end
+
 
 function playerModule.update(dt)
   movePlayer(dt)
