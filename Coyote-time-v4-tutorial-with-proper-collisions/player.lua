@@ -6,6 +6,7 @@ local player = {
   width = 30,
   height = 50,
   speed = 100,
+  velocity = {x = 0, y = 0},
 }
 
 function movePlayer(dt)
@@ -19,6 +20,18 @@ function movePlayer(dt)
   
   
   
+  player.y = player.y + player.velocity.y * dt
+  
+  addGravity()
+  
+end
+
+function playerJump()
+  player.velocity.y = - 500
+end
+
+function addGravity()
+  player.velocity.y = 10
 end
 
 
@@ -28,6 +41,15 @@ end
 
 function playerModule.draw()
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
+  
+  love.graphics.print("vel y : " .. player.velocity.y, 300, 300)
 end
+
+function love.keypressed(key, scan, isrepeat)
+  if key == "space" then
+    playerJump()
+  end
+end
+
 
 return playerModule
