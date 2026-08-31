@@ -27,11 +27,13 @@ function movePlayer(dt)
 end
 
 function playerJump()
-  player.velocity.y = - 500
+  print("JUMP 0: " .. player.velocity.y)
+  player.velocity.y = - 2000
+  print("JUMP : " .. player.velocity.y)
 end
 
 function addGravity()
-  player.velocity.y = 10
+  player.velocity.y = 50
 end
 
 function collisionCheck(aa, bb)
