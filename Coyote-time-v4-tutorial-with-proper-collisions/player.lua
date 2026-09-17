@@ -54,6 +54,7 @@ function movePlayer(dt)
   for _, tile in ipairs(tiles) do
     if collisionCheck(player, tile) then
       player.x = oldX
+      break
     end
   end
   
@@ -67,9 +68,11 @@ function movePlayer(dt)
       
       if player.velocity.y < 0 then
         player.y = tile.y - player.height
+        break
       elseif player.velocity.y >= 0 then
         player.y = oldY
-      
+        print(tile.y)
+        break
       end
       
     end
@@ -79,7 +82,10 @@ end
 
 function playerJump()
   print("JUMP 0: " .. player.velocity.y)
-  player.velocity.y = - 1700
+  -- player.velocity.y = - 1700
+  
+  player.y = player.y - 80
+  
   print("JUMP : " .. player.velocity.y)
 end
 
