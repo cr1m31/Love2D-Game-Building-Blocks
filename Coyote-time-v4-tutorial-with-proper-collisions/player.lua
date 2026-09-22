@@ -67,11 +67,12 @@ function movePlayer(dt)
     if collisionCheck(player, tile) then
       
       if player.velocity.y < 0 then
-        player.y = tile.y - player.height
+        print("JUMP < 0 : " .. player.velocity.y)
+        player.y = tile.y + tile.height
         break
       elseif player.velocity.y >= 0 then
+        print("JUMP >= 0 : " .. player.velocity.y)
         player.y = oldY
-        print(tile.y)
         break
       end
       
@@ -81,16 +82,14 @@ function movePlayer(dt)
 end
 
 function playerJump()
-  print("JUMP 0: " .. player.velocity.y)
-  -- player.velocity.y = - 1700
   
-  player.y = player.y - 80
+  player.velocity.y = 1700
   
-  print("JUMP : " .. player.velocity.y)
+  -- player.y = player.y - 80
 end
 
 function addGravity()
-  player.velocity.y = 50
+  player.velocity.y = - 50
 end
 
 
