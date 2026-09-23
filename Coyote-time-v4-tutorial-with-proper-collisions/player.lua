@@ -68,10 +68,12 @@ function movePlayer(dt)
       
       if player.velocity.y < 0 then
         print("JUMP < 0 : " .. player.velocity.y)
+        player.velocity.y = 0
         player.y = tile.y + tile.height
         break
       elseif player.velocity.y >= 0 then
         print("JUMP >= 0 : " .. player.velocity.y)
+        player.velocity.y = 0
         player.y = oldY
         break
       end
@@ -83,13 +85,13 @@ end
 
 function playerJump()
   
-  player.velocity.y = 1700
+  player.velocity.y = - 100
   
   -- player.y = player.y - 80
 end
 
 function addGravity()
-  player.velocity.y = - 50
+  player.velocity.y =  player.velocity.y + 1
 end
 
 
