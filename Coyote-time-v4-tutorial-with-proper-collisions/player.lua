@@ -60,31 +60,23 @@ function movePlayer(dt)
     end
   end
   
-  
   player.y = player.y + player.velocity.y * dt
   
   addGravity()
   
   for _, tile in ipairs(tiles) do
     if collisionCheck(player, tile) then
-      
       if player.velocity.y < 0 then
-        print("JUMP < 0 : " .. player.velocity.y)
-        player.velocity.y = 0
         player.y = tile.y + tile.height
+        player.velocity.y = 0
         break
       elseif player.velocity.y >= 0 then
         player.y = oldY
         player.velocity.y = 0
-        
-        
-        
         break
       end
-      
     end
   end
-  
 end
 
 function playerJump()
