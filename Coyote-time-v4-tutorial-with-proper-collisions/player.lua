@@ -7,6 +7,8 @@ local player = {
   height = 50,
   speed = 100,
   velocity = {x = 0, y = 0},
+  gravity = 6.8,
+  jumpForce = 220
 }
 
 local platform = {
@@ -72,9 +74,11 @@ function movePlayer(dt)
         player.y = tile.y + tile.height
         break
       elseif player.velocity.y >= 0 then
-        print("JUMP >= 0 : " .. player.velocity.y)
-        player.velocity.y = 0
         player.y = oldY
+        player.velocity.y = 0
+        
+        
+        
         break
       end
       
@@ -84,14 +88,12 @@ function movePlayer(dt)
 end
 
 function playerJump()
-  
-  player.velocity.y = - 100
-  
-  -- player.y = player.y - 80
+  player.velocity.y = - player.jumpForce -- set jump as a constant
 end
 
 function addGravity()
-  player.velocity.y =  player.velocity.y + 1
+  -- !! important to modify velocity instead of assigning a constant to it for sake of velocity detection in tiles collisions !!
+  player.velocity.y =  player.velocity.y + player.gravity
 end
 
 
