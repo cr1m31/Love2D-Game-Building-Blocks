@@ -41,6 +41,17 @@ function collisionCheck(aa, bb)
     aa.y < bb.y + bb.height
 end
 
+function addGravity()
+  -- !! important to modify velocity instead of assigning a constant to it for sake of velocity detection in tiles collisions !!
+  player.velocity.y =  player.velocity.y + player.gravity
+end
+
+function limitMaxSpeed(maxSpeedDown)
+  if player.velocity.y >= maxSpeedDown then
+    player.velocity.y = player.velocity.y / 3 + maxSpeedDown
+  end
+end
+
 function movePlayer(dt)
   local oldX = player.x
   local oldY = player.y
@@ -77,16 +88,16 @@ function movePlayer(dt)
       end
     end
   end
+  
+  limitMaxSpeed(60)
+  
 end
 
 function playerJump()
   player.velocity.y = - player.jumpForce -- set jump as a constant
 end
 
-function addGravity()
-  -- !! important to modify velocity instead of assigning a constant to it for sake of velocity detection in tiles collisions !!
-  player.velocity.y =  player.velocity.y + player.gravity
-end
+
 
 
 function playerModule.load()
