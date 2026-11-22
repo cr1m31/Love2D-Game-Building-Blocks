@@ -95,26 +95,19 @@ function movePlayer(dt)
       end
     end
   end
-  
   limitMaxSpeedDown(80)
-  
-  limitMaxSpeedUp(-820)
-  
+  limitMaxSpeedUp(-820)  
 end
 
 function playerJump()
   player.velocity.y = - player.jumpForce -- set jump as a constant
 end
 
-
-
-
 function playerModule.load()
   table.insert(tiles, 1, platform)
   table.insert(tiles, 2, wall)
   table.insert(tiles, 3, ceiling)
 end
-
 
 function playerModule.update(dt)
   movePlayer(dt)
