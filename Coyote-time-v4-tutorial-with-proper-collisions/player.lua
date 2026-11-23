@@ -71,9 +71,9 @@ function movePlayer(dt)
     end
   end
   
-  player.y = player.y + player.velocity.y * dt
+  addGravity() -- !! must run before updating player.y so ground collision detects contact and resets velocity.y !!
   
-  addGravity()
+  player.y = player.y + player.velocity.y * dt
   
   for _, tile in ipairs(tiles) do
     if collisionCheck(player, tile) then
@@ -90,15 +90,11 @@ function movePlayer(dt)
   end
   
   limitMaxSpeed(60)
-  
 end
 
 function playerJump()
   player.velocity.y = - player.jumpForce -- set jump as a constant
 end
-
-
-
 
 function playerModule.load()
   table.insert(tiles, 1, platform)
@@ -106,20 +102,15 @@ function playerModule.load()
   table.insert(tiles, 3, ceiling)
 end
 
-
 function playerModule.update(dt)
   movePlayer(dt)
 end
 
 function playerModule.draw()
-  
   for _, tile in ipairs(tiles) do
     love.graphics.rectangle("line", tile.x, tile.y, tile.width, tile.height)
   end
-  
-  
   love.graphics.rectangle("line", player.x, player.y, player.width, player.height)
-  
   love.graphics.print("vel y : " .. player.velocity.y, 300, 300)
 end
 
@@ -128,6 +119,5 @@ function love.keypressed(key, scan, isrepeat)
     playerJump()
   end
 end
-
 
 return playerModule
