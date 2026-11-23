@@ -56,7 +56,7 @@ function limitMaxSpeedUp(maxSpeedUp)
   if player.velocity.y < maxSpeedUp then
     player.velocity.y = maxSpeedUp
   end
-  
+
 end
 
 function movePlayer(dt)
@@ -96,7 +96,9 @@ function movePlayer(dt)
     end
   end
   
-  limitMaxSpeed(60)
+  limitMaxSpeedDown(80)
+  
+  limitMaxSpeedUp(-820) -- !! WARNING must be a negative value otherwise this parameter value will replace gravity forever !!
 end
 
 function playerJump()
