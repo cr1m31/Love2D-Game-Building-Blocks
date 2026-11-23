@@ -7,8 +7,8 @@ local player = {
   height = 50,
   speed = 100,
   velocity = {x = 0, y = 0},
-  gravity = 6.8,
-  jumpForce = 220
+  gravity = 106.8,
+  jumpForce = 1820
 }
 
 local platform = {
@@ -46,10 +46,17 @@ function addGravity()
   player.velocity.y =  player.velocity.y + player.gravity
 end
 
-function limitMaxSpeed(maxSpeedDown)
+function limitMaxSpeedDown(maxSpeedDown)
   if player.velocity.y >= maxSpeedDown then
-    player.velocity.y = player.velocity.y / 3 + maxSpeedDown
+    player.velocity.y = maxSpeedDown
   end
+end
+
+function limitMaxSpeedUp(maxSpeedUp)
+  if player.velocity.y < maxSpeedUp then
+    player.velocity.y = maxSpeedUp
+  end
+  
 end
 
 function movePlayer(dt)
